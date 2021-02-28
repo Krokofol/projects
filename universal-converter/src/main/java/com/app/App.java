@@ -1,6 +1,6 @@
 package com.app;
 
-public class Main {
+public class App {
     public static void main (String[] args) {
         GraphHolder.readingStartInfo(args[0]);
     }
