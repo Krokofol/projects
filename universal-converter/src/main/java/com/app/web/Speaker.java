@@ -6,6 +6,8 @@ import com.app.Node;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -22,6 +24,9 @@ public class Speaker extends Thread{
     public void run() {
         try (InputStream inputStream = socket.getInputStream(); OutputStream outputStream = socket.getOutputStream()) {
             String[] units = getUnits(inputStream);
+
+//            System.out.println(units[0] + "," + units[1]);
+
             String[] fromUnit = units[0].split("/");
             String[] toUnit = units[1].split("/");
 
@@ -69,19 +74,20 @@ public class Speaker extends Thread{
     }
 
     private String[] getUnits(InputStream input) {
-        Scanner scanner = new Scanner(input).useDelimiter("\r\n");
-        String url = scanner.next();
-        url = url.split(" ")[1];
+        String url = "";
+        try(var scanner = new Scanner(input).useDelimiter("\r\n")) {
+            if(scanner.hasNext()) url = scanner.next();
+        }
+
+        System.out.println("!!!");
 
         try {
-            System.out.println(new String(url.getBytes(), "windows-1251"));
-            System.out.println(new String(url.getBytes("windows-1251"), "windows-1251"));
-//            System.out.println(url.getBytes(StandardCharsets.).toString());
-            System.out.println(url.getBytes().toString());
+            url = URLDecoder.decode(url.split(" ")[1], "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
 
-        return url.split("/")[1].split(",");
+        return String.copyValueOf(url.toCharArray(), 1, url.length() - 1).split(",");
+//        return url.split("/")[1].split(",");
     }
 }
