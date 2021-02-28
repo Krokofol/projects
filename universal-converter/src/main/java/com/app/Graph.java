@@ -63,7 +63,7 @@ public class Graph {
         nodes.add(newNode);
     }
 
-    private Node findNode(String neighboringNodeName) {
+    public Node findNode(String neighboringNodeName) {
         for (Node nodeIterator : nodes)
             if (nodeIterator.getName().equals(neighboringNodeName))
                 return nodeIterator;
