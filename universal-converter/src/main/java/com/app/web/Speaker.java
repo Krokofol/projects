@@ -6,6 +6,7 @@ import com.app.Node;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -48,6 +49,10 @@ public class Speaker extends Thread{
                 Graph graph = GraphHolder.findGraph(numeratorIterator);
                 Node node = graph.findNode(numeratorIterator);
                 for (String denominatorIterator : denominator) {
+                    if(denominatorIterator.equals(numeratorIterator)) {
+                        denominator.remove(denominatorIterator);
+                        break;
+                    }
                     if(graph.existenceNode(denominatorIterator)) {
                         result *= node.findEdge(denominatorIterator).getQuotient();
                         denominator.remove(denominatorIterator);
@@ -68,6 +73,16 @@ public class Speaker extends Thread{
         Scanner scanner = new Scanner(input).useDelimiter("\r\n");
         String url = scanner.next();
         url = url.split(" ")[1];
+
+        try {
+            System.out.println(new String(url.getBytes(), "windows-1251"));
+            System.out.println(new String(url.getBytes("windows-1251"), "windows-1251"));
+//            System.out.println(url.getBytes(StandardCharsets.).toString());
+            System.out.println(url.getBytes().toString());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
         return url.split("/")[1].split(",");
     }
 }
