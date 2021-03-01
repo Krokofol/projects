@@ -1,6 +1,7 @@
 package com.app;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 public class GraphHolder {
@@ -57,9 +58,10 @@ public class GraphHolder {
         graph1.connect(graph2, node1Name, node2Name, 1 / quotient);
     }
 
-    private static BufferedReader preloadReader(String filePath) throws FileNotFoundException {
+    private static BufferedReader preloadReader(String filePath) throws FileNotFoundException, UnsupportedEncodingException {
         File input = new File(filePath);
-        FileReader fr = new FileReader(input);
-        return new BufferedReader(fr);
+        InputStreamReader isr = new InputStreamReader(new FileInputStream(input), StandardCharsets.UTF_8);
+        return   new BufferedReader(isr);
+
     }
 }

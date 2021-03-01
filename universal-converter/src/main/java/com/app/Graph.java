@@ -12,9 +12,10 @@ public class Graph {
 
     public boolean existenceNode(String nodeName) {
         //бинарный поиск
-        for (Node nodeIterator : nodes)
+        for (Node nodeIterator : nodes) {
             if (nodeName.equals(nodeIterator.getName()))
                 return true;
+        }
         return false;
     }
 

@@ -7,21 +7,23 @@ import com.app.Node;
 import java.io.*;
 import java.net.Socket;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class Speaker extends Thread{
 
     public Socket socket;
 
     public Speaker(Socket socket) {
+        super();
         this.socket = socket;
     }
 
-    @Override
     public void run() {
+        super.run();
         try (InputStream inputStream = socket.getInputStream(); OutputStream outputStream = socket.getOutputStream()) {
             String[] units = getUnits(inputStream);
 
@@ -39,7 +41,6 @@ public class Speaker extends Thread{
             if (toUnit.length > 0) denominatorBuilder.append(toUnit[0]);
             if (toUnit.length > 0 && fromUnit.length > 1) denominatorBuilder.append("*");
             if (fromUnit.length > 1) denominatorBuilder.append(fromUnit[1]);
-
 
             ArrayList<String> numerator = new ArrayList<>();
             ArrayList<String> denominator = new ArrayList<>();
@@ -74,20 +75,14 @@ public class Speaker extends Thread{
     }
 
     private String[] getUnits(InputStream input) {
+        System.out.println(this.getId());
         String url = "";
         try(var scanner = new Scanner(input).useDelimiter("\r\n")) {
             if(scanner.hasNext()) url = scanner.next();
         }
 
-        System.out.println("!!!");
-
-        try {
-            url = URLDecoder.decode(url.split(" ")[1], "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        url = URLDecoder.decode(url.split(" ")[1], UTF_8);
 
         return String.copyValueOf(url.toCharArray(), 1, url.length() - 1).split(",");
-//        return url.split("/")[1].split(",");
     }
 }
