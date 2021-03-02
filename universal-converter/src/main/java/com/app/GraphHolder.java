@@ -62,6 +62,5 @@ public class GraphHolder {
         File input = new File(filePath);
         InputStreamReader isr = new InputStreamReader(new FileInputStream(input), StandardCharsets.UTF_8);
         return   new BufferedReader(isr);
-
     }
 }

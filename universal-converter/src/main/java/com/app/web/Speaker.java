@@ -18,16 +18,16 @@ public class Speaker extends Thread{
     public Socket socket;
 
     public Speaker(Socket socket) {
-        super();
+//        super();
         this.socket = socket;
     }
 
     public void run() {
-        super.run();
-        try (InputStream inputStream = socket.getInputStream(); OutputStream outputStream = socket.getOutputStream()) {
+//        super.run();
+        try {
+            InputStream inputStream = socket.getInputStream();
+            OutputStream outputStream = socket.getOutputStream();
             String[] units = getUnits(inputStream);
-
-//            System.out.println(units[0] + "," + units[1]);
 
             String[] fromUnit = units[0].split("/");
             String[] toUnit = units[1].split("/");
@@ -68,21 +68,48 @@ public class Speaker extends Thread{
             }
 
             System.out.println(result);
+            byte[] answer = result.toString().getBytes();
+            this.sendHeader(outputStream, "200", "OK", answer.length);
+            outputStream.write(answer);
 
         } catch (IOException error) {
             error.printStackTrace();
         }
     }
 
+    private void sendHeader(OutputStream output, String statusCode, String statusText, long length) {
+        PrintStream printStream = new PrintStream(output);
+        printStream.printf("HTTP/1.1 %s %s%n", statusCode, statusText);
+        printStream.printf("Content-Type: text/plain%n");
+        printStream.printf("Content-Length: %s%n%n", length);
+    }
+
+
     private String[] getUnits(InputStream input) {
-        System.out.println(this.getId());
         String url = "";
-        try(var scanner = new Scanner(input).useDelimiter("\r\n")) {
-            if(scanner.hasNext()) url = scanner.next();
-        }
+
+        Scanner scanner = new Scanner(input).useDelimiter("\r\n");
+        if (scanner.hasNext())url = scanner.next();
+        else this.stop();
 
         url = URLDecoder.decode(url.split(" ")[1], UTF_8);
+        System.out.println(url);
 
-        return String.copyValueOf(url.toCharArray(), 1, url.length() - 1).split(",");
+        String[] args = url.split("\\?");
+        if (args.length != 2)
+            System.out.println("Ошибка ввада");
+        if (!args[0].equals("/convert"))
+            System.out.println("Не тот оператор");
+
+        String[] arg1 = args[1].split("&")[0].split("=");
+        String[] arg2 = args[1].split("&")[1].split("=");
+
+        if (!(arg1[0].equals("to") && arg2[0].equals("from"))&&(!(arg1[0].equals("from") && arg2[0].equals("to"))))
+            System.out.println("неверные параметры");
+
+        if (arg1[0].equals("from"))
+            return new String[]{arg1[1], arg2[1]};
+        return new String[]{arg2[1], arg1[1]};
+//        return url.split(" ");
     }
 }
