@@ -1,0 +1,1 @@
+mvn clean&&mvn package&&cd target&&java -jar universal-converter-1.0.0.jar ..\src\bigData.txt&&cd ..&&mvn clean

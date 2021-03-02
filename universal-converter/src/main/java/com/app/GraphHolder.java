@@ -45,7 +45,6 @@ public class GraphHolder {
                 }
                 res = reader.readLine();
             }
-            System.out.println("done");
         } catch (IOException e) {
             e.printStackTrace();
         }

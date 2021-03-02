@@ -18,10 +18,10 @@ public class Server {
             int i = 0;
             while (true) {
                 Socket socket = serverSocket.accept();
-                i++;
-                System.out.println("!!!" + i + "!!!");
                 Thread thread = new Speaker(socket);
                 thread.start();
+                i++;
+                System.out.println(i);
             }
         } catch (IOException error) {
             error.printStackTrace();

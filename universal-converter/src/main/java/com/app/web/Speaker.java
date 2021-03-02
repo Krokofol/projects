@@ -67,8 +67,7 @@ public class Speaker extends Thread{
                 numerator.remove(numeratorIterator);
             }
 
-            System.out.println(result);
-            byte[] answer = result.toString().getBytes();
+            byte[] answer = String.format("%f",result).getBytes();
             this.sendHeader(outputStream, "200", "OK", answer.length);
             outputStream.write(answer);
 
@@ -93,7 +92,7 @@ public class Speaker extends Thread{
         else this.stop();
 
         url = URLDecoder.decode(url.split(" ")[1], UTF_8);
-        System.out.println(url);
+        url = url.replaceAll(" ", "");
 
         String[] args = url.split("\\?");
         if (args.length != 2)
