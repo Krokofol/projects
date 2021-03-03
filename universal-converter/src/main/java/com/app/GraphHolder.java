@@ -8,14 +8,13 @@ public class GraphHolder {
     static public ArrayList<Graph> graphs = new ArrayList<>();
 
     public static void createGraph(Node startNode) {
-        graphs.add(new Graph(startNode));
+        Graph graph = new Graph(startNode);
+        graphs.add(graph);
+        Node.setGraphsForName(startNode.getName(), graph);
     }
 
     public static Graph findGraph(String neighboringNodeName) {
-        for (Graph graphIterator : graphs)
-            if(graphIterator.existenceNode(neighboringNodeName))
-                return graphIterator;
-        return graphs.get(0);
+        return Node.getGraph(Node.findPos(neighboringNodeName));
     }
 
     public static void addNode(String nodeName, String neighboringNodeName, Double quotient) {
@@ -33,10 +32,18 @@ public class GraphHolder {
         try {
             BufferedReader reader = preloadReader(filePath);
             String res = reader.readLine();
+
+            int i = 0;
+
             while (res != null) {
+
+                i++;
+                if (i % 1000 == 0) System.out.println(i);
+
                 String node1Name = res.split(",")[0];
                 String node2Name = res.split(",")[1];
                 double quotient = Double.parseDouble(res.split(",")[2]);
+
                 if (Node.checkExistence(node1Name) && Node.checkExistence(node2Name)) {
                     connectTwoGraphs(node1Name, node2Name, quotient);
                 } else {
