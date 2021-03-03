@@ -55,12 +55,13 @@ public class Graph {
         Node neighboringNode = findNode(neighboringNodeName);
         //сортировка вставкой
         newNode.createEdge(neighboringNode, startQuotient);
-        for (Edge edgeIterator : neighboringNode.edges) {
-            newNode.createEdge(edgeIterator.getNeighboringNode(), startQuotient * edgeIterator.getQuotient());
-        }
-        for (Edge edgeIterator : newNode.edges) {
-            edgeIterator.getNeighboringNode().createEdge(newNode, 1 / edgeIterator.getQuotient());
-        }
+        neighboringNode.createEdge(newNode, 1 / startQuotient);
+//        for (Edge edgeIterator : neighboringNode.edges) {
+//            newNode.createEdge(edgeIterator.getNeighboringNode(), startQuotient * edgeIterator.getQuotient());
+//        }
+//        for (Edge edgeIterator : newNode.edges) {
+//            edgeIterator.getNeighboringNode().createEdge(newNode, 1 / edgeIterator.getQuotient());
+//        }
         nodes.add(newNode);
     }
 
