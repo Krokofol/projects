@@ -27,9 +27,8 @@ public class Graph {
 
         for (Node nodeIterator : graph2Nodes) {
             Node.setGraphsForName(nodeIterator.getName(), this);
+            nodes.add(findPos(nodeIterator.getName()), nodeIterator);
         }
-
-        nodes.addAll(graph2Nodes);
     }
 
     public ArrayList<Node> getNodes() {
@@ -70,4 +69,43 @@ public class Graph {
         }
         return Math.max(leftPos, rightPos);
     }
+
+    public Double findWay(String startNodeName, String endNodeName) {
+        ArrayList<Node> changedNodes = new ArrayList<>();
+        ArrayList<Node> queue = new ArrayList<>();
+        ArrayList<Double> quotients = new ArrayList<>();
+
+        Node startNode = findNode(startNodeName);
+        startNode.setVisit(Visit.inQueue);
+
+        changedNodes.add(startNode);
+        queue.add(startNode);
+        quotients.add(1.0);
+
+        while (!queue.get(0).getName().equals(endNodeName)) {
+            Node node = queue.get(0);
+            Double quotient = quotients.get(0);
+            for (Edge edgeIterator : node.getEdges()) {
+                Node neighboringNode = edgeIterator.getNode2();
+                if(neighboringNode.getVisit() == Visit.notVisited) {
+                    neighboringNode.setVisit(Visit.inQueue);
+                    changedNodes.add(neighboringNode);
+                    queue.add(queue.size(), neighboringNode);
+                    quotients.add(quotients.size(), quotient * edgeIterator.getQuotient());
+                }
+            }
+            node.setVisit(Visit.visited);
+            queue.remove(0);
+            quotients.remove(0);
+        }
+
+        Double result = quotients.get(0);
+
+        for (Node nodeIterator : changedNodes) {
+            nodeIterator.setVisit(Visit.notVisited);
+        }
+
+        return result;
+    }
+
 }

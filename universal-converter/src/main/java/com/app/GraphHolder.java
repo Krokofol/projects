@@ -14,7 +14,7 @@ public class GraphHolder {
     }
 
     public static Graph findGraph(String neighboringNodeName) {
-        return Node.getGraph(Node.findPos(neighboringNodeName));
+        return Node.getGraph(Node.findPosForName(neighboringNodeName));
     }
 
     public static void addNode(String nodeName, String neighboringNodeName, Double quotient) {
@@ -32,14 +32,7 @@ public class GraphHolder {
         try {
             BufferedReader reader = preloadReader(filePath);
             String res = reader.readLine();
-
-            int i = 0;
-
             while (res != null) {
-
-                i++;
-                if (i % 1000 == 0) System.out.println(i);
-
                 String node1Name = res.split(",")[0];
                 String node2Name = res.split(",")[1];
                 double quotient = Double.parseDouble(res.split(",")[2]);
@@ -52,6 +45,7 @@ public class GraphHolder {
                 }
                 res = reader.readLine();
             }
+            System.out.println("preloaded");
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -2,11 +2,11 @@ package com.app.web;
 
 import com.app.Graph;
 import com.app.GraphHolder;
-import com.app.Node;
 
 import java.io.*;
 import java.net.Socket;
 import java.net.URLDecoder;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -52,22 +52,14 @@ public class Speaker extends Thread{
             while (numerator.size() > 0) {
                 String numeratorIterator = numerator.get(0);
                 Graph graph = GraphHolder.findGraph(numeratorIterator);
-                Node node = graph.findNode(numeratorIterator);
                 for (String denominatorIterator : denominator) {
-                    if(denominatorIterator.equals(numeratorIterator)) {
-                        denominator.remove(denominatorIterator);
-                        break;
-                    }
                     if(graph.existenceNode(denominatorIterator)) {
-                        result *= node.findEdge(denominatorIterator).getQuotient();
-                        denominator.remove(denominatorIterator);
-                        break;
+                        result *= graph.findWay(numeratorIterator, denominatorIterator);
                     }
                 }
                 numerator.remove(numeratorIterator);
             }
-
-            byte[] answer = String.format("%f",result).getBytes();
+            byte[] answer = new DecimalFormat("#.###############").format(result).getBytes();
             this.sendHeader(outputStream, "200", "OK", answer.length);
             outputStream.write(answer);
 
