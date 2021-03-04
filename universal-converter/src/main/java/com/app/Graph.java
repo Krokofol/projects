@@ -12,7 +12,7 @@ public class Graph {
 
     public boolean existenceNode(String nodeName) {
         if (nodes.size() == 0) return false;
-        int pos = findPos(nodeName);
+        int pos = PosSearcher.searchNamePosInNodeArray(nodeName, nodes);
         if (nodes.size() == pos) return false;
         return nodes.get(pos).getName().equals(nodeName);
     }
@@ -27,7 +27,7 @@ public class Graph {
 
         for (Node nodeIterator : graph2Nodes) {
             Node.setGraphsForName(nodeIterator.getName(), this);
-            nodes.add(findPos(nodeIterator.getName()), nodeIterator);
+            nodes.add(PosSearcher.searchNamePosInNodeArray(nodeIterator.getName(), nodes), nodeIterator);
         }
     }
 
@@ -42,33 +42,33 @@ public class Graph {
         neighboringNode.createEdge(newNode, 1 / startQuotient);
 
         Node.setGraphsForName(newNode.getName(), this);
-        nodes.add(findPos(newNode.getName()), newNode);
+        nodes.add(PosSearcher.searchNamePosInNodeArray(newNode.getName(), nodes), newNode);
     }
 
     public Node findNode(String neighboringNodeName) {
-        return nodes.get(findPos(neighboringNodeName));
+        return nodes.get(PosSearcher.searchNamePosInNodeArray(neighboringNodeName, nodes));
     }
 
-    public int findPos(String nodeName) {
-        int leftPos = 0;
-        int rightPos = nodes.size();
-
-        int mid = (leftPos + rightPos) / 2;
-
-        while (leftPos < rightPos) {
-            int compare = nodes.get(mid).getName().compareTo(nodeName);
-            if (compare == 0) {
-                return mid;
-            }
-            if (compare > 0) {
-                rightPos = mid;
-            } else {
-                leftPos = mid + 1;
-            }
-            mid = (leftPos + rightPos) / 2;
-        }
-        return Math.max(leftPos, rightPos);
-    }
+//    public int findPos(String nodeName) {
+//        int leftPos = 0;
+//        int rightPos = nodes.size();
+//
+//        int mid = (leftPos + rightPos) / 2;
+//
+//        while (leftPos < rightPos) {
+//            int compare = nodes.get(mid).getName().compareTo(nodeName);
+//            if (compare == 0) {
+//                return mid;
+//            }
+//            if (compare > 0) {
+//                rightPos = mid;
+//            } else {
+//                leftPos = mid + 1;
+//            }
+//            mid = (leftPos + rightPos) / 2;
+//        }
+//        return Math.max(leftPos, rightPos);
+//    }
 
     public Double findWay(String startNodeName, String endNodeName) {
         ArrayList<Node> changedNodes = new ArrayList<>();

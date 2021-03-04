@@ -14,7 +14,7 @@ public class GraphHolder {
     }
 
     public static Graph findGraph(String neighboringNodeName) {
-        return Node.getGraph(Node.findPosForName(neighboringNodeName));
+        return Node.getGraph(PosSearcher.searchNamePosInNodeArray(neighboringNodeName, Node.getAllNames()));
     }
 
     public static void addNode(String nodeName, String neighboringNodeName, Double quotient) {

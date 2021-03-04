@@ -2,8 +2,11 @@ package com.app.web;
 
 import com.app.Graph;
 import com.app.GraphHolder;
+import com.sun.net.httpserver.HttpPrincipal;
+import com.sun.net.httpserver.HttpsConfigurator;
 
 import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.Socket;
 import java.net.URLDecoder;
 import java.text.DecimalFormat;
@@ -80,6 +83,7 @@ public class Speaker extends Thread{
         String url = "";
 
         Scanner scanner = new Scanner(input).useDelimiter("\r\n");
+
         if (scanner.hasNext())url = scanner.next();
         else this.stop();
 
@@ -101,6 +105,5 @@ public class Speaker extends Thread{
         if (arg1[0].equals("from"))
             return new String[]{arg1[1], arg2[1]};
         return new String[]{arg2[1], arg1[1]};
-//        return url.split(" ");
     }
 }
