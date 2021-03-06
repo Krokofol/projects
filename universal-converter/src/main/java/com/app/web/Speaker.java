@@ -122,7 +122,7 @@ public class Speaker extends Thread{
 
 
     private String[] getUnits(InputStream input) {
-        Scanner scanner = new Scanner(input).useDelimiter("\r\n");
+        Scanner scanner = new Scanner(input, UTF_8).useDelimiter("\r\n");
 
         if (!scanner.hasNext()) {
 //            System.out.println("wrong : empty");
