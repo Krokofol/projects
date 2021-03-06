@@ -18,8 +18,4 @@ public class Edge {
     public Double getQuotient() {
         return quotient;
     }
-
-    public Node getNeighboringNode() {
-        return node2;
-    }
 }

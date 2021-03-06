@@ -7,6 +7,7 @@ import com.app.Node;
 import java.io.*;
 import java.net.Socket;
 import java.net.URLDecoder;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -18,62 +19,98 @@ public class Speaker extends Thread{
     public Socket socket;
 
     public Speaker(Socket socket) {
-//        super();
         this.socket = socket;
     }
 
     public void run() {
-//        super.run();
         try {
             InputStream inputStream = socket.getInputStream();
             OutputStream outputStream = socket.getOutputStream();
             String[] units = getUnits(inputStream);
 
+            if (units == null) {
+                //если у нас какие-то параметры лишние
+                return;
+            }
+
             String[] fromUnit = units[0].split("/");
             String[] toUnit = units[1].split("/");
 
-            StringBuilder numeratorBuilder = new StringBuilder();
-            if (fromUnit.length > 0) numeratorBuilder.append(fromUnit[0]);
-            if (fromUnit.length > 0 && toUnit.length > 1) numeratorBuilder.append("*");
-            if (toUnit.length > 1) numeratorBuilder.append(toUnit[1]);
+            buildArgs(toUnit, fromUnit);
 
-            StringBuilder denominatorBuilder = new StringBuilder();
-            if (toUnit.length > 0) denominatorBuilder.append(toUnit[0]);
-            if (toUnit.length > 0 && fromUnit.length > 1) denominatorBuilder.append("*");
-            if (fromUnit.length > 1) denominatorBuilder.append(fromUnit[1]);
+            StringBuilder denominatorBuilder = buildArgs(fromUnit, toUnit);
+            StringBuilder numeratorBuilder = buildArgs(toUnit, fromUnit);
 
             ArrayList<String> numerator = new ArrayList<>();
             ArrayList<String> denominator = new ArrayList<>();
             Collections.addAll(numerator, numeratorBuilder.toString().replace(" ", "").split("\\*"));
             Collections.addAll(denominator, denominatorBuilder.toString().replace(" ", "").split("\\*"));
 
-            Double result = 1.0;
 
-            while (numerator.size() > 0) {
-                String numeratorIterator = numerator.get(0);
-                Graph graph = GraphHolder.findGraph(numeratorIterator);
-                Node node = graph.findNode(numeratorIterator);
-                for (String denominatorIterator : denominator) {
-                    if(denominatorIterator.equals(numeratorIterator)) {
-                        denominator.remove(denominatorIterator);
-                        break;
-                    }
-                    if(graph.existenceNode(denominatorIterator)) {
-                        result *= node.findEdge(denominatorIterator).getQuotient();
-                        denominator.remove(denominatorIterator);
-                        break;
-                    }
-                }
-                numerator.remove(numeratorIterator);
+            if (checkExistence(outputStream, numerator)) return;
+            if (checkExistence(outputStream, denominator)) return;
+
+            Double result = calculateResult(denominator, numerator);
+            if (result == null) {
+                this.sendHeader(outputStream, "404", "Not Found", 0);
+                return;
             }
 
-            byte[] answer = String.format("%f",result).getBytes();
+            byte[] answer = new DecimalFormat("#.###############").format(result).getBytes();
             this.sendHeader(outputStream, "200", "OK", answer.length);
             outputStream.write(answer);
 
         } catch (IOException error) {
             error.printStackTrace();
         }
+    }
+
+    private Double calculateResult (ArrayList<String> denominator, ArrayList<String> numerator) {
+        Double result = 1.0;
+        boolean gotPare;
+
+        if (numerator.size() != denominator.size()) {
+            return null;
+        }
+
+        while (numerator.size() > 0) {
+            String numeratorIterator = numerator.get(0);
+            Graph graph = GraphHolder.findGraph(numeratorIterator);
+            gotPare = false;
+
+            for (String denominatorIterator : denominator) {
+                if(graph.existenceNode(denominatorIterator)) {
+                    result *= graph.findWay(numeratorIterator, denominatorIterator);
+                    denominator.remove(denominatorIterator);
+                    gotPare = true;
+                    break;
+                }
+            }
+            if (!gotPare) {
+                return null;
+            }
+            numerator.remove(numeratorIterator);
+        }
+        return result;
+    }
+
+    private boolean checkExistence(OutputStream outputStream, ArrayList<String> numerator) {
+        for (String nameIterator : numerator)
+            if (!Node.checkExistence(nameIterator)) {
+                this.sendHeader(outputStream, "400", "Bad Request", 0);
+                return true;
+            }
+        return false;
+    }
+
+    private StringBuilder buildArgs(String[] fromUnit, String[] toUnit) {
+        StringBuilder denominatorBuilder = new StringBuilder();
+        if (toUnit.length > 0) denominatorBuilder.append(toUnit[0]);
+        if (toUnit.length > 0 && fromUnit.length > 1)
+            if (toUnit[0].length() > 0)
+                denominatorBuilder.append("*");
+        if (fromUnit.length > 1) denominatorBuilder.append(fromUnit[1]);
+        return denominatorBuilder;
     }
 
     private void sendHeader(OutputStream output, String statusCode, String statusText, long length) {
@@ -85,30 +122,52 @@ public class Speaker extends Thread{
 
 
     private String[] getUnits(InputStream input) {
-        String url = "";
-
         Scanner scanner = new Scanner(input).useDelimiter("\r\n");
-        if (scanner.hasNext())url = scanner.next();
-        else this.stop();
 
-        url = URLDecoder.decode(url.split(" ")[1], UTF_8);
-        url = url.replaceAll(" ", "");
+        if (!scanner.hasNext()) {
+//            System.out.println("wrong : empty");
+            return null;
+        }
 
-        String[] args = url.split("\\?");
-        if (args.length != 2)
-            System.out.println("Ошибка ввада");
-        if (!args[0].equals("/convert"))
-            System.out.println("Не тот оператор");
+        if (!scanner.next().split(" ")[1].equals("/convert")) {
+//            System.out.println("wrong : URL configuration");
+            return null;
+        }
 
-        String[] arg1 = args[1].split("&")[0].split("=");
-        String[] arg2 = args[1].split("&")[1].split("=");
+        String[] fromTo = new String[2];
 
-        if (!(arg1[0].equals("to") && arg2[0].equals("from"))&&(!(arg1[0].equals("from") && arg2[0].equals("to"))))
-            System.out.println("неверные параметры");
+        boolean gotFrom = false, gotTo = false;
 
-        if (arg1[0].equals("from"))
-            return new String[]{arg1[1], arg2[1]};
-        return new String[]{arg2[1], arg1[1]};
-//        return url.split(" ");
+        while(scanner.hasNext() && (!(gotFrom && gotTo))) {
+            String nextString = URLDecoder.decode(scanner.next(), UTF_8);
+            if (nextString.contains("from")) {
+                if (gotFrom) {
+//                    System.out.println("wrong : second \"from\"");
+                    return null;
+                }
+                gotFrom = true;
+                fromTo[0] = Speaker.cleanUp(nextString);
+            }
+            if (nextString.contains("to")) {
+                if (gotTo) {
+//                    System.out.println("wrong : second \"to\"");
+                    return null;
+                }
+                gotTo = true;
+                fromTo[1] = Speaker.cleanUp(nextString);
+            }
+        }
+
+        if (!gotFrom || !gotTo) {
+//            System.out.println("wrong : have not from or have not to");
+            return null;
+        }
+
+        return fromTo;
+    }
+
+    private static String cleanUp(String string) {
+        return string.replace(" ", "").replace(",", "").replace(":","")
+                .replace("from", "").replace("to", "").replace("\"","");
     }
 }

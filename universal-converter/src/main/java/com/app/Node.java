@@ -1,51 +1,87 @@
 package com.app;
 
-import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Node {
-    public static ArrayList<String> names = new ArrayList<>();
+    public static CopyOnWriteArrayList<Node> allNodes = new CopyOnWriteArrayList<>();
+    public static CopyOnWriteArrayList<Graph> graphsForNames = new CopyOnWriteArrayList<>();
 
+    public int posNumInGraph;
     public String name;
-    public ArrayList<Edge> edges;
+    public CopyOnWriteArrayList<Edge> edges;
 
     public static Node createNode(String name) {
         if (checkExistence(name))
             return null;
-        return new Node(name);
+        Node node = new Node (name);
+        int pos = PosSearcher.searchNamePosInNodeArray(name, allNodes);
+        allNodes.add(pos, node);
+        graphsForNames.add(pos, null);
+        return node;
     }
 
     private Node(String nodeName) {
-        //сортировка вставкой
-        names.add(nodeName);
+
         name = nodeName;
-        edges = new ArrayList<>();
+        edges = new CopyOnWriteArrayList<>();
     }
 
     public static boolean checkExistence (String name) {
-        //бинарный поиск
-        for (String namesIterator : names)
-            if (name.equals(namesIterator))
-                return true;
-        return false;
-    }
-
-
-    public Edge findEdge(String nodeName) {
-        //бинарный поиск
-        for (Edge edgeIterator : edges) {
-            if (edgeIterator.getNode2().getName().equals(nodeName))
-                return edgeIterator;
-        }
-        return edges.get(0);
+        if (allNodes.size() == 0) return false;
+        int pos = PosSearcher.searchNamePosInNodeArray(name, allNodes);
+        if (allNodes.size() == pos) return false;
+        return allNodes.get(pos).getName().equals(name);
     }
 
     public void createEdge(Node neighboringNode, Double quotient) {
-        //сортировка вставкой
-        edges.add(new Edge(this, neighboringNode, quotient));
+        this.edges.add(findPosForEdge(neighboringNode.getName()), new Edge(this, neighboringNode, quotient));
     }
 
     public String getName() {
         return name;
     }
 
+    public int findPosForEdge(String node2Name) {
+        int leftPos = 0;
+        int rightPos = this.edges.size();
+        int mid = (leftPos + rightPos) / 2;
+
+        while (leftPos < rightPos) {
+            int compare = edges.get(mid).getNode2().getName().compareTo(node2Name);
+            if (compare == 0) {
+                return mid;
+            }
+            if (compare > 0) {
+                rightPos = mid;
+            } else {
+                leftPos = mid + 1;
+            }
+            mid = (leftPos + rightPos) / 2;
+        }
+        return Math.max(leftPos, rightPos);
+    }
+
+    public static void setGraphsForName(String name, Graph graph) {
+        graphsForNames.set(PosSearcher.searchNamePosInNodeArray(name, allNodes), graph);
+    }
+
+    public static Graph getGraph(int index) {
+        return graphsForNames.get(index);
+    }
+
+    public CopyOnWriteArrayList<Edge> getEdges() {
+        return edges;
+    }
+
+    public void setPosNumInGraph(int posNumInGraph) {
+        this.posNumInGraph = posNumInGraph;
+    }
+
+    public int getPosNumInGraph() {
+        return posNumInGraph;
+    }
+
+    public static CopyOnWriteArrayList<Node> getAllNames() {
+        return allNodes;
+    }
 }
