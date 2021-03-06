@@ -1,14 +1,14 @@
 package com.app;
 
-import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Node {
-    public static ArrayList<Node> allNodes = new ArrayList<>();
-    public static ArrayList<Graph> graphsForNames = new ArrayList<>();
+    public static CopyOnWriteArrayList<Node> allNodes = new CopyOnWriteArrayList<>();
+    public static CopyOnWriteArrayList<Graph> graphsForNames = new CopyOnWriteArrayList<>();
 
+    public int posNumInGraph;
     public String name;
-    public ArrayList<Edge> edges;
-    public Visit visit;
+    public CopyOnWriteArrayList<Edge> edges;
 
     public static Node createNode(String name) {
         if (checkExistence(name))
@@ -23,8 +23,7 @@ public class Node {
     private Node(String nodeName) {
 
         name = nodeName;
-        visit = Visit.notVisited;
-        edges = new ArrayList<>();
+        edges = new CopyOnWriteArrayList<>();
     }
 
     public static boolean checkExistence (String name) {
@@ -70,19 +69,19 @@ public class Node {
         return graphsForNames.get(index);
     }
 
-    public ArrayList<Edge> getEdges() {
+    public CopyOnWriteArrayList<Edge> getEdges() {
         return edges;
     }
 
-    public static ArrayList<Node> getAllNames() {
+    public void setPosNumInGraph(int posNumInGraph) {
+        this.posNumInGraph = posNumInGraph;
+    }
+
+    public int getPosNumInGraph() {
+        return posNumInGraph;
+    }
+
+    public static CopyOnWriteArrayList<Node> getAllNames() {
         return allNodes;
-    }
-
-    public void setVisit(Visit visit) {
-        this.visit = visit;
-    }
-
-    public Visit getVisit() {
-        return visit;
     }
 }

@@ -124,8 +124,13 @@ public class Speaker extends Thread{
     private String[] getUnits(InputStream input) {
         Scanner scanner = new Scanner(input).useDelimiter("\r\n");
 
+        if (!scanner.hasNext()) {
+//            System.out.println("wrong : empty");
+            return null;
+        }
+
         if (!scanner.next().split(" ")[1].equals("/convert")) {
-            System.out.println("wrong : URL configuration");
+//            System.out.println("wrong : URL configuration");
             return null;
         }
 
@@ -137,7 +142,7 @@ public class Speaker extends Thread{
             String nextString = URLDecoder.decode(scanner.next(), UTF_8);
             if (nextString.contains("from")) {
                 if (gotFrom) {
-                    System.out.println("wrong : second \"from\"");
+//                    System.out.println("wrong : second \"from\"");
                     return null;
                 }
                 gotFrom = true;
@@ -145,12 +150,17 @@ public class Speaker extends Thread{
             }
             if (nextString.contains("to")) {
                 if (gotTo) {
-                    System.out.println("wrong : second \"to\"");
+//                    System.out.println("wrong : second \"to\"");
                     return null;
                 }
                 gotTo = true;
                 fromTo[1] = Speaker.cleanUp(nextString);
             }
+        }
+
+        if (!gotFrom || !gotTo) {
+//            System.out.println("wrong : have not from or have not to");
+            return null;
         }
 
         return fromTo;

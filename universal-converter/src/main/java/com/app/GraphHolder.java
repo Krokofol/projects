@@ -2,10 +2,10 @@ package com.app;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class GraphHolder {
-    static public ArrayList<Graph> graphs = new ArrayList<>();
+    static public CopyOnWriteArrayList<Graph> graphs = new CopyOnWriteArrayList<>();
 
     public static void createGraph(Node startNode) {
         Graph graph = new Graph(startNode);
@@ -45,7 +45,7 @@ public class GraphHolder {
                 }
                 res = reader.readLine();
             }
-            System.out.println("preloaded");
+//            System.out.println("preloaded");
         } catch (IOException e) {
             e.printStackTrace();
         }

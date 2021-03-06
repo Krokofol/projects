@@ -15,13 +15,10 @@ public class Server {
     public void launch() {
         try {
             ServerSocket serverSocket = new ServerSocket(port);
-            int i = 0;
             while (true) {
                 Socket socket = serverSocket.accept();
                 Thread thread = new Speaker(socket);
                 thread.start();
-                i++;
-                System.out.println(i);
             }
         } catch (IOException error) {
             error.printStackTrace();
