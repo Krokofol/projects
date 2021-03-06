@@ -2,11 +2,8 @@ package com.app.web;
 
 import com.app.Graph;
 import com.app.GraphHolder;
-import com.sun.net.httpserver.HttpPrincipal;
-import com.sun.net.httpserver.HttpsConfigurator;
 
 import java.io.*;
-import java.net.HttpURLConnection;
 import java.net.Socket;
 import java.net.URLDecoder;
 import java.text.DecimalFormat;
@@ -26,11 +23,14 @@ public class Speaker extends Thread{
     }
 
     public void run() {
-//        super.run();
         try {
             InputStream inputStream = socket.getInputStream();
             OutputStream outputStream = socket.getOutputStream();
             String[] units = getUnits(inputStream);
+
+            if (units == null) {
+                return;
+            }
 
             String[] fromUnit = units[0].split("/");
             String[] toUnit = units[1].split("/");
@@ -51,17 +51,22 @@ public class Speaker extends Thread{
             Collections.addAll(denominator, denominatorBuilder.toString().replace(" ", "").split("\\*"));
 
             Double result = 1.0;
+//            boolean gotPare;
 
             while (numerator.size() > 0) {
                 String numeratorIterator = numerator.get(0);
                 Graph graph = GraphHolder.findGraph(numeratorIterator);
+//                gotPare = false;
+
                 for (String denominatorIterator : denominator) {
                     if(graph.existenceNode(denominatorIterator)) {
                         result *= graph.findWay(numeratorIterator, denominatorIterator);
+                        //gotPare = true;
                     }
                 }
                 numerator.remove(numeratorIterator);
             }
+
             byte[] answer = new DecimalFormat("#.###############").format(result).getBytes();
             this.sendHeader(outputStream, "200", "OK", answer.length);
             outputStream.write(answer);
@@ -80,30 +85,43 @@ public class Speaker extends Thread{
 
 
     private String[] getUnits(InputStream input) {
-        String url = "";
-
         Scanner scanner = new Scanner(input).useDelimiter("\r\n");
 
-        if (scanner.hasNext())url = scanner.next();
-        else this.stop();
+        if (!scanner.next().split(" ")[1].equals("/convert")) {
+            System.out.println("wrong : URL configuration");
+            return null;
+        }
 
-        url = URLDecoder.decode(url.split(" ")[1], UTF_8);
-        url = url.replaceAll(" ", "");
 
-        String[] args = url.split("\\?");
-        if (args.length != 2)
-            System.out.println("Ошибка ввада");
-        if (!args[0].equals("/convert"))
-            System.out.println("Не тот оператор");
+        String[] fromTo = new String[2];
 
-        String[] arg1 = args[1].split("&")[0].split("=");
-        String[] arg2 = args[1].split("&")[1].split("=");
+        boolean gotFrom = false, gotTo = false;
 
-        if (!(arg1[0].equals("to") && arg2[0].equals("from"))&&(!(arg1[0].equals("from") && arg2[0].equals("to"))))
-            System.out.println("неверные параметры");
+        while(scanner.hasNext() && (!(gotFrom && gotTo))) {
+            String nextString = URLDecoder.decode(scanner.next(), UTF_8);
+            if (nextString.contains("from")) {
+                if (gotFrom) {
+                    System.out.println("wrong : second \"from\"");
+                    return null;
+                }
+                gotFrom = true;
+                fromTo[0] = Speaker.cleanUp(nextString);
+            }
+            if (nextString.contains("to")) {
+                if (gotTo) {
+                    System.out.println("wrong : second \"to\"");
+                    return null;
+                }
+                gotTo = true;
+                fromTo[1] = Speaker.cleanUp(nextString);
+            }
+        }
 
-        if (arg1[0].equals("from"))
-            return new String[]{arg1[1], arg2[1]};
-        return new String[]{arg2[1], arg1[1]};
+        return fromTo;
+    }
+
+    private static String cleanUp(String string) {
+        return string.replace(" ", "").replace(",", "").replace(":","")
+                .replace("from", "").replace("to", "").replace("\"","");
     }
 }
