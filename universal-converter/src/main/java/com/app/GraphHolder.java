@@ -2,10 +2,10 @@ package com.app;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.ArrayList;
 
 public class GraphHolder {
-    static public CopyOnWriteArrayList<Graph> graphs = new CopyOnWriteArrayList<>();
+    static public ArrayList<Graph> graphs = new ArrayList<>();
 
     public static void createGraph(Node startNode) {
         Graph graph = new Graph(startNode);
@@ -32,12 +32,10 @@ public class GraphHolder {
         try {
             BufferedReader reader = preloadReader(filePath);
             String res = reader.readLine();
-            int i = 0;
             while (res != null) {
-                if (i % 2000 == 0) System.out.println(i / 2000);
-                i++;
                 String node1Name = res.split(",")[0];
                 String node2Name = res.split(",")[1];
+
                 double quotient = Double.parseDouble(res.split(",")[2]);
 
                 if (Node.checkExistence(node1Name) && Node.checkExistence(node2Name)) {
@@ -48,9 +46,16 @@ public class GraphHolder {
                 }
                 res = reader.readLine();
             }
+            setNodesIndexesInGraph();
             System.out.println("preloaded");
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private static void setNodesIndexesInGraph() {
+        for (Graph graphIterator : graphs) {
+            graphIterator.setNodesIndexes();
         }
     }
 

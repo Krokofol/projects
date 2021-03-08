@@ -1,14 +1,14 @@
 package com.app;
 
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.ArrayList;
 
 public class Node {
-    public static CopyOnWriteArrayList<Node> allNodes = new CopyOnWriteArrayList<>();
-    public static CopyOnWriteArrayList<Graph> graphsForNames = new CopyOnWriteArrayList<>();
+    public static ArrayList<Node> allNodes = new ArrayList<>();
+    public static ArrayList<Graph> graphsForNames = new ArrayList<>();
 
     public int posNumInGraph;
     public String name;
-    public CopyOnWriteArrayList<Edge> edges;
+    public ArrayList<Edge> edges;
 
     public static Node createNode(String name) {
         if (checkExistence(name))
@@ -23,7 +23,7 @@ public class Node {
     private Node(String nodeName) {
 
         name = nodeName;
-        edges = new CopyOnWriteArrayList<>();
+        edges = new ArrayList<>();
     }
 
     public static boolean checkExistence (String name) {
@@ -69,7 +69,7 @@ public class Node {
         return graphsForNames.get(index);
     }
 
-    public CopyOnWriteArrayList<Edge> getEdges() {
+    public ArrayList<Edge> getEdges() {
         return edges;
     }
 
@@ -81,7 +81,7 @@ public class Node {
         return posNumInGraph;
     }
 
-    public static CopyOnWriteArrayList<Node> getAllNames() {
+    public static ArrayList<Node> getAllNames() {
         return allNodes;
     }
 }

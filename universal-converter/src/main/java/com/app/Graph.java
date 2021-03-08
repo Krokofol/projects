@@ -1,13 +1,12 @@
 package com.app;
 
 import java.util.ArrayList;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Graph {
-    public CopyOnWriteArrayList<Node> nodes;
+    public ArrayList<Node> nodes;
 
     public Graph(Node startNode) {
-        nodes = new CopyOnWriteArrayList<>();
+        nodes = new ArrayList<>();
         nodes.add(startNode);
         startNode.setPosNumInGraph(0);
     }
@@ -22,7 +21,7 @@ public class Graph {
     public void connect(Graph graph2, String nodeName, String graph2NodeName, Double startQuotient) {
         Node graph2Node = graph2.findNode(graph2NodeName);
         Node node = findNode(nodeName);
-        CopyOnWriteArrayList<Node> graph2Nodes = graph2.getNodes();
+        ArrayList<Node> graph2Nodes = graph2.getNodes();
 
         graph2Node.createEdge(node, startQuotient);
         node.createEdge(graph2Node, 1 / startQuotient);
@@ -35,7 +34,7 @@ public class Graph {
         }
     }
 
-    public CopyOnWriteArrayList<Node> getNodes() {
+    public ArrayList<Node> getNodes() {
         return nodes;
     }
 
@@ -48,7 +47,12 @@ public class Graph {
         Node.setGraphsForName(newNode.getName(), this);
         int pos = PosSearcher.searchNamePosInNodeArray(newNode.getName(), nodes);
         nodes.add(pos, newNode);
-        newNode.setPosNumInGraph(pos);
+    }
+
+    public void setNodesIndexes() {
+        for (int i = 0; i < nodes.size(); i++) {
+            nodes.get(i).setPosNumInGraph(i);
+        }
     }
 
     public Node findNode(String neighboringNodeName) {

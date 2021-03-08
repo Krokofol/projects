@@ -1,10 +1,10 @@
 package com.app;
 
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.ArrayList;
 
 public class PosSearcher {
 
-    public static int searchNamePosInNodeArray(String name, CopyOnWriteArrayList<Node> array) {
+    public static int searchNamePosInNodeArray(String name, ArrayList<Node> array) {
         int leftPos = 0;
         int rightPos = array.size();
         int mid = (leftPos + rightPos) / 2;
