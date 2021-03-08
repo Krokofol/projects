@@ -23,7 +23,7 @@ public class Speaker extends Thread{
     }
 
     public void run() {
-        try (var inputStream = this.socket.getInputStream(); var outputStream = this.socket.getOutputStream()) {
+        try (InputStream inputStream = this.socket.getInputStream(); OutputStream outputStream = this.socket.getOutputStream()) {
             String[] units = getUnits(inputStream);
 
             if (units == null) {
