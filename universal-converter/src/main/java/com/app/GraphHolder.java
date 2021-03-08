@@ -32,7 +32,10 @@ public class GraphHolder {
         try {
             BufferedReader reader = preloadReader(filePath);
             String res = reader.readLine();
+            int i = 0;
             while (res != null) {
+                if (i % 2000 == 0) System.out.println(i / 2000);
+                i++;
                 String node1Name = res.split(",")[0];
                 String node2Name = res.split(",")[1];
                 double quotient = Double.parseDouble(res.split(",")[2]);
@@ -45,7 +48,7 @@ public class GraphHolder {
                 }
                 res = reader.readLine();
             }
-//            System.out.println("preloaded");
+            System.out.println("preloaded");
         } catch (IOException e) {
             e.printStackTrace();
         }

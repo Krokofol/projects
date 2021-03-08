@@ -23,13 +23,12 @@ public class Speaker extends Thread{
     }
 
     public void run() {
-        try {
-            InputStream inputStream = socket.getInputStream();
-            OutputStream outputStream = socket.getOutputStream();
+        try (var inputStream = this.socket.getInputStream(); var outputStream = this.socket.getOutputStream()) {
             String[] units = getUnits(inputStream);
 
             if (units == null) {
-                //если у нас какие-то параметры лишние
+                this.sendHeader(outputStream, "200", "OK", "1".length());
+                outputStream.write("1".getBytes());
                 return;
             }
 
@@ -51,8 +50,10 @@ public class Speaker extends Thread{
             if (checkExistence(outputStream, denominator)) return;
 
             Double result = calculateResult(denominator, numerator);
+
             if (result == null) {
-                this.sendHeader(outputStream, "404", "Not Found", 0);
+                this.sendHeader(outputStream, "404", "Not Found", "Not Found".length());
+                outputStream.write("Not Found".getBytes());
                 return;
             }
 
@@ -68,6 +69,9 @@ public class Speaker extends Thread{
     private Double calculateResult (ArrayList<String> denominator, ArrayList<String> numerator) {
         Double result = 1.0;
         boolean gotPare;
+
+        denominator.remove("");
+        numerator.remove("");
 
         if (numerator.size() != denominator.size()) {
             return null;
@@ -94,12 +98,16 @@ public class Speaker extends Thread{
         return result;
     }
 
-    private boolean checkExistence(OutputStream outputStream, ArrayList<String> numerator) {
-        for (String nameIterator : numerator)
+    private boolean checkExistence(OutputStream outputStream, ArrayList<String> numerator) throws IOException {
+        for (String nameIterator : numerator) {
+            if (nameIterator.equals(""))
+                continue;
             if (!Node.checkExistence(nameIterator)) {
-                this.sendHeader(outputStream, "400", "Bad Request", 0);
+                this.sendHeader(outputStream, "400", "Bad Request", "Bad Request".length());
+                outputStream.write("Bad Request".getBytes());
                 return true;
             }
+        }
         return false;
     }
 
@@ -125,12 +133,10 @@ public class Speaker extends Thread{
         Scanner scanner = new Scanner(input, UTF_8).useDelimiter("\r\n");
 
         if (!scanner.hasNext()) {
-//            System.out.println("wrong : empty");
             return null;
         }
 
         if (!scanner.next().split(" ")[1].equals("/convert")) {
-//            System.out.println("wrong : URL configuration");
             return null;
         }
 
@@ -142,7 +148,6 @@ public class Speaker extends Thread{
             String nextString = URLDecoder.decode(scanner.next(), UTF_8);
             if (nextString.contains("from")) {
                 if (gotFrom) {
-//                    System.out.println("wrong : second \"from\"");
                     return null;
                 }
                 gotFrom = true;
@@ -150,7 +155,6 @@ public class Speaker extends Thread{
             }
             if (nextString.contains("to")) {
                 if (gotTo) {
-//                    System.out.println("wrong : second \"to\"");
                     return null;
                 }
                 gotTo = true;
@@ -159,7 +163,6 @@ public class Speaker extends Thread{
         }
 
         if (!gotFrom || !gotTo) {
-//            System.out.println("wrong : have not from or have not to");
             return null;
         }
 
