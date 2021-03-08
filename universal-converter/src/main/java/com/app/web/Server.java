@@ -13,15 +13,14 @@ public class Server {
     }
 
     public void launch() {
-        try {
-            ServerSocket serverSocket = new ServerSocket(port);
+        try (var server = new ServerSocket(this.port)) {
             while (true) {
-                Socket socket = serverSocket.accept();
-                Thread thread = new Speaker(socket);
+                var socket = server.accept();
+                var thread = new Speaker(socket);
                 thread.start();
             }
-        } catch (IOException error) {
-            error.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
