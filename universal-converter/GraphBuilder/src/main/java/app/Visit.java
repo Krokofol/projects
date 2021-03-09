@@ -1,4 +1,4 @@
-package com.app;
+package app;
 
 public enum Visit {
     visited,

@@ -6,8 +6,8 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="universal-converter" />
         <module name="universal-convertor" />
+        <module name="GraphBuilder" />
       </profile>
     </annotationProcessing>
   </component>
