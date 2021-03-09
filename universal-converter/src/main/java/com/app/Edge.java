@@ -1,4 +1,4 @@
-package app;
+package com.app;
 
 public class Edge {
     public Node node1;

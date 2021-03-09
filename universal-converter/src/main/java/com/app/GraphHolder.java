@@ -1,4 +1,4 @@
-package app;
+package com.app;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
