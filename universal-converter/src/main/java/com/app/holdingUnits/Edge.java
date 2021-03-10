@@ -8,6 +8,8 @@ package com.app.holdingUnits;
  *
  */
 public class Edge implements CompareInterface{
+    /* implements CompareInterface for searching position in PosSearch */
+
     public Node node1;
     public Node node2;
     public Double quotient;
