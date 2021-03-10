@@ -2,6 +2,13 @@ package com.app.holdingUnits;
 
 import java.util.ArrayList;
 
+/**
+ * Node is holding name of the unit and all it's rules of converting (edges).
+ *
+ * @version 1.0.0 10 Mar 2021
+ * @author Aleksey Lkahanskii
+ *
+ */
 public class Node implements CompareInterface {
     public static ArrayList<Node> allNodes = new ArrayList<>();
     public static ArrayList<Graph> graphsForNames = new ArrayList<>();

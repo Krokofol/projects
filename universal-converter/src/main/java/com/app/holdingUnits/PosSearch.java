@@ -2,6 +2,14 @@ package com.app.holdingUnits;
 
 import java.util.ArrayList;
 
+/**
+ * Class which have only one duty - to find position (index) in arrays of
+ * class's instances, which implements special interface (CompareInterface).
+ *
+ * @version 1.0.0 10 Mar 2021
+ * @author Aleksey Lakhanskii
+ *
+ */
 public class PosSearch {
 
     public static <T extends CompareInterface> int searchPosition(String name,

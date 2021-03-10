@@ -2,6 +2,14 @@ package com.app.holdingUnits;
 
 import java.util.ArrayList;
 
+/**
+ * Class to hold nodes of the graph. Also it should find way to convert one
+ * unit to other one.
+ *
+ * @version 1.0.0 10 Mar 2021
+ * @author Aleksey Lakhanskii
+ *
+ */
 public class Graph {
     public ArrayList<Node> nodes;
 

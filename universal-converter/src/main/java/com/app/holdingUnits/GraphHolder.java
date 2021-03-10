@@ -4,6 +4,13 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
+/**
+ * Class which builds and holds all graphs.
+ *
+ * @version 1.0.0 10 Mar 2021
+ * @author Aleksey Lakhanskii
+ *
+ */
 public class GraphHolder {
     static public ArrayList<Graph> graphs = new ArrayList<>();
 

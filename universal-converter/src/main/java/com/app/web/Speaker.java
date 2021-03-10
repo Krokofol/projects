@@ -14,6 +14,14 @@ import java.util.Scanner;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+/**
+ * Class which receive units from client, start converting units and then
+ * deliver them to client.
+ *
+ * @version 1.0.0 10 Mar 2021
+ * @author Aleksey Lakhanskii
+ *
+ */
 public class Speaker extends Thread{
 
     public Socket socket;

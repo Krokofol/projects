@@ -4,6 +4,13 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+/**
+ * Server class. The main duty to start new Speaker thread after new connection.
+ *
+ * @version 1.0.0 10 Mar 2021
+ * @author Aleksey Lakhanskii
+ *
+ */
 public class Server {
 
     public int port;
@@ -15,8 +22,8 @@ public class Server {
     public void launch() {
         try (var server = new ServerSocket(this.port)) {
             while (true) {
-                var socket = server.accept();
-                var thread = new Speaker(socket);
+                Socket socket = server.accept();
+                Thread thread = new Speaker(socket);
                 thread.start();
             }
         } catch (IOException e) {

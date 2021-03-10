@@ -1,5 +1,12 @@
 package com.app.holdingUnits;
 
+/**
+ * Edge which connects two nodes and contains converting rule.
+ *
+ * @version 1.0.0 10 Mar 2021
+ * @author Aleksey Lakhanskii
+ *
+ */
 public class Edge implements CompareInterface{
     public Node node1;
     public Node node2;
