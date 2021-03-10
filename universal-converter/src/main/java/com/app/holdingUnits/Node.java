@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 /**
  * Node is holding name of the unit and all it's rules of converting (edges).
+ * Also class Node holding all units (Nodes) which have been preloaded
  *
  * @version 1.0.0 10 Mar 2021
  * @author Aleksey Lkahanskii
@@ -18,8 +19,9 @@ public class Node implements CompareInterface {
     public ArrayList<Edge> edges;
 
     public static Node createNode(String name) {
-        if (checkExistence(name))
+        if (checkExistence(name)) {
             return null;
+        }
         Node node = new Node (name);
         int pos = PosSearch.searchPosition(name, allNodes);
         allNodes.add(pos, node);
@@ -27,16 +29,32 @@ public class Node implements CompareInterface {
         return node;
     }
 
+    public static boolean checkExistence (String name) {
+        if (allNodes.size() == 0) {
+            return false;
+        }
+        int pos = PosSearch.searchPosition(name, allNodes);
+        if (allNodes.size() == pos) {
+            return false;
+        }
+        return allNodes.get(pos).getName().equals(name);
+    }
+
     private Node(String nodeName) {
         name = nodeName;
         edges = new ArrayList<>();
     }
 
-    public static boolean checkExistence (String name) {
-        if (allNodes.size() == 0) return false;
-        int pos = PosSearch.searchPosition(name, allNodes);
-        if (allNodes.size() == pos) return false;
-        return allNodes.get(pos).getName().equals(name);
+    public static void setGraphsForName(String name, Graph graph) {
+        graphsForNames.set(PosSearch.searchPosition(name, allNodes), graph);
+    }
+
+    public static Graph getGraph(int index) {
+        return graphsForNames.get(index);
+    }
+
+    public static ArrayList<Node> getAllNames() {
+        return allNodes;
     }
 
     public void createEdge(Node neighboringNode, Double quotient) {
@@ -52,18 +70,6 @@ public class Node implements CompareInterface {
         return name;
     }
 
-    public static void setGraphsForName(String name, Graph graph) {
-        graphsForNames.set(PosSearch.searchPosition(name, allNodes), graph);
-    }
-    @Override
-    public int compare(String secondName) {
-        return  getName().compareTo(secondName);
-    }
-
-    public static Graph getGraph(int index) {
-        return graphsForNames.get(index);
-    }
-
     public ArrayList<Edge> getEdges() {
         return edges;
     }
@@ -76,7 +82,8 @@ public class Node implements CompareInterface {
         return posNumInGraph;
     }
 
-    public static ArrayList<Node> getAllNames() {
-        return allNodes;
+    @Override
+    public int compare(String secondName) {
+        return  getName().compareTo(secondName);
     }
 }

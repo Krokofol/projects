@@ -71,7 +71,6 @@ public class Speaker extends Thread{
                 outputStream.write("Not Found".getBytes());
                 return;
             }
-
             byte[] answer = new DecimalFormat("#.###############")
                     .format(result).getBytes();
             this.sendHeader(outputStream, "200", "OK", answer.length);
@@ -80,6 +79,79 @@ public class Speaker extends Thread{
         } catch (IOException error) {
             error.printStackTrace();
         }
+    }
+
+    private String[] getUnits(InputStream input) {
+        Scanner scanner = new Scanner(input, UTF_8).useDelimiter("\r\n");
+
+        if (!scanner.hasNext()) {
+            return null;
+        }
+        if (!scanner.next().split(" ")[1].equals("/convert")) {
+            return null;
+        }
+
+        String[] fromTo = new String[2];
+        boolean gotFrom = false, gotTo = false;
+
+        while(scanner.hasNext() && (!(gotFrom && gotTo))) {
+            String nextString = URLDecoder.decode(scanner.next(), UTF_8);
+            if (nextString.contains("from")) {
+                if (gotFrom) {
+                    return null;
+                }
+                gotFrom = true;
+                fromTo[0] = Speaker.cleanUp(nextString);
+            }
+            if (nextString.contains("to")) {
+                if (gotTo) {
+                    return null;
+                }
+                gotTo = true;
+                fromTo[1] = Speaker.cleanUp(nextString);
+            }
+        }
+
+        if (!gotFrom || !gotTo) {
+            return null;
+        }
+        return fromTo;
+    }
+
+    private static String cleanUp(String string) {
+        return string.replace(" ", "").replace(",", "").replace(":","")
+                .replace("from", "").replace("to", "").replace("\"","");
+    }
+
+    private StringBuilder buildArgs(String[] units1, String[] units2) {
+        StringBuilder result = new StringBuilder();
+        if (units2.length > 0) result.append(units2[0]);
+        if (units2.length > 0 && units1.length > 1) {
+            if (units2[0].length() > 0) {
+                result.append("*");
+            }
+        }
+        if (units1.length > 1) result.append(units1[1]);
+        return result;
+    }
+
+    private boolean checkExistence(OutputStream outputStream,
+                                   ArrayList<String> numerator) {
+        for (String nameIterator : numerator) {
+            if (nameIterator.equals(""))
+                continue;
+            if (!Node.checkExistence(nameIterator)) {
+                this.sendHeader(outputStream, "400", "Bad Request",
+                        "Bad Request".length());
+                try {
+                    outputStream.write("Bad Request".getBytes());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return true;
+            }
+        }
+        return false;
     }
 
     private Double calculateResult (ArrayList<String> denominator,
@@ -116,86 +188,11 @@ public class Speaker extends Thread{
         return result;
     }
 
-    private boolean checkExistence(OutputStream outputStream,
-                                   ArrayList<String> numerator) {
-        for (String nameIterator : numerator) {
-            if (nameIterator.equals(""))
-                continue;
-            if (!Node.checkExistence(nameIterator)) {
-                this.sendHeader(outputStream, "400", "Bad Request",
-                        "Bad Request".length());
-                try {
-                    outputStream.write("Bad Request".getBytes());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private StringBuilder buildArgs(String[] fromUnit, String[] toUnit) {
-        StringBuilder denominatorBuilder = new StringBuilder();
-        if (toUnit.length > 0) denominatorBuilder.append(toUnit[0]);
-        if (toUnit.length > 0 && fromUnit.length > 1)
-            if (toUnit[0].length() > 0)
-                denominatorBuilder.append("*");
-        if (fromUnit.length > 1) denominatorBuilder.append(fromUnit[1]);
-        return denominatorBuilder;
-    }
-
     private void sendHeader(OutputStream output, String statusCode,
                             String statusText, long length) {
         PrintStream printStream = new PrintStream(output);
         printStream.printf("HTTP/1.1 %s %s%n", statusCode, statusText);
         printStream.printf("Content-Type: text/plain%n");
         printStream.printf("Content-Length: %s%n%n", length);
-    }
-
-
-    private String[] getUnits(InputStream input) {
-        Scanner scanner = new Scanner(input, UTF_8).useDelimiter("\r\n");
-
-        if (!scanner.hasNext()) {
-            return null;
-        }
-
-        if (!scanner.next().split(" ")[1].equals("/convert")) {
-            return null;
-        }
-
-        String[] fromTo = new String[2];
-
-        boolean gotFrom = false, gotTo = false;
-
-        while(scanner.hasNext() && (!(gotFrom && gotTo))) {
-            String nextString = URLDecoder.decode(scanner.next(), UTF_8);
-            if (nextString.contains("from")) {
-                if (gotFrom) {
-                    return null;
-                }
-                gotFrom = true;
-                fromTo[0] = Speaker.cleanUp(nextString);
-            }
-            if (nextString.contains("to")) {
-                if (gotTo) {
-                    return null;
-                }
-                gotTo = true;
-                fromTo[1] = Speaker.cleanUp(nextString);
-            }
-        }
-
-        if (!gotFrom || !gotTo) {
-            return null;
-        }
-
-        return fromTo;
-    }
-
-    private static String cleanUp(String string) {
-        return string.replace(" ", "").replace(",", "").replace(":","")
-                .replace("from", "").replace("to", "").replace("\"","");
     }
 }

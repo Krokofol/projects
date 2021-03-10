@@ -19,11 +19,16 @@ public class Graph {
         startNode.setPosNumInGraph(0);
     }
 
-    public boolean existenceNode(String nodeName) {
-        if (nodes.size() == 0) return false;
-        int pos = PosSearch.searchPosition(nodeName, nodes);
-        if (nodes.size() == pos) return false;
-        return nodes.get(pos).getName().equals(nodeName);
+    public void addNode(Node newNode, String neighboringNodeName,
+                        Double startQuotient) {
+        Node neighboringNode = findNode(neighboringNodeName);
+
+        newNode.createEdge(neighboringNode, startQuotient);
+        neighboringNode.createEdge(newNode, 1 / startQuotient);
+
+        Node.setGraphsForName(newNode.getName(), this);
+        int pos = PosSearch.searchPosition(newNode.getName(), nodes);
+        nodes.add(pos, newNode);
     }
 
     public void connect(Graph graph2, String nodeName, String graph2NodeName,
@@ -43,26 +48,21 @@ public class Graph {
         }
     }
 
-    public ArrayList<Node> getNodes() {
-        return nodes;
-    }
-
-    public void addNode(Node newNode, String neighboringNodeName,
-                        Double startQuotient) {
-        Node neighboringNode = findNode(neighboringNodeName);
-
-        newNode.createEdge(neighboringNode, startQuotient);
-        neighboringNode.createEdge(newNode, 1 / startQuotient);
-
-        Node.setGraphsForName(newNode.getName(), this);
-        int pos = PosSearch.searchPosition(newNode.getName(), nodes);
-        nodes.add(pos, newNode);
+    public boolean existenceNode(String nodeName) {
+        if (nodes.size() == 0) return false;
+        int pos = PosSearch.searchPosition(nodeName, nodes);
+        if (nodes.size() == pos) return false;
+        return nodes.get(pos).getName().equals(nodeName);
     }
 
     public void setNodesIndexes() {
         for (int i = 0; i < nodes.size(); i++) {
             nodes.get(i).setPosNumInGraph(i);
         }
+    }
+
+    public ArrayList<Node> getNodes() {
+        return nodes;
     }
 
     public Node findNode(String neighboringNodeName) {
@@ -100,5 +100,4 @@ public class Graph {
 
         return quotients.get(0);
     }
-
 }
