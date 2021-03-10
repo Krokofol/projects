@@ -13,12 +13,20 @@ import java.net.Socket;
  */
 public class Server {
 
+    /** port where program waits for connections. */
     public int port;
 
+    /**
+     * constructor of the Server.
+     * @param serverPort the server port.
+     */
     public Server(int serverPort) {
         port = serverPort;
     }
 
+    /**
+     * starts Server.
+     */
     public void launch() {
         try (var server = new ServerSocket(this.port)) {
             while (true) {

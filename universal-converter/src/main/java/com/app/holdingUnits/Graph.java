@@ -11,14 +11,26 @@ import java.util.ArrayList;
  *
  */
 public class Graph {
+
+    /** all nodes of the graph. */
     public ArrayList<Node> nodes;
 
+    /**
+     * constructs the graph.
+     * @param startNode first graph node.
+     */
     public Graph(Node startNode) {
         nodes = new ArrayList<>();
         nodes.add(startNode);
         startNode.setPosNumInGraph(0);
     }
 
+    /**
+     * adds node to the graph.
+     * @param newNode new node.
+     * @param neighboringNodeName node with which new node has edge.
+     * @param startQuotient the quotient of converting.
+     */
     public void addNode(Node newNode, String neighboringNodeName,
                         Double startQuotient) {
         Node neighboringNode = findNode(neighboringNodeName);
@@ -31,6 +43,13 @@ public class Graph {
         nodes.add(pos, newNode);
     }
 
+    /**
+     * connects two graphs.
+     * @param graph2 the second graph.
+     * @param nodeName node name from the first graph.
+     * @param graph2NodeName node name from the second graph.
+     * @param startQuotient the quotient of converting.
+     */
     public void connect(Graph graph2, String nodeName, String graph2NodeName,
                         Double startQuotient) {
         Node graph2Node = graph2.findNode(graph2NodeName);
@@ -48,6 +67,11 @@ public class Graph {
         }
     }
 
+    /**
+     * checks the existence of the node by node name.
+     * @param nodeName node name.
+     * @return if node exists - true, else - false.
+     */
     public boolean existenceNode(String nodeName) {
         if (nodes.size() == 0) return false;
         int pos = PosSearch.searchPos(nodeName, nodes);
@@ -55,20 +79,38 @@ public class Graph {
         return nodes.get(pos).getName().equals(nodeName);
     }
 
+    /**
+     * indexes nodes.
+     */
     public void setNodesIndexes() {
         for (int i = 0; i < nodes.size(); i++) {
             nodes.get(i).setPosNumInGraph(i);
         }
     }
 
+    /**
+     * gets all nodes of the graph.
+     * @return nodes.
+     */
     public ArrayList<Node> getNodes() {
         return nodes;
     }
 
-    public Node findNode(String neighboringNodeName) {
-        return nodes.get(PosSearch.searchPos(neighboringNodeName, nodes));
+    /**
+     * gets node by name.
+     * @param nodeName node name.
+     * @return node.
+     */
+    public Node findNode(String nodeName) {
+        return nodes.get(PosSearch.searchPos(nodeName, nodes));
     }
 
+    /**
+     * finds the nearest converting rule from one node to the other one.
+     * @param startNodeName node name from which we are converting.
+     * @param endNodeName node name to where we are converting.
+     * @return the quotient of converting.
+     */
     public Double findWay(String startNodeName, String endNodeName) {
         Visit[] nodesStatus = new Visit[nodes.size()];
         ArrayList<Node> queue = new ArrayList<>();

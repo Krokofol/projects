@@ -12,8 +12,14 @@ import java.util.ArrayList;
  *
  */
 public class GraphHolder {
+
+    /** all graphs */
     static public ArrayList<Graph> graphs = new ArrayList<>();
 
+    /**
+     * preloading graphs.
+     * @param filePath path to file with converting rules.
+     */
     public static void readingStartInfo(String filePath) {
         try {
             BufferedReader reader = preloadReader(filePath);
@@ -33,13 +39,18 @@ public class GraphHolder {
                 }
                 res = reader.readLine();
             }
-            setNodesIndexesInGraph();
+            setNodesIndexesInGraphs();
 //            System.out.println("preloaded");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * preloads buffer reader of file.
+     * @param filePath path to the file with converting rules.
+     * @return buffer reader.
+     */
     private static BufferedReader preloadReader(String filePath) {
         File input = new File(filePath);
         InputStreamReader isr = null;
@@ -53,6 +64,12 @@ public class GraphHolder {
         return new BufferedReader(isr);
     }
 
+    /**
+     * tries to connect two graphs if two nodes already exists.
+     * @param node1Name first node name.
+     * @param node2Name second node name.
+     * @param quotient the quotient of converting.
+     */
     private static void connectTwoGraphs(String node1Name, String node2Name,
                                          Double quotient) {
         Graph graph1 = findGraph(node1Name);
@@ -61,6 +78,12 @@ public class GraphHolder {
         graph1.connect(graph2, node1Name, node2Name, 1 / quotient);
     }
 
+    /**
+     * adds node to on of the graph if the second node exists.
+     * @param nodeName first node.
+     * @param neighboringNodeName second node.
+     * @param quotient the quotient of converting.
+     */
     public static void addNode(String nodeName, String neighboringNodeName,
                                Double quotient) {
         Node newNode = Node.createNode(nodeName);
@@ -74,18 +97,30 @@ public class GraphHolder {
                 quotient);
     }
 
-    public static Graph findGraph(String neighboringNodeName) {
-        return Node.getGraph(PosSearch.searchPos(neighboringNodeName,
+    /**
+     * search graph for the node by node name. Node must exist.
+     * @param nodeName node name.
+     * @return graph.
+     */
+    public static Graph findGraph(String nodeName) {
+        return Node.getGraph(PosSearch.searchPos(nodeName,
                 Node.getAllNames()));
     }
 
+    /**
+     * creates new graph for node which could not be connected to other graphs.
+     * @param startNode first node in the graph.
+     */
     public static void createGraph(Node startNode) {
         Graph graph = new Graph(startNode);
         graphs.add(graph);
         Node.setGraphsForName(startNode.getName(), graph);
     }
 
-    private static void setNodesIndexesInGraph() {
+    /**
+     * sets indexes for all nodes in all graphs.
+     */
+    private static void setNodesIndexesInGraphs() {
         for (Graph graphIterator : graphs) {
             graphIterator.setNodesIndexes();
         }
