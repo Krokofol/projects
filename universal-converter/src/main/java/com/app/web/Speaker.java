@@ -52,7 +52,6 @@ public class Speaker extends Thread{
                 outputStream.write("1".getBytes());
                 return;
             }
-
             String[] fromUnit = units[0].split("/");
             String[] toUnit = units[1].split("/");
 
@@ -82,7 +81,6 @@ public class Speaker extends Thread{
                     .format(result).getBytes();
             this.sendHeader(outputStream, "200", "OK", answer.length);
             outputStream.write(answer);
-
         } catch (IOException error) {
             error.printStackTrace();
         }

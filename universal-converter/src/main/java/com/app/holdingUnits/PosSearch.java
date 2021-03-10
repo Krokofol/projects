@@ -20,8 +20,8 @@ public class PosSearch {
      * @param <T> template which should extend Comparable.
      * @return index in the array.
      */
-    public static <T extends Comparable<String>> int searchPos(String name,
-            ArrayList<T> array) {
+    public static <T extends Comparable<String>> int posSearch(String name,
+                ArrayList<T> array) {
 
         int leftPos = 0;
         int rightPos = array.size();

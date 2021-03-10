@@ -39,7 +39,7 @@ public class Graph {
         neighboringNode.createEdge(newNode, 1 / startQuotient);
 
         Node.setGraphsForName(newNode.getName(), this);
-        int pos = PosSearch.searchPos(newNode.getName(), nodes);
+        int pos = PosSearch.posSearch(newNode.getName(), nodes);
         nodes.add(pos, newNode);
     }
 
@@ -61,7 +61,7 @@ public class Graph {
 
         for (Node nodeIterator : graph2Nodes) {
             Node.setGraphsForName(nodeIterator.getName(), this);
-            int pos = PosSearch.searchPos(nodeIterator.getName(), nodes);
+            int pos = PosSearch.posSearch(nodeIterator.getName(), nodes);
             nodes.add(pos, nodeIterator);
             nodeIterator.setPosNumInGraph(pos);
         }
@@ -74,7 +74,7 @@ public class Graph {
      */
     public boolean existenceNode(String nodeName) {
         if (nodes.size() == 0) return false;
-        int pos = PosSearch.searchPos(nodeName, nodes);
+        int pos = PosSearch.posSearch(nodeName, nodes);
         if (nodes.size() == pos) return false;
         return nodes.get(pos).getName().equals(nodeName);
     }
@@ -102,7 +102,20 @@ public class Graph {
      * @return node.
      */
     public Node findNode(String nodeName) {
-        return nodes.get(PosSearch.searchPos(nodeName, nodes));
+        return nodes.get(PosSearch.posSearch(nodeName, nodes));
+    }
+
+    /**
+     * connects two nodes in one graph.
+     * @param node1Name the first node.
+     * @param node2Name the second node.
+     * @param quotient the conversion's quotient.
+     */
+    public void addEdge(String node1Name, String node2Name, Double quotient) {
+        Node node1 = nodes.get(PosSearch.posSearch(node1Name, nodes));
+        Node node2 = nodes.get(PosSearch.posSearch(node2Name, nodes));
+        node1.createEdge(node2, quotient);
+        node2.createEdge(node1, 1 / quotient);
     }
 
     /**

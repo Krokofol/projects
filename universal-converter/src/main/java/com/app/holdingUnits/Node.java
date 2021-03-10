@@ -43,7 +43,7 @@ public class Node implements Comparable<String> {
             return null;
         }
         Node node = new Node (name);
-        int pos = PosSearch.searchPos(name, allNodes);
+        int pos = PosSearch.posSearch(name, allNodes);
         allNodes.add(pos, node);
         graphsForNames.add(pos, null);
         return node;
@@ -58,7 +58,7 @@ public class Node implements Comparable<String> {
         if (allNodes.size() == 0) {
             return false;
         }
-        int pos = PosSearch.searchPos(name, allNodes);
+        int pos = PosSearch.posSearch(name, allNodes);
         if (allNodes.size() == pos) {
             return false;
         }
@@ -80,7 +80,7 @@ public class Node implements Comparable<String> {
      * @param graph graph to set.
      */
     public static void setGraphsForName(String name, Graph graph) {
-        graphsForNames.set(PosSearch.searchPos(name, allNodes), graph);
+        graphsForNames.set(PosSearch.posSearch(name, allNodes), graph);
     }
 
     /**
@@ -109,7 +109,7 @@ public class Node implements Comparable<String> {
         assert neighboringNode != null;
         String neighboringNodeName = neighboringNode.getName();
         int edgePosition = PosSearch
-                .searchPos(neighboringNodeName, edges);
+                .posSearch(neighboringNodeName, edges);
         Edge newEdge = new Edge(this, neighboringNode, quotient);
         this.edges.add(edgePosition, newEdge);
     }

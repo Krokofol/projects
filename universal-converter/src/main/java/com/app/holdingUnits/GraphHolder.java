@@ -32,7 +32,7 @@ public class GraphHolder {
 
                 if (Node.checkExistence(node1Name)
                         && Node.checkExistence(node2Name)) {
-                    connectTwoGraphs(node1Name, node2Name, quotient);
+                    connectTwoNodes(node1Name, node2Name, quotient);
                 } else {
                     addNode(node1Name, node2Name, quotient);
                     addNode(node2Name, node1Name, 1 / quotient);
@@ -65,15 +65,19 @@ public class GraphHolder {
     }
 
     /**
-     * tries to connect two graphs if two nodes already exists.
+     * tries to connect two already existing nodes.
      * @param node1Name first node name.
      * @param node2Name second node name.
      * @param quotient the quotient of converting.
      */
-    private static void connectTwoGraphs(String node1Name, String node2Name,
-                                         Double quotient) {
+    private static void connectTwoNodes(String node1Name, String node2Name,
+                                        Double quotient) {
         Graph graph1 = findGraph(node1Name);
         Graph graph2 = findGraph(node2Name);
+        if (graph1 == graph2) {
+            graph1.addEdge(node1Name, node2Name, quotient);
+            return;
+        }
         graphs.remove(graph2);
         graph1.connect(graph2, node1Name, node2Name, 1 / quotient);
     }
@@ -103,7 +107,7 @@ public class GraphHolder {
      * @return graph.
      */
     public static Graph findGraph(String nodeName) {
-        return Node.getGraph(PosSearch.searchPos(nodeName,
+        return Node.getGraph(PosSearch.posSearch(nodeName,
                 Node.getAllNames()));
     }
 
