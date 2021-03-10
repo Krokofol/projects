@@ -40,9 +40,8 @@ public class Speaker extends Thread{
      * answer and send back to the client.
      */
     public void run() {
-        try {
-            InputStream inputStream = this.socket.getInputStream();
-            OutputStream outputStream = this.socket.getOutputStream();
+        try(InputStream inputStream = this.socket.getInputStream();
+            OutputStream outputStream = this.socket.getOutputStream()) {
 
             String[] units = getUnits(inputStream);
 
