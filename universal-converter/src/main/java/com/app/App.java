@@ -12,6 +12,10 @@ import com.app.web.Server;
  */
 public class App {
 
+    /**
+     * preloads graphs for converting units and starts server.
+     * @param args first arg is path to file with converting rules.
+     */
     public static void main (String[] args) {
         GraphHolder.readingStartInfo(args[0]);
         Server server = new Server(80);

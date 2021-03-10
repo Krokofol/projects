@@ -24,12 +24,21 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  */
 public class Speaker extends Thread{
 
+    /** socket with which thread will work. */
     public Socket socket;
 
+    /**
+     * constructs speaker and saves socket with which thread will work.
+     * @param socket the socket.
+     */
     public Speaker(Socket socket) {
         this.socket = socket;
     }
 
+    /**
+     * main method of the thread which will receive the request, calculate the
+     * answer and send back to the client.
+     */
     public void run() {
         try {
             InputStream inputStream = this.socket.getInputStream();
@@ -47,23 +56,21 @@ public class Speaker extends Thread{
             String[] fromUnit = units[0].split("/");
             String[] toUnit = units[1].split("/");
 
-            buildArgs(toUnit, fromUnit);
+            StringBuilder fromUnitsBuilder = buildArgs(fromUnit, toUnit);
+            StringBuilder toUnitsBuilder = buildArgs(toUnit, fromUnit);
 
-            StringBuilder denominatorBuilder = buildArgs(fromUnit, toUnit);
-            StringBuilder numeratorBuilder = buildArgs(toUnit, fromUnit);
-
-            ArrayList<String> numerator = new ArrayList<>();
-            ArrayList<String> denominator = new ArrayList<>();
-            Collections.addAll(numerator, numeratorBuilder.toString()
+            ArrayList<String> fromUnits = new ArrayList<>();
+            ArrayList<String> toUnits = new ArrayList<>();
+            Collections.addAll(fromUnits, toUnitsBuilder.toString()
                     .replace(" ", "").split("\\*"));
-            Collections.addAll(denominator, denominatorBuilder.toString()
+            Collections.addAll(toUnits, fromUnitsBuilder.toString()
                     .replace(" ", "").split("\\*"));
 
 
-            if (checkExistence(outputStream, numerator)) return;
-            if (checkExistence(outputStream, denominator)) return;
+            if (checkExistence(outputStream, fromUnits)) return;
+            if (checkExistence(outputStream, toUnits)) return;
 
-            Double result = calculateResult(denominator, numerator);
+            Double result = calculateResult(toUnits, fromUnits);
 
             if (result == null) {
                 this.sendHeader(outputStream, "404", "Not Found",
@@ -81,6 +88,13 @@ public class Speaker extends Thread{
         }
     }
 
+    /**
+     * reads all url and it's body and get from it units from which server is
+     * converting and to which.
+     * @param input receiving thread.
+     * @return string array length two. first element are units from which
+     * convert and the second to which.
+     */
     private String[] getUnits(InputStream input) {
         Scanner scanner = new Scanner(input, UTF_8).useDelimiter("\r\n");
 
@@ -118,11 +132,23 @@ public class Speaker extends Thread{
         return fromTo;
     }
 
+    /**
+     * removes from string extra elements.
+     * @param string string to clean up.
+     * @return cleaned up string.
+     */
     private static String cleanUp(String string) {
         return string.replace(" ", "").replace(",", "").replace(":","")
                 .replace("from", "").replace("to", "").replace("\"","");
     }
 
+    /**
+     * multiplies numerator (first element) of the first units and denominator
+     * (second element) of the second units.
+     * @param units1 first units.
+     * @param units2 second units.
+     * @return result of multiplication.
+     */
     private StringBuilder buildArgs(String[] units1, String[] units2) {
         StringBuilder result = new StringBuilder();
         if (units2.length > 0) result.append(units2[0]);
@@ -135,9 +161,16 @@ public class Speaker extends Thread{
         return result;
     }
 
+    /**
+     * checks existence of all units, if one of them does not exists sends
+     * status code of error.
+     * @param outputStream stream to deliver.
+     * @param units all units.
+     * @return if everything is ok - false, else - true.
+     */
     private boolean checkExistence(OutputStream outputStream,
-                                   ArrayList<String> numerator) {
-        for (String nameIterator : numerator) {
+                                   ArrayList<String> units) {
+        for (String nameIterator : units) {
             if (nameIterator.equals(""))
                 continue;
             if (!Node.checkExistence(nameIterator)) {
@@ -154,28 +187,34 @@ public class Speaker extends Thread{
         return false;
     }
 
-    private Double calculateResult (ArrayList<String> denominator,
-                                    ArrayList<String> numerator) {
+    /**
+     * calculates result.
+     * @param toUnits units to which converts.
+     * @param fromUnits units from which converts.
+     * @return conversion result.
+     */
+    private Double calculateResult (ArrayList<String> toUnits,
+                                    ArrayList<String> fromUnits) {
         Double result = 1.0;
         boolean gotPare;
 
-        denominator.remove("");
-        numerator.remove("");
+        toUnits.remove("");
+        fromUnits.remove("");
 
-        if (numerator.size() != denominator.size()) {
+        if (fromUnits.size() != toUnits.size()) {
             return null;
         }
 
-        while (numerator.size() > 0) {
-            String numeratorIterator = numerator.get(0);
+        while (fromUnits.size() > 0) {
+            String numeratorIterator = fromUnits.get(0);
             Graph graph = GraphHolder.findGraph(numeratorIterator);
             gotPare = false;
 
-            for (String denominatorIterator : denominator) {
+            for (String denominatorIterator : toUnits) {
                 if(graph.existenceNode(denominatorIterator)) {
                     result *= graph.findWay(numeratorIterator,
                             denominatorIterator);
-                    denominator.remove(denominatorIterator);
+                    toUnits.remove(denominatorIterator);
                     gotPare = true;
                     break;
                 }
@@ -183,11 +222,18 @@ public class Speaker extends Thread{
             if (!gotPare) {
                 return null;
             }
-            numerator.remove(numeratorIterator);
+            fromUnits.remove(numeratorIterator);
         }
         return result;
     }
 
+    /**
+     * sends header.
+     * @param output stream to deliver.
+     * @param statusCode status code.
+     * @param statusText status text.
+     * @param length length of the data which will be send next.
+     */
     private void sendHeader(OutputStream output, String statusCode,
                             String statusText, long length) {
         PrintStream printStream = new PrintStream(output);
