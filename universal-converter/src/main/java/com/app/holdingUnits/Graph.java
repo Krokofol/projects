@@ -27,7 +27,7 @@ public class Graph {
         neighboringNode.createEdge(newNode, 1 / startQuotient);
 
         Node.setGraphsForName(newNode.getName(), this);
-        int pos = PosSearch.searchPosition(newNode.getName(), nodes);
+        int pos = PosSearch.searchPos(newNode.getName(), nodes);
         nodes.add(pos, newNode);
     }
 
@@ -42,7 +42,7 @@ public class Graph {
 
         for (Node nodeIterator : graph2Nodes) {
             Node.setGraphsForName(nodeIterator.getName(), this);
-            int pos = PosSearch.searchPosition(nodeIterator.getName(), nodes);
+            int pos = PosSearch.searchPos(nodeIterator.getName(), nodes);
             nodes.add(pos, nodeIterator);
             nodeIterator.setPosNumInGraph(pos);
         }
@@ -50,7 +50,7 @@ public class Graph {
 
     public boolean existenceNode(String nodeName) {
         if (nodes.size() == 0) return false;
-        int pos = PosSearch.searchPosition(nodeName, nodes);
+        int pos = PosSearch.searchPos(nodeName, nodes);
         if (nodes.size() == pos) return false;
         return nodes.get(pos).getName().equals(nodeName);
     }
@@ -66,7 +66,7 @@ public class Graph {
     }
 
     public Node findNode(String neighboringNodeName) {
-        return nodes.get(PosSearch.searchPosition(neighboringNodeName, nodes));
+        return nodes.get(PosSearch.searchPos(neighboringNodeName, nodes));
     }
 
     public Double findWay(String startNodeName, String endNodeName) {

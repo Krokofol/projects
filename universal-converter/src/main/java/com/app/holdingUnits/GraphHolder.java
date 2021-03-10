@@ -75,7 +75,7 @@ public class GraphHolder {
     }
 
     public static Graph findGraph(String neighboringNodeName) {
-        return Node.getGraph(PosSearch.searchPosition(neighboringNodeName,
+        return Node.getGraph(PosSearch.searchPos(neighboringNodeName,
                 Node.getAllNames()));
     }
 

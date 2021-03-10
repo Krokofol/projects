@@ -1,17 +1,19 @@
 package com.app.holdingUnits;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
 /**
  * Node is holding name of the unit and all its rules converting (edges).
- * Also class Node holding all units (Nodes) which have been preloaded
+ * Also class Node holding all units (Nodes) which have been preloaded.
  *
  * @version 1.0.0 10 Mar 2021
  * @author Aleksey Lkahanskii
  *
  */
-public class Node implements CompareInterface {
-    /* implements CompareInterface for searching position in PosSearch */
+public class Node implements Comparable<String> {
+    /* implements Comparable for searching position in PosSearch. */
 
     /** allNodes contains all added nodes ordered by name. */
     public static ArrayList<Node> allNodes = new ArrayList<>();
@@ -41,7 +43,7 @@ public class Node implements CompareInterface {
             return null;
         }
         Node node = new Node (name);
-        int pos = PosSearch.searchPosition(name, allNodes);
+        int pos = PosSearch.searchPos(name, allNodes);
         allNodes.add(pos, node);
         graphsForNames.add(pos, null);
         return node;
@@ -56,7 +58,7 @@ public class Node implements CompareInterface {
         if (allNodes.size() == 0) {
             return false;
         }
-        int pos = PosSearch.searchPosition(name, allNodes);
+        int pos = PosSearch.searchPos(name, allNodes);
         if (allNodes.size() == pos) {
             return false;
         }
@@ -78,7 +80,7 @@ public class Node implements CompareInterface {
      * @param graph graph to set.
      */
     public static void setGraphsForName(String name, Graph graph) {
-        graphsForNames.set(PosSearch.searchPosition(name, allNodes), graph);
+        graphsForNames.set(PosSearch.searchPos(name, allNodes), graph);
     }
 
     /**
@@ -107,7 +109,7 @@ public class Node implements CompareInterface {
         assert neighboringNode != null;
         String neighboringNodeName = neighboringNode.getName();
         int edgePosition = PosSearch
-                .searchPosition(neighboringNodeName, edges);
+                .searchPos(neighboringNodeName, edges);
         Edge newEdge = new Edge(this, neighboringNode, quotient);
         this.edges.add(edgePosition, newEdge);
     }
@@ -150,7 +152,7 @@ public class Node implements CompareInterface {
      * @return if equal - 0, bigger > 0 and smaller < 0.
      */
     @Override
-    public int compare(String secondName) {
+    public int compareTo(@NotNull String secondName) {
         return  getName().compareTo(secondName);
     }
 }
