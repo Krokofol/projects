@@ -33,7 +33,7 @@ public class Node implements CompareInterface {
 
     /**
      * creates new node if node with the same name does not exist yet.
-     * @param name - name of the new node which need to create.
+     * @param name name of the new node which need to create.
      * @return new node or null if node already exists.
      */
     public static Node createNode(String name) {
@@ -49,7 +49,7 @@ public class Node implements CompareInterface {
 
     /**
      * checks existence of the node with the same name.
-     * @param name - name of the node which existence need be checked.
+     * @param name name of the node which existence need be checked.
      * @return true if node exists else return false.
      */
     public static boolean checkExistence (String name) {
@@ -65,7 +65,7 @@ public class Node implements CompareInterface {
 
     /**
      * constructs node.
-     * @param nodeName - name of new node.
+     * @param nodeName name of new node.
      */
     private Node(String nodeName) {
         name = nodeName;
@@ -74,8 +74,8 @@ public class Node implements CompareInterface {
 
     /**
      * sets graph for node.
-     * @param name - name of the node for which graph sets.
-     * @param graph - graph to set.
+     * @param name name of the node for which graph sets.
+     * @param graph graph to set.
      */
     public static void setGraphsForName(String name, Graph graph) {
         graphsForNames.set(PosSearch.searchPosition(name, allNodes), graph);
@@ -83,7 +83,7 @@ public class Node implements CompareInterface {
 
     /**
      * gets graph.
-     * @param index - index of the graph.
+     * @param index index of the graph.
      * @return graph.
      */
     public static Graph getGraph(int index) {
@@ -100,8 +100,8 @@ public class Node implements CompareInterface {
 
     /**
      * creates edge.
-     * @param neighboringNode - name of the node with which this edge connects.
-     * @param quotient - the rule of converting.
+     * @param neighboringNode name of the node with which this edge connects.
+     * @param quotient the rule of converting.
      */
     public void createEdge(Node neighboringNode, Double quotient) {
         assert neighboringNode != null;
@@ -130,7 +130,7 @@ public class Node implements CompareInterface {
 
     /**
      * sets for this node index of this node in the graph.
-     * @param posNumInGraph - index in the graph
+     * @param posNumInGraph index in the graph
      */
     public void setPosNumInGraph(int posNumInGraph) {
         this.posNumInGraph = posNumInGraph;
@@ -146,7 +146,7 @@ public class Node implements CompareInterface {
 
     /**
      * comparing for search in PosSearch.
-     * @param secondName - name of comparing node.
+     * @param secondName name of comparing node.
      * @return if equal - 0, bigger > 0 and smaller < 0.
      */
     @Override
