@@ -1,8 +1,8 @@
 package com.app.web;
 
-import com.app.Graph;
-import com.app.GraphHolder;
-import com.app.Node;
+import com.app.holdingUnits.Graph;
+import com.app.holdingUnits.GraphHolder;
+import com.app.holdingUnits.Node;
 
 import java.io.*;
 import java.net.Socket;
@@ -23,11 +23,15 @@ public class Speaker extends Thread{
     }
 
     public void run() {
-        try (InputStream inputStream = this.socket.getInputStream(); OutputStream outputStream = this.socket.getOutputStream()) {
+        try {
+            InputStream inputStream = this.socket.getInputStream();
+            OutputStream outputStream = this.socket.getOutputStream();
+
             String[] units = getUnits(inputStream);
 
             if (units == null) {
-                this.sendHeader(outputStream, "200", "OK", "1".length());
+                this.sendHeader(outputStream, "200", "OK",
+                        "1".length());
                 outputStream.write("1".getBytes());
                 return;
             }
@@ -42,8 +46,10 @@ public class Speaker extends Thread{
 
             ArrayList<String> numerator = new ArrayList<>();
             ArrayList<String> denominator = new ArrayList<>();
-            Collections.addAll(numerator, numeratorBuilder.toString().replace(" ", "").split("\\*"));
-            Collections.addAll(denominator, denominatorBuilder.toString().replace(" ", "").split("\\*"));
+            Collections.addAll(numerator, numeratorBuilder.toString()
+                    .replace(" ", "").split("\\*"));
+            Collections.addAll(denominator, denominatorBuilder.toString()
+                    .replace(" ", "").split("\\*"));
 
 
             if (checkExistence(outputStream, numerator)) return;
@@ -52,12 +58,14 @@ public class Speaker extends Thread{
             Double result = calculateResult(denominator, numerator);
 
             if (result == null) {
-                this.sendHeader(outputStream, "404", "Not Found", "Not Found".length());
+                this.sendHeader(outputStream, "404", "Not Found",
+                        "Not Found".length());
                 outputStream.write("Not Found".getBytes());
                 return;
             }
 
-            byte[] answer = new DecimalFormat("#.###############").format(result).getBytes();
+            byte[] answer = new DecimalFormat("#.###############")
+                    .format(result).getBytes();
             this.sendHeader(outputStream, "200", "OK", answer.length);
             outputStream.write(answer);
 
@@ -66,7 +74,8 @@ public class Speaker extends Thread{
         }
     }
 
-    private Double calculateResult (ArrayList<String> denominator, ArrayList<String> numerator) {
+    private Double calculateResult (ArrayList<String> denominator,
+                                    ArrayList<String> numerator) {
         Double result = 1.0;
         boolean gotPare;
 
@@ -84,7 +93,8 @@ public class Speaker extends Thread{
 
             for (String denominatorIterator : denominator) {
                 if(graph.existenceNode(denominatorIterator)) {
-                    result *= graph.findWay(numeratorIterator, denominatorIterator);
+                    result *= graph.findWay(numeratorIterator,
+                            denominatorIterator);
                     denominator.remove(denominatorIterator);
                     gotPare = true;
                     break;
@@ -98,13 +108,19 @@ public class Speaker extends Thread{
         return result;
     }
 
-    private boolean checkExistence(OutputStream outputStream, ArrayList<String> numerator) throws IOException {
+    private boolean checkExistence(OutputStream outputStream,
+                                   ArrayList<String> numerator) {
         for (String nameIterator : numerator) {
             if (nameIterator.equals(""))
                 continue;
             if (!Node.checkExistence(nameIterator)) {
-                this.sendHeader(outputStream, "400", "Bad Request", "Bad Request".length());
-                outputStream.write("Bad Request".getBytes());
+                this.sendHeader(outputStream, "400", "Bad Request",
+                        "Bad Request".length());
+                try {
+                    outputStream.write("Bad Request".getBytes());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 return true;
             }
         }
@@ -121,7 +137,8 @@ public class Speaker extends Thread{
         return denominatorBuilder;
     }
 
-    private void sendHeader(OutputStream output, String statusCode, String statusText, long length) {
+    private void sendHeader(OutputStream output, String statusCode,
+                            String statusText, long length) {
         PrintStream printStream = new PrintStream(output);
         printStream.printf("HTTP/1.1 %s %s%n", statusCode, statusText);
         printStream.printf("Content-Type: text/plain%n");

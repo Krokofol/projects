@@ -1,4 +1,4 @@
-package com.app;
+package com.app.holdingUnits;
 
 import java.util.ArrayList;
 
@@ -13,12 +13,13 @@ public class Graph {
 
     public boolean existenceNode(String nodeName) {
         if (nodes.size() == 0) return false;
-        int pos = PosSearcher.searchNamePosInNodeArray(nodeName, nodes);
+        int pos = PosSearch.searchPosition(nodeName, nodes);
         if (nodes.size() == pos) return false;
         return nodes.get(pos).getName().equals(nodeName);
     }
 
-    public void connect(Graph graph2, String nodeName, String graph2NodeName, Double startQuotient) {
+    public void connect(Graph graph2, String nodeName, String graph2NodeName,
+                        Double startQuotient) {
         Node graph2Node = graph2.findNode(graph2NodeName);
         Node node = findNode(nodeName);
         ArrayList<Node> graph2Nodes = graph2.getNodes();
@@ -28,7 +29,7 @@ public class Graph {
 
         for (Node nodeIterator : graph2Nodes) {
             Node.setGraphsForName(nodeIterator.getName(), this);
-            int pos = PosSearcher.searchNamePosInNodeArray(nodeIterator.getName(), nodes);
+            int pos = PosSearch.searchPosition(nodeIterator.getName(), nodes);
             nodes.add(pos, nodeIterator);
             nodeIterator.setPosNumInGraph(pos);
         }
@@ -38,14 +39,15 @@ public class Graph {
         return nodes;
     }
 
-    public void addNode(Node newNode, String neighboringNodeName, Double startQuotient) {
+    public void addNode(Node newNode, String neighboringNodeName,
+                        Double startQuotient) {
         Node neighboringNode = findNode(neighboringNodeName);
 
         newNode.createEdge(neighboringNode, startQuotient);
         neighboringNode.createEdge(newNode, 1 / startQuotient);
 
         Node.setGraphsForName(newNode.getName(), this);
-        int pos = PosSearcher.searchNamePosInNodeArray(newNode.getName(), nodes);
+        int pos = PosSearch.searchPosition(newNode.getName(), nodes);
         nodes.add(pos, newNode);
     }
 
@@ -56,7 +58,7 @@ public class Graph {
     }
 
     public Node findNode(String neighboringNodeName) {
-        return nodes.get(PosSearcher.searchNamePosInNodeArray(neighboringNodeName, nodes));
+        return nodes.get(PosSearch.searchPosition(neighboringNodeName, nodes));
     }
 
     public Double findWay(String startNodeName, String endNodeName) {
@@ -75,10 +77,12 @@ public class Graph {
             Double quotient = quotients.get(0);
             for (Edge edgeIterator : node.getEdges()) {
                 Node neighboringNode = edgeIterator.getNode2();
-                if(nodesStatus[neighboringNode.getPosNumInGraph()] == null) {
-                    nodesStatus[neighboringNode.getPosNumInGraph()] = Visit.inQueue;
+                int posInGraph = neighboringNode.getPosNumInGraph();
+                if(nodesStatus[posInGraph] == null) {
+                    nodesStatus[posInGraph] = Visit.inQueue;
                     queue.add(queue.size(), neighboringNode);
-                    quotients.add(quotients.size(), quotient * edgeIterator.getQuotient());
+                    quotients.add(quotients.size(),
+                            quotient * edgeIterator.getQuotient());
                 }
             }
             nodesStatus[node.getPosNumInGraph()] = Visit.visited;

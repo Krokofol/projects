@@ -1,4 +1,4 @@
-package com.app;
+package com.app.holdingUnits;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -14,10 +14,12 @@ public class GraphHolder {
     }
 
     public static Graph findGraph(String neighboringNodeName) {
-        return Node.getGraph(PosSearcher.searchNamePosInNodeArray(neighboringNodeName, Node.getAllNames()));
+        return Node.getGraph(PosSearch.searchPosition(neighboringNodeName,
+                Node.getAllNames()));
     }
 
-    public static void addNode(String nodeName, String neighboringNodeName, Double quotient) {
+    public static void addNode(String nodeName, String neighboringNodeName,
+                               Double quotient) {
         Node newNode = Node.createNode(nodeName);
         if (newNode == null)
             return;
@@ -25,7 +27,8 @@ public class GraphHolder {
             createGraph(newNode);
             return;
         }
-        findGraph(neighboringNodeName).addNode(newNode, neighboringNodeName, quotient);
+        findGraph(neighboringNodeName).addNode(newNode, neighboringNodeName,
+                quotient);
     }
 
     public static void readingStartInfo(String filePath) {
@@ -38,7 +41,8 @@ public class GraphHolder {
 
                 double quotient = Double.parseDouble(res.split(",")[2]);
 
-                if (Node.checkExistence(node1Name) && Node.checkExistence(node2Name)) {
+                if (Node.checkExistence(node1Name)
+                        && Node.checkExistence(node2Name)) {
                     connectTwoGraphs(node1Name, node2Name, quotient);
                 } else {
                     GraphHolder.addNode(node1Name, node2Name, quotient);
@@ -59,16 +63,24 @@ public class GraphHolder {
         }
     }
 
-    private static void connectTwoGraphs(String node1Name, String node2Name, Double quotient) {
+    private static void connectTwoGraphs(String node1Name, String node2Name,
+                                         Double quotient) {
         Graph graph1 = findGraph(node1Name);
         Graph graph2 = findGraph(node2Name);
         graphs.remove(graph2);
         graph1.connect(graph2, node1Name, node2Name, 1 / quotient);
     }
 
-    private static BufferedReader preloadReader(String filePath) throws FileNotFoundException, UnsupportedEncodingException {
+    private static BufferedReader preloadReader(String filePath) {
         File input = new File(filePath);
-        InputStreamReader isr = new InputStreamReader(new FileInputStream(input), StandardCharsets.UTF_8);
-        return   new BufferedReader(isr);
+        InputStreamReader isr = null;
+        try {
+            isr = new InputStreamReader(new FileInputStream(input),
+                    StandardCharsets.UTF_8);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        assert isr != null;
+        return new BufferedReader(isr);
     }
 }

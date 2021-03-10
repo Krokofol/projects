@@ -7,8 +7,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="universal-converter" />
+        <module name="project" />
         <module name="universal-convertor" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="GraphBuilder" target="11" />
+    </bytecodeTargetLevel>
   </component>
 </project>

@@ -1,6 +1,6 @@
-package com.app;
+package com.app.holdingUnits;
 
-public class Edge {
+public class Edge implements CompareInterface{
     public Node node1;
     public Node node2;
     public Double quotient;
@@ -17,5 +17,10 @@ public class Edge {
 
     public Double getQuotient() {
         return quotient;
+    }
+
+    @Override
+    public int compare(String secondName) {
+        return getNode2().getName().compareTo(secondName);
     }
 }
