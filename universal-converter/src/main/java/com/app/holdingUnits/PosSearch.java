@@ -12,6 +12,14 @@ import java.util.ArrayList;
  */
 public class PosSearch {
 
+    /**
+     * searches position in array ordered by name where instance is, or where
+     * it should be added if it does not exist.
+     * @param name name of the instance.
+     * @param array array of the instances.
+     * @param <T> template which should extend Comparable.
+     * @return index in the array.
+     */
     public static <T extends Comparable<String>> int searchPos(String name,
             ArrayList<T> array) {
 
