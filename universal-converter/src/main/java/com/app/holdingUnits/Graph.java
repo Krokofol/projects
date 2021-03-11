@@ -1,7 +1,9 @@
 package com.app.holdingUnits;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Class to hold nodes of the graph. Also it should find way to convert one
@@ -98,7 +100,8 @@ public class Graph {
     }
 
     /**
-     * finds the nearest converting rule from one node to the other one.
+     * Dijkstra search, but the weight is the inaccuracy in the representation
+     * of a number in binary form
      * @param startNodeName node name from which we are converting.
      * @param endNodeName node name to where we are converting.
      * @return the quotient of converting.
@@ -106,6 +109,65 @@ public class Graph {
     public Double findWay(String startNodeName, String endNodeName) {
         Node startNode = nodesForNames.get(startNodeName);
         Node endNode = nodesForNames.get(endNodeName);
-        return 1.0;
+
+        HashMap<Node, Double> inaccuracyForNodes = new HashMap<>();
+        HashMap<Node, Node> prevNodeForNodes = new HashMap<>();
+        HashSet<Node> visitedNodes = new HashSet<>();
+
+        inaccuracyForNodes.put(startNode, 0.0);
+
+        Node workingNode;
+        do {
+            Double minInaccuracy = Double.POSITIVE_INFINITY;
+            workingNode = null;
+            for(Map.Entry<Node, Double> entry : inaccuracyForNodes.entrySet())
+            {
+                if(Math.abs(entry.getValue()) < Math.abs(minInaccuracy)) {
+                    minInaccuracy = entry.getValue();
+                    workingNode = entry.getKey();
+                }
+            }
+
+            assert workingNode != null;
+            if (workingNode == endNode)
+                System.out.println(minInaccuracy);
+
+            inaccuracyForNodes.remove(workingNode);
+            visitedNodes.add(workingNode);
+            Set<Map.Entry<String, Edge>> entrySet = workingNode
+                    .edgesForSecondNodeName.entrySet();
+            for(Map.Entry<String, Edge> entry : entrySet) {
+                Double quotient = entry.getValue().getQuotient();
+                Edge edge = entry.getValue();
+                if (visitedNodes.contains(edge.getNode2()))
+                    continue;
+                Double newInaccuracy = minInaccuracy;
+                if (Math.abs(minInaccuracy + Math.log10(quotient))
+                        > Math.abs(minInaccuracy))
+                    newInaccuracy = minInaccuracy + Math.log10(quotient);
+                Double oldInaccuracy = inaccuracyForNodes.get(edge.getNode2());
+                if (oldInaccuracy == null) {
+                    inaccuracyForNodes.put(edge.getNode2(), newInaccuracy);
+                    prevNodeForNodes.put(edge.getNode2(), workingNode);
+                    continue;
+                }
+                if (Math.abs(oldInaccuracy) > Math.abs(newInaccuracy)) {
+                    inaccuracyForNodes.put(edge.getNode2(), newInaccuracy);
+                    prevNodeForNodes.put(edge.getNode2(), workingNode);
+                }
+            }
+        } while (workingNode != endNode);
+
+
+
+        Double result = 1.0;
+        while (workingNode != startNode) {
+            Node prevNode = prevNodeForNodes.get(workingNode);
+            result *= prevNode.getEdgeBySecondNodeName(workingNode.getName())
+                    .getQuotient();
+            workingNode = prevNode;
+        }
+
+        return result;
     }
 }

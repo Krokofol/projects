@@ -1,7 +1,5 @@
 package com.app.holdingUnits;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.HashMap;
 
 /**
@@ -12,7 +10,7 @@ import java.util.HashMap;
  * @author Aleksey Lkahanskii
  *
  */
-public class Node implements Comparable<String> {
+public class Node {
     /* implements Comparable for searching position in PosSearch. */
 
     /** contains all added nodes. */
@@ -36,7 +34,9 @@ public class Node implements Comparable<String> {
         if (checkExistence(name)) {
             return null;
         }
-        return new Node(name);
+        Node newNode = new Node(name);
+        nodesForNames.put(name, newNode);
+        return newNode;
     }
 
     /**
@@ -83,16 +83,26 @@ public class Node implements Comparable<String> {
     public void createEdge(Node secondNode, Double quotient) {
         Edge edge = new Edge(this, secondNode, quotient);
         edgesForSecondNodeName.put(secondNode.getName(), edge);
-        secondNode.addEdge(this.getName(), edge);
+        secondNode.addEdge(this, 1 / quotient);
     }
 
     /**
-     * adds existing edge to node.
-     * @param secondNodeName node with which this edge connects.
-     * @param edge the edge with converting rule.
+     * adds edge.
+     * @param secondNode node with which this edge connects.
+     * @param quotient the rule of converting.
      */
-    public void addEdge(String secondNodeName, Edge edge) {
-        edgesForSecondNodeName.put(secondNodeName, edge);
+    public void addEdge (Node secondNode, Double quotient) {
+        Edge edge = new Edge(this, secondNode, quotient);
+        edgesForSecondNodeName.put(secondNode.getName(), edge);
+    }
+
+    /**
+     * finds edge by second node name.
+     * @param name name of the second node.
+     * @return edge to the second node.
+     */
+    public Edge getEdgeBySecondNodeName(String name) {
+        return edgesForSecondNodeName.get(name);
     }
 
     /**
@@ -101,15 +111,5 @@ public class Node implements Comparable<String> {
      */
     public String getName() {
         return name;
-    }
-
-    /**
-     * comparing for search in PosSearch.
-     * @param secondName name of comparing node.
-     * @return if equal - 0, bigger > 0 and smaller < 0.
-     */
-    @Override
-    public int compareTo(@NotNull String secondName) {
-        return  getName().compareTo(secondName);
     }
 }
