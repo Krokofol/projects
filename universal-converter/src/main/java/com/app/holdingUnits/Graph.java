@@ -1,6 +1,7 @@
 package com.app.holdingUnits;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Class to hold nodes of the graph. Also it should find way to convert one
@@ -13,16 +14,15 @@ import java.util.ArrayList;
 public class Graph {
 
     /** all nodes of the graph. */
-    public ArrayList<Node> nodes;
+    public HashMap<String, Node> nodesForNames;
 
     /**
      * constructs the graph.
      * @param startNode first graph node.
      */
     public Graph(Node startNode) {
-        nodes = new ArrayList<>();
-        nodes.add(startNode);
-        startNode.setPosNumInGraph(0);
+        nodesForNames = new HashMap<>();
+        nodesForNames.put(startNode.getName(), startNode);
     }
 
     /**
@@ -34,13 +34,9 @@ public class Graph {
     public void addNode(Node newNode, String neighboringNodeName,
                         Double startQuotient) {
         Node neighboringNode = findNode(neighboringNodeName);
-
         newNode.createEdge(neighboringNode, startQuotient);
-        neighboringNode.createEdge(newNode, 1 / startQuotient);
-
         Node.setGraphsForName(newNode.getName(), this);
-        int pos = PosSearch.posSearch(newNode.getName(), nodes);
-        nodes.add(pos, newNode);
+        nodesForNames.put(newNode.getName(), newNode);
     }
 
     /**
@@ -54,16 +50,12 @@ public class Graph {
                         Double startQuotient) {
         Node graph2Node = graph2.findNode(graph2NodeName);
         Node node = findNode(nodeName);
-        ArrayList<Node> graph2Nodes = graph2.getNodes();
-
         graph2Node.createEdge(node, startQuotient);
-        node.createEdge(graph2Node, 1 / startQuotient);
 
-        for (Node nodeIterator : graph2Nodes) {
-            Node.setGraphsForName(nodeIterator.getName(), this);
-            int pos = PosSearch.posSearch(nodeIterator.getName(), nodes);
-            nodes.add(pos, nodeIterator);
-            nodeIterator.setPosNumInGraph(pos);
+        HashMap<String, Node> nodesForNamesGraph2 = graph2.getNodesForNames();
+        for (Map.Entry<String, Node> entry : nodesForNamesGraph2.entrySet()) {
+            Node.setGraphsForName(entry.getValue().getName(), this);
+            nodesForNames.put(entry.getKey(), entry.getValue());
         }
     }
 
@@ -73,27 +65,7 @@ public class Graph {
      * @return if node exists - true, else - false.
      */
     public boolean existenceNode(String nodeName) {
-        if (nodes.size() == 0) return false;
-        int pos = PosSearch.posSearch(nodeName, nodes);
-        if (nodes.size() == pos) return false;
-        return nodes.get(pos).getName().equals(nodeName);
-    }
-
-    /**
-     * indexes nodes.
-     */
-    public void setNodesIndexes() {
-        for (int i = 0; i < nodes.size(); i++) {
-            nodes.get(i).setPosNumInGraph(i);
-        }
-    }
-
-    /**
-     * gets all nodes of the graph.
-     * @return nodes.
-     */
-    public ArrayList<Node> getNodes() {
-        return nodes;
+        return nodesForNames.get(nodeName) != null;
     }
 
     /**
@@ -102,7 +74,15 @@ public class Graph {
      * @return node.
      */
     public Node findNode(String nodeName) {
-        return nodes.get(PosSearch.posSearch(nodeName, nodes));
+        return nodesForNames.get(nodeName);
+    }
+
+    /**
+     * get HashMap with nodes.
+     * @return HashMap nodeForNames.
+     */
+    public HashMap<String, Node> getNodesForNames() {
+        return nodesForNames;
     }
 
     /**
@@ -112,10 +92,9 @@ public class Graph {
      * @param quotient the conversion's quotient.
      */
     public void addEdge(String node1Name, String node2Name, Double quotient) {
-        Node node1 = nodes.get(PosSearch.posSearch(node1Name, nodes));
-        Node node2 = nodes.get(PosSearch.posSearch(node2Name, nodes));
+        Node node1 = nodesForNames.get(node1Name);
+        Node node2 = nodesForNames.get(node2Name);
         node1.createEdge(node2, quotient);
-        node2.createEdge(node1, 1 / quotient);
     }
 
     /**
@@ -125,34 +104,8 @@ public class Graph {
      * @return the quotient of converting.
      */
     public Double findWay(String startNodeName, String endNodeName) {
-        Visit[] nodesStatus = new Visit[nodes.size()];
-        ArrayList<Node> queue = new ArrayList<>();
-        ArrayList<Double> quotients = new ArrayList<>();
-
-        Node startNode = findNode(startNodeName);
-        nodesStatus[startNode.getPosNumInGraph()] = Visit.inQueue;
-
-        queue.add(startNode);
-        quotients.add(1.0);
-
-        while (!queue.get(0).getName().equals(endNodeName)) {
-            Node node = queue.get(0);
-            Double quotient = quotients.get(0);
-            for (Edge edgeIterator : node.getEdges()) {
-                Node neighboringNode = edgeIterator.getNode2();
-                int posInGraph = neighboringNode.getPosNumInGraph();
-                if(nodesStatus[posInGraph] == null) {
-                    nodesStatus[posInGraph] = Visit.inQueue;
-                    queue.add(queue.size(), neighboringNode);
-                    quotients.add(quotients.size(),
-                            quotient * edgeIterator.getQuotient());
-                }
-            }
-            nodesStatus[node.getPosNumInGraph()] = Visit.visited;
-            queue.remove(0);
-            quotients.remove(0);
-        }
-
-        return quotients.get(0);
+        Node startNode = nodesForNames.get(startNodeName);
+        Node endNode = nodesForNames.get(endNodeName);
+        return 1.0;
     }
 }

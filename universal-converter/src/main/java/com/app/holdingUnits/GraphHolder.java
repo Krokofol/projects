@@ -39,7 +39,6 @@ public class GraphHolder {
                 }
                 res = reader.readLine();
             }
-            setNodesIndexesInGraphs();
 //            System.out.println("preloaded");
         } catch (IOException e) {
             e.printStackTrace();
@@ -107,8 +106,7 @@ public class GraphHolder {
      * @return graph.
      */
     public static Graph findGraph(String nodeName) {
-        return Node.getGraph(PosSearch.posSearch(nodeName,
-                Node.getAllNames()));
+        return Node.getGraph(nodeName);
     }
 
     /**
@@ -119,14 +117,5 @@ public class GraphHolder {
         Graph graph = new Graph(startNode);
         graphs.add(graph);
         Node.setGraphsForName(startNode.getName(), graph);
-    }
-
-    /**
-     * sets indexes for all nodes in all graphs.
-     */
-    private static void setNodesIndexesInGraphs() {
-        for (Graph graphIterator : graphs) {
-            graphIterator.setNodesIndexes();
-        }
     }
 }
