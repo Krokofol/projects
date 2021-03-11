@@ -46,8 +46,7 @@ public class Speaker extends Thread{
             String[] units = getUnits(inputStream);
 
             if (units == null) {
-                this.sendHeader(outputStream, "200", "OK",
-                        "1".length());
+                this.sendHeader(outputStream, "200", "OK", "1".length());
                 outputStream.write("1".getBytes());
                 return;
             }
@@ -71,9 +70,7 @@ public class Speaker extends Thread{
             Double result = calculateResult(toUnits, fromUnits);
 
             if (result == null) {
-                this.sendHeader(outputStream, "404", "Not Found",
-                        "Not Found".length());
-                outputStream.write("Not Found".getBytes());
+                this.sendHeader(outputStream, "404", "Not Found", 0);
                 return;
             }
             byte[] answer = new DecimalFormat("#.###############")
@@ -171,13 +168,7 @@ public class Speaker extends Thread{
             if (nameIterator.equals(""))
                 continue;
             if (!Node.checkExistence(nameIterator)) {
-                this.sendHeader(outputStream, "400", "Bad Request",
-                        "Bad Request".length());
-                try {
-                    outputStream.write("Bad Request".getBytes());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                this.sendHeader(outputStream, "400", "Bad Request", 0);
                 return true;
             }
         }
