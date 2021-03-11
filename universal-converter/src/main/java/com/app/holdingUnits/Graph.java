@@ -101,12 +101,12 @@ public class Graph {
 
     /**
      * Dijkstra search, but the weight is the inaccuracy in the representation
-     * of a number in binary form
+     * of a number in binary form.
      * @param startNodeName node name from which we are converting.
      * @param endNodeName node name to where we are converting.
      * @return the quotient of converting.
      */
-    public Double findWay(String startNodeName, String endNodeName) {
+    public Double findConverting(String startNodeName, String endNodeName) {
         Node startNode = nodesForNames.get(startNodeName);
         Node endNode = nodesForNames.get(endNodeName);
 

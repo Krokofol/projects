@@ -11,7 +11,6 @@ import java.util.HashMap;
  *
  */
 public class Node {
-    /* implements Comparable for searching position in PosSearch. */
 
     /** contains all added nodes. */
     public static HashMap<String, Node> nodesForNames = new HashMap<>();
@@ -76,22 +75,22 @@ public class Node {
     }
 
     /**
-     * creates edge.
+     * creates edge and opposite edge.
      * @param secondNode node with which this edge connects.
      * @param quotient the rule of converting.
      */
     public void createEdge(Node secondNode, Double quotient) {
         Edge edge = new Edge(this, secondNode, quotient);
         edgesForSecondNodeName.put(secondNode.getName(), edge);
-        secondNode.addEdge(this, 1 / quotient);
+        secondNode.createOppositeEdge(this, 1 / quotient);
     }
 
     /**
-     * adds edge.
+     * creates opposite edge.
      * @param secondNode node with which this edge connects.
      * @param quotient the rule of converting.
      */
-    public void addEdge (Node secondNode, Double quotient) {
+    public void createOppositeEdge(Node secondNode, Double quotient) {
         Edge edge = new Edge(this, secondNode, quotient);
         edgesForSecondNodeName.put(secondNode.getName(), edge);
     }

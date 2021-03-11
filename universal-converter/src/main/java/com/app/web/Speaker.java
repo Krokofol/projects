@@ -209,7 +209,7 @@ public class Speaker extends Thread{
 
             for (String denominatorIterator : toUnits) {
                 if(graph.existenceNode(denominatorIterator)) {
-                    result *= graph.findWay(numeratorIterator,
+                    result *= graph.findConverting(numeratorIterator,
                             denominatorIterator);
                     toUnits.remove(denominatorIterator);
                     gotPare = true;

@@ -1,7 +1,5 @@
 package com.app.holdingUnits;
 
-import org.jetbrains.annotations.NotNull;
-
 /**
  * Edge which connects two nodes and contains converting quotient.
  *
@@ -9,8 +7,7 @@ import org.jetbrains.annotations.NotNull;
  * @author Aleksey Lakhanskii
  *
  */
-public class Edge implements Comparable<String>{
-    /* implements Comparable for searching position in PosSearch. */
+public class Edge {
 
     /** node from which this edge is going. */
     public Node node1;
@@ -47,15 +44,5 @@ public class Edge implements Comparable<String>{
      */
     public Double getQuotient() {
         return quotient;
-    }
-
-    /**
-     * comparing for search in PosSearch.
-     * @param secondName name of the node to where converting is going in edge.
-     * @return if equal - 0, bigger > 0 and smaller < 0.
-     */
-    @Override
-    public int compareTo(@NotNull String secondName) {
-        return getNode2().getName().compareTo(secondName);
     }
 }
