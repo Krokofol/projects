@@ -118,7 +118,7 @@ public class Graph {
 
         Node workingNode;
         do {
-            Double minInaccuracy = Double.POSITIVE_INFINITY;
+            double minInaccuracy = Double.POSITIVE_INFINITY;
             workingNode = null;
             for(Map.Entry<Node, Double> entry : inaccuracyForNodes.entrySet())
             {
@@ -129,8 +129,6 @@ public class Graph {
             }
 
             assert workingNode != null;
-            if (workingNode == endNode)
-                System.out.println(minInaccuracy);
 
             inaccuracyForNodes.remove(workingNode);
             visitedNodes.add(workingNode);
@@ -141,7 +139,7 @@ public class Graph {
                 Edge edge = entry.getValue();
                 if (visitedNodes.contains(edge.getNode2()))
                     continue;
-                Double newInaccuracy = minInaccuracy;
+                double newInaccuracy = minInaccuracy;
                 if (Math.abs(minInaccuracy + Math.log10(quotient))
                         > Math.abs(minInaccuracy))
                     newInaccuracy = minInaccuracy + Math.log10(quotient);
@@ -157,8 +155,6 @@ public class Graph {
                 }
             }
         } while (workingNode != endNode);
-
-
 
         Double result = 1.0;
         while (workingNode != startNode) {
