@@ -1,4 +1,4 @@
-package com.app.holdingUnits;
+package app.holdingUnits;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class GraphHolder {
 
     /** all graphs */
-    static public ArrayList<Graph> graphs = new ArrayList<>();
+    public static ArrayList<Graph> graphs = new ArrayList<>();
 
     /**
      * preloading graphs.
@@ -39,6 +39,7 @@ public class GraphHolder {
                 }
                 res = reader.readLine();
             }
+            System.out.println("preloaded");
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -1,4 +1,4 @@
-package com.app.holdingUnits;
+package app.holdingUnits;
 
 /**
  * Edge which connects two nodes and contains converting quotient.

@@ -1,4 +1,4 @@
-package com.app.web;
+package app.web;
 
 import java.io.IOException;
 import java.net.ServerSocket;

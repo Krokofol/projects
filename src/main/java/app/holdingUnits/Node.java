@@ -1,4 +1,4 @@
-package com.app.holdingUnits;
+package app.holdingUnits;
 
 import java.util.HashMap;
 

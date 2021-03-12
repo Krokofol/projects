@@ -1,8 +1,8 @@
-package com.app.web;
+package app.web;
 
-import com.app.holdingUnits.Graph;
-import com.app.holdingUnits.GraphHolder;
-import com.app.holdingUnits.Node;
+import app.holdingUnits.Graph;
+import app.holdingUnits.GraphHolder;
+import app.holdingUnits.Node;
 
 import java.io.*;
 import java.net.Socket;
