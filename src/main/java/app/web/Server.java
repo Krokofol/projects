@@ -28,7 +28,7 @@ public class Server {
      * starts Server.
      */
     public void launch() {
-        try (var server = new ServerSocket(this.port)) {
+        try (ServerSocket server = new ServerSocket(this.port)) {
             while (true) {
                 Socket socket = server.accept();
                 Thread thread = new Speaker(socket);

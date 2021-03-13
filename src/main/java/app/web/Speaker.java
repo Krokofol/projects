@@ -50,6 +50,7 @@ public class Speaker extends Thread{
                 outputStream.write("1".getBytes());
                 return;
             }
+
             String[] fromUnit = units[0].split("/");
             String[] toUnit = units[1].split("/");
 
@@ -184,7 +185,6 @@ public class Speaker extends Thread{
     private Double calculateResult (ArrayList<String> toUnits,
                                     ArrayList<String> fromUnits) {
         Double result = 1.0;
-        boolean gotPare;
 
         toUnits.remove("");
         fromUnits.remove("");
@@ -193,24 +193,21 @@ public class Speaker extends Thread{
             return null;
         }
 
-        while (fromUnits.size() > 0) {
+        first:
+        if (fromUnits.size() > 0) {
             String numeratorIterator = fromUnits.get(0);
             Graph graph = GraphHolder.findGraph(numeratorIterator);
-            gotPare = false;
 
             for (String denominatorIterator : toUnits) {
                 if(graph.existenceNode(denominatorIterator)) {
                     result *= graph.findConverting(numeratorIterator,
                             denominatorIterator);
                     toUnits.remove(denominatorIterator);
-                    gotPare = true;
-                    break;
+                    fromUnits.remove(numeratorIterator);
+                    break first;
                 }
             }
-            if (!gotPare) {
-                return null;
-            }
-            fromUnits.remove(numeratorIterator);
+            return null;
         }
         return result;
     }
