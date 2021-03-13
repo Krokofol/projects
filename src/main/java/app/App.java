@@ -1,7 +1,6 @@
 package app;
 
 import app.holdingUnits.GraphHolder;
-import app.web.Server;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -20,15 +19,7 @@ public class App {
      * @param args first arg is path to file with converting rules.
      */
     public static void main (String[] args) {
+        SpringApplication.run(App.class, args);
         GraphHolder.readingStartInfo(args[0]);
-//        пока не работает, потому что я не знаю как вызвать предыдущий метод 1
-//        раз до старта спринга (и в него обязательно надо передать args[0]).
-//        а ещё почему-то деикстра на спроинге работает дольше (наверное это
-//        из-за того что у спринга куча своих потоков и они занимают время
-//        процессора. Поэтому я не знаю что лучше, использовать спринг или
-//        сделать на коленочках на serverSocket.
-//        SpringApplication.run(App.class, args);
-        Server server = new Server(80);
-        server.launch();
     }
 }

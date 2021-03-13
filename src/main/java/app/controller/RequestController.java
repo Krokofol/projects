@@ -1,7 +1,8 @@
-package app.web;
+package app.controller;
 
 import app.holdingUnits.Graph;
 import app.holdingUnits.GraphHolder;
+import app.holdingUnits.Node;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -34,15 +35,19 @@ public class RequestController {
         String to = body.get("to");
 
         if (checkInput(from, to))
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         String[] fromTo = refactorArgs(from, to);
         from = fromTo[0];
         to = fromTo[1];
+        if (checkExistence(from.split(" * "))
+            || checkExistence(to.split(" * "))) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
         Double result = calculateResult(
-                new ArrayList<>(Arrays.asList(from.split("\\*"))),
-                new ArrayList<>(Arrays.asList(to.split("\\*")))
+                new ArrayList<>(Arrays.asList(from.split(" * "))),
+                new ArrayList<>(Arrays.asList(to.split(" * ")))
         );
 
         if (result == null) {
@@ -61,11 +66,7 @@ public class RequestController {
      * @return if one of inputs is empty returns true, else false.
      */
     private boolean checkInput(String from, String to) {
-        if (from == null || to == null)
-            return true;
-        from = from.replace(" ", "");
-        to = to.replace(" ", "");
-        return from.equals("") || to.equals("");
+        return from == null || to == null;
     }
 
     /**
@@ -79,8 +80,8 @@ public class RequestController {
      * string.
      */
     private static String[] refactorArgs(String from, String to) {
-        String[] units1 = from.split("/");
-        String[] units2 = to.split("/");
+        String[] units1 = from.split(" / ");
+        String[] units2 = to.split(" / ");
 
         return new String[]{
                 buildArgs(units1, units2).toString(),
@@ -100,11 +101,25 @@ public class RequestController {
         if (units2.length > 0) result.append(units2[0]);
         if (units2.length > 0 && units1.length > 1) {
             if (units2[0].length() > 0) {
-                result.append("*");
+                result.append(" * ");
             }
         }
         if (units1.length > 1) result.append(units1[1]);
         return result;
+    }
+
+    /**
+     * checks existence of all units.
+     * @param units all units.
+     * @return if everything is ok - false, else - true.
+     */
+    private boolean checkExistence(String[] units) {
+        for (String nameIterator : units) {
+            if (!Node.checkExistence(nameIterator)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

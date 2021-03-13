@@ -22,25 +22,27 @@ public class GraphHolder {
      */
     public static void readingStartInfo(String filePath) {
         try (BufferedReader reader = preloadReader(filePath)) {
-            String res = reader.readLine();
-            while (res != null) {
-                String node1Name = res.split(",")[0];
-                String node2Name = res.split(",")[1];
-
-                double quotient = Double.parseDouble(res.split(",")[2]);
-
-                if (Node.checkExistence(node1Name)
-                        && Node.checkExistence(node2Name)) {
-                    connectTwoNodes(node1Name, node2Name, quotient);
-                } else {
-                    addNode(node1Name, node2Name, quotient);
-                    addNode(node2Name, node1Name, 1 / quotient);
-                }
-                res = reader.readLine();
-            }
+            reader.lines().forEach(GraphHolder::parseLine);
             System.out.println("preloaded");
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * gets from line names of the nodes. Adds node if it does not exists and
+     * after checking both nodes connect them by edge.
+     * @param line the line with names and quotient.
+     */
+    private static void parseLine(String line) {
+        String node1Name = line.split(",")[0];
+        String node2Name = line.split(",")[1];
+        double quotient = Double.parseDouble(line.split(",")[2]);
+        if (Node.checkExistence(node1Name) && Node.checkExistence(node2Name)) {
+            connectTwoNodes(node1Name, node2Name, quotient);
+        } else {
+            addNode(node1Name, node2Name, quotient);
+            addNode(node2Name, node1Name, 1 / quotient);
         }
     }
 
