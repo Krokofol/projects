@@ -54,6 +54,12 @@ public class RequestController {
         );
     }
 
+    /**
+     * checks is input empty.
+     * @param from input string with units from which converts.
+     * @param to input string with units to which converts.
+     * @return if one of inputs is empty returns true, else false.
+     */
     private boolean checkInput(String from, String to) {
         if (from == null || to == null)
             return true;
@@ -62,7 +68,16 @@ public class RequestController {
         return from.equals("") || to.equals("");
     }
 
-
+    /**
+     * splits numerator and denominator of "from" and "to" units. Multiplies
+     * numerator of "from" and denominator of "to" and writs it into "from" and
+     * also multiplies numerator of "to" and denominator of "from" and writes
+     * it into "to"
+     * @param from "from" units
+     * @param to "to" units
+     * @return two elements, first is new "from" string, second is new "to"
+     * string.
+     */
     private static String[] refactorArgs(String from, String to) {
         String[] units1 = from.split("/");
         String[] units2 = to.split("/");
@@ -73,7 +88,13 @@ public class RequestController {
         };
     }
 
-
+    /**
+     * Multiplies numerator of the first units and denominator of the
+     * second units.
+     * @param units1 first units.
+     * @param units2 second units.
+     * @return multiplication.
+     */
     private static StringBuilder buildArgs(String[] units1, String[] units2) {
         StringBuilder result = new StringBuilder();
         if (units2.length > 0) result.append(units2[0]);
@@ -86,6 +107,14 @@ public class RequestController {
         return result;
     }
 
+    /**
+     * iterates through "toUnits" and tries to find conversion to one of
+     * "fromUnits".
+     * @param toUnits units to which we are converting.
+     * @param fromUnits units from which we are converting.
+     * @return if it finds all conversions then return the result, if it don't
+     * finds one of conversions returns false.
+     */
     private Double calculateResult (ArrayList<String> toUnits,
                                     ArrayList<String> fromUnits) {
         Double result = 1.0;

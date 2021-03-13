@@ -21,8 +21,7 @@ public class GraphHolder {
      * @param filePath path to file with converting rules.
      */
     public static void readingStartInfo(String filePath) {
-        try {
-            BufferedReader reader = preloadReader(filePath);
+        try (BufferedReader reader = preloadReader(filePath)) {
             String res = reader.readLine();
             while (res != null) {
                 String node1Name = res.split(",")[0];
