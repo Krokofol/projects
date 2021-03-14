@@ -139,13 +139,13 @@ public class RequestController {
      */
     private Double calculateResult (ArrayList<String> toUnits,
                                     ArrayList<String> fromUnits) {
-        Double result = 1.0;
+        final Double[] result = {1.0};
 
         if (fromUnits.size() != toUnits.size()) {
             return null;
         }
 
-        ArrayList<Thread> threads = new ArrayList<>();
+        ArrayList<Searcher> threads = new ArrayList<>();
 
         first:
         while (fromUnits.size() > 0) {
@@ -154,8 +154,8 @@ public class RequestController {
 
             for (String denominatorIterator : toUnits) {
                 if(graph.existenceNode(denominatorIterator)) {
-                    result *= graph.findConverting(numeratorIterator,
-                            denominatorIterator);
+                    threads.add(new Searcher(graph, numeratorIterator,
+                            denominatorIterator));
                     toUnits.remove(denominatorIterator);
                     fromUnits.remove(numeratorIterator);
                     continue first;
@@ -163,6 +163,64 @@ public class RequestController {
             }
             return null;
         }
-        return result;
+        threads.forEach(Searcher::start);
+        threads.forEach(thread -> {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        threads.forEach(thread -> result[0] *= thread.getResult());
+
+        return result[0];
     }
+
+    /**
+     * class only to parallelize converting.
+     */
+    public static class Searcher extends Thread {
+
+        /** result of converting*/
+        public Double result;
+
+        /** the graph, where converting will be */
+        public Graph graph;
+
+        /** name of the node FROM which we are converting */
+        public String startNodeName;
+
+        /** name of the node TO which we are converting */
+        public String endNodeName;
+
+        /**
+         * returns result.
+         * @return result.
+         */
+        public Double getResult() {
+            return result;
+        }
+
+        /**
+         * constructor.
+         * @param graph the graph, where converting will be.
+         * @param startNodeName name of the node FROM which we are converting.
+         * @param endNodeName name of the node TO which we are converting.
+         */
+        public Searcher(Graph graph, String startNodeName,
+                        String endNodeName) {
+            this.endNodeName = endNodeName;
+            this.startNodeName = startNodeName;
+            this.graph = graph;
+        }
+
+        /**
+         * search the converting rules.
+         */
+        @Override
+        public void run() {
+            result = graph.findConverting(startNodeName, endNodeName);
+        }
+    }
+
 }
