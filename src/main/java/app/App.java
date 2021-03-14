@@ -20,6 +20,6 @@ public class App {
      */
     public static void main (String[] args) {
         SpringApplication.run(App.class, args);
-        GraphHolder.readingStartInfo(args[0]);
+        GraphHolder.preload(args[0]);
     }
 }

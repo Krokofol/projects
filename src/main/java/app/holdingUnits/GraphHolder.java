@@ -11,10 +11,42 @@ import java.util.ArrayList;
  * @author Aleksey Lakhanskii
  *
  */
-public class GraphHolder {
+public class GraphHolder implements Runnable {
 
     /** all graphs */
     public static ArrayList<Graph> graphs = new ArrayList<>();
+
+    /** thread which preloads units and converting rules. */
+    public static Thread preloader;
+
+    /** path to the file with rules */
+    public String path;
+
+    /**
+     * creates instance of GraphHolder and starts new thread to preload units
+     * and converting rules.
+     * @param path path to the file with units and converting rules.
+     */
+    public static void preload(String path) {
+        GraphHolder.preloader = new Thread(new GraphHolder(path));
+        preloader.start();
+    }
+
+    /**
+     * constructs GraphHolder.
+     * @param path path to the file with units and converting rules.
+     */
+    public GraphHolder(String path) {
+        this.path = path;
+    }
+
+    /**
+     * runs thread and preloads units and converting rules.
+     */
+    @Override
+    public void run() {
+        GraphHolder.readingStartInfo(path);
+    }
 
     /**
      * preloading graphs.

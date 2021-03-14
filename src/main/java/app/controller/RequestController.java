@@ -22,7 +22,8 @@ import java.util.Map;
 public class RequestController {
 
     /**
-     * Processes requests with "convert" address.
+     * Processes requests with "convert" address.  Also it waits of ending
+     * preloading thread.
      * @param body body of the request.
      * @return response, which consist of the text and Http status.
      */
@@ -34,14 +35,20 @@ public class RequestController {
         String from = body.get("from");
         String to = body.get("to");
 
+        try {
+            GraphHolder.preloader.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         if (checkInput(from, to))
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         String[] fromTo = refactorArgs(from, to);
         from = fromTo[0];
         to = fromTo[1];
-        if (checkExistence(from.split(" * "))
-            || checkExistence(to.split(" * "))) {
+        if (checkExistence(from.split(" \\* "))
+            || checkExistence(to.split(" \\* "))) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
