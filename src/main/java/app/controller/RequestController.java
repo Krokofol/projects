@@ -53,8 +53,8 @@ public class RequestController {
         }
 
         Double result = calculateResult(
-                new ArrayList<>(Arrays.asList(from.split(" * "))),
-                new ArrayList<>(Arrays.asList(to.split(" * ")))
+                new ArrayList<>(Arrays.asList(from.split(" \\* "))),
+                new ArrayList<>(Arrays.asList(to.split(" \\* ")))
         );
 
         if (result == null) {
@@ -145,8 +145,10 @@ public class RequestController {
             return null;
         }
 
+        ArrayList<Thread> threads = new ArrayList<>();
+
         first:
-        if (fromUnits.size() > 0) {
+        while (fromUnits.size() > 0) {
             String numeratorIterator = fromUnits.get(0);
             Graph graph = GraphHolder.findGraph(numeratorIterator);
 
@@ -156,12 +158,11 @@ public class RequestController {
                             denominatorIterator);
                     toUnits.remove(denominatorIterator);
                     fromUnits.remove(numeratorIterator);
-                    break first;
+                    continue first;
                 }
             }
             return null;
         }
         return result;
     }
-
 }
