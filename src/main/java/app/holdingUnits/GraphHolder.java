@@ -12,14 +12,15 @@ import java.util.ArrayList;
  *
  */
 public class GraphHolder implements Runnable {
+    /* implements Runnable to start preloading thread. */
 
-    /** all graphs */
+    /** all graphs. */
     public static ArrayList<Graph> graphs = new ArrayList<>();
 
     /** thread which preloads units and converting rules. */
     public static Thread preloader;
 
-    /** path to the file with rules */
+    /** path to the file with rules. */
     public String path;
 
     /**

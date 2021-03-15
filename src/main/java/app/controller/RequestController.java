@@ -80,7 +80,7 @@ public class RequestController {
      * splits numerator and denominator of "from" and "to" units. Multiplies
      * numerator of "from" and denominator of "to" and writs it into "from" and
      * also multiplies numerator of "to" and denominator of "from" and writes
-     * it into "to"
+     * it into "to".
      * @param from "from" units
      * @param to "to" units
      * @return two elements, first is new "from" string, second is new "to"
@@ -180,17 +180,18 @@ public class RequestController {
      * class only to parallelize converting.
      */
     public static class Searcher extends Thread {
+        /* extends thread to start Graph.findConverting at new thread. */
 
-        /** result of converting*/
+        /** result of converting. */
         public Double result;
 
-        /** the graph, where converting will be */
+        /** the graph, where converting will be. */
         public Graph graph;
 
-        /** name of the node FROM which we are converting */
+        /** name of the node FROM which we are converting. */
         public String startNodeName;
 
-        /** name of the node TO which we are converting */
+        /** name of the node TO which we are converting. */
         public String endNodeName;
 
         /**
