@@ -119,7 +119,6 @@ public class Graph {
             String startNodeName,
             String endNodeName
     ) {
-        System.out.println("convertingStarted");
         Node startNode = nodesForNames.get(startNodeName);
         Node endNode = nodesForNames.get(endNodeName);
         HashMap<Node, Node> prevNodes = new HashMap<>();
@@ -144,38 +143,29 @@ public class Graph {
                 queue.add(toTheNode);
                 prevNodes.put(toTheNode, workingNode);
                 visitedNodes.add(toTheNode);
-                workingNode = queue.get(0);
             }
+            workingNode = queue.get(0);
         }
-
-        System.out.println("wayIsBuilt");
-
         MyBigDecimal result = new MyBigDecimal("1");
         while (workingNode != startNode) {
             Node prevNode = prevNodes.get(workingNode);
             Edge edge = prevNode.findEdge(workingNode.getName());
             Node toNode = edge.getNode2();
             if (workingNode.equals(toNode)) {
-                result.multiply(edge.quotient);
+                result.multiply(edge.getQuotient());
             }
             workingNode = prevNode;
         }
-
-        System.out.println("multiplyIsDone");
-
         workingNode = endNode;
         while (workingNode != startNode) {
             Node prevNode = prevNodes.get(workingNode);
             Edge edge = prevNode.findEdge(workingNode.getName());
             Node toNode = edge.getNode1();
             if (workingNode.equals(toNode)) {
-                result.divide(edge.quotient);
+                result.divide(edge.getQuotient());
             }
             workingNode = prevNode;
         }
-
-        System.out.println("divideIsDone");
-
         return result;
     }
 }

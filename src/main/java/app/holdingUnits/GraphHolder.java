@@ -1,7 +1,6 @@
 package app.holdingUnits;
 
 import java.io.*;
-import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
@@ -32,6 +31,11 @@ public class GraphHolder implements Runnable {
     public static void preload(String path) {
         GraphHolder.preloader = new Thread(new GraphHolder(path));
         preloader.start();
+        try {
+            preloader.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -57,7 +61,6 @@ public class GraphHolder implements Runnable {
     public static void readingStartInfo(String filePath) {
         try (BufferedReader reader = preloadReader(filePath)) {
             reader.lines().forEach(GraphHolder::parseLine);
-            System.out.println("preloaded");
         } catch (IOException e) {
             e.printStackTrace();
         }

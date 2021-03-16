@@ -1,9 +1,6 @@
 package app.controller;
 
-import app.holdingUnits.Graph;
-import app.holdingUnits.GraphHolder;
-import app.holdingUnits.MyBigDecimal;
-import app.holdingUnits.Node;
+import app.holdingUnits.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -172,53 +169,4 @@ public class RequestController {
 
         return result.toString();
     }
-
-    /**
-     * class only to parallelize converting.
-     */
-    public static class Searcher extends Thread {
-        /* extends thread to start Graph.findConverting at new thread. */
-
-        /** result of converting. */
-        public MyBigDecimal result;
-
-        /** the graph, where converting will be. */
-        public Graph graph;
-
-        /** name of the node FROM which we are converting. */
-        public String startNodeName;
-
-        /** name of the node TO which we are converting. */
-        public String endNodeName;
-
-        /**
-         * returns result.
-         * @return result.
-         */
-        public MyBigDecimal getResult() {
-            return result;
-        }
-
-        /**
-         * constructor.
-         * @param graph the graph, where converting will be.
-         * @param startNodeName name of the node FROM which we are converting.
-         * @param endNodeName name of the node TO which we are converting.
-         */
-        public Searcher(Graph graph, String startNodeName,
-                        String endNodeName) {
-            this.endNodeName = endNodeName;
-            this.startNodeName = startNodeName;
-            this.graph = graph;
-        }
-
-        /**
-         * search the converting rules.
-         */
-        @Override
-        public void run() {
-            result = graph.findConverting(startNodeName, endNodeName);
-        }
-    }
-
 }
