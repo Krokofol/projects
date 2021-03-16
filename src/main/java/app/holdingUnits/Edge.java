@@ -1,7 +1,5 @@
 package app.holdingUnits;
 
-import java.math.BigDecimal;
-
 /**
  * Edge which connects two nodes and contains converting quotient.
  *
@@ -18,7 +16,7 @@ public class Edge {
     public Node node2;
 
     /** the quotient of converting. */
-    public BigDecimal quotient;
+    public MyBigDecimal quotient;
 
     /**
      * constructs edge.
@@ -26,7 +24,7 @@ public class Edge {
      * @param node2 node to where converting is going.
      * @param quotient the quotient of converting.
      */
-    public Edge(Node node1, Node node2, BigDecimal quotient) {
+    public Edge(Node node1, Node node2, MyBigDecimal quotient) {
         this.node1 = node1;
         this.node2 = node2;
         this.quotient = quotient;
@@ -44,7 +42,7 @@ public class Edge {
      * gets the quotient of converting.
      * @return the quotient.
      */
-    public BigDecimal getQuotient() {
+    public MyBigDecimal getQuotient() {
         return quotient;
     }
 }

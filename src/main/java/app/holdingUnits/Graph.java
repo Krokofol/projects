@@ -35,7 +35,7 @@ public class Graph {
      * @param startQuotient the quotient of converting.
      */
     public void addNode(String node1Name, String node2Name,
-                        BigDecimal startQuotient) {
+                        MyBigDecimal startQuotient) {
         Node node1 = nodesForNames.get(node1Name);
         if (node1 == null) {
             node1 = Node.createNode(node1Name);
@@ -60,10 +60,10 @@ public class Graph {
      * @param startQuotient the quotient of converting.
      */
     public void connect(Graph graph2, String nodeName, String graph2NodeName,
-                        BigDecimal startQuotient) {
+                        MyBigDecimal startQuotient) {
         Node graph2Node = graph2.findNode(graph2NodeName);
         Node node = findNode(nodeName);
-        graph2Node.createEdge(node, startQuotient);
+        node.createEdge(graph2Node, startQuotient);
 
         HashMap<String, Node> nodesForNamesGraph2 = graph2.getNodesForNames();
         for (Map.Entry<String, Node> entry : nodesForNamesGraph2.entrySet()) {
@@ -104,7 +104,7 @@ public class Graph {
      * @param node2Name the second node.
      * @param quotient the conversion's quotient.
      */
-    public void addEdge(String node1Name, String node2Name, BigDecimal quotient) {
+    public void addEdge(String node1Name, String node2Name, MyBigDecimal quotient) {
         Node node1 = nodesForNames.get(node1Name);
         if (node1.getEdgeBySecondNodeName(node2Name) != null)
             return;
@@ -119,7 +119,7 @@ public class Graph {
      * @param endNodeName node name to where we are converting.
      * @return the quotient of converting.
      */
-    public BigDecimal findConverting(String startNodeName, String endNodeName) {
+    public MyBigDecimal findConverting(String startNodeName, String endNodeName) {
         Node startNode = nodesForNames.get(startNodeName);
         Node endNode = nodesForNames.get(endNodeName);
 

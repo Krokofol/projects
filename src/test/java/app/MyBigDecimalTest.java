@@ -1,7 +1,6 @@
 package app;
 
 import app.holdingUnits.MyBigDecimal;
-import org.junit.jupiter.api.Test;
 
 public class MyBigDecimalTest {
 
@@ -13,6 +12,4 @@ public class MyBigDecimalTest {
         d1.divide(d3);
         System.out.println(d1.toString());
     }
-
-
 }

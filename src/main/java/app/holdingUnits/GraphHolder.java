@@ -71,7 +71,7 @@ public class GraphHolder implements Runnable {
     private static void parseLine(String line) {
         String node1Name = line.split(",")[0];
         String node2Name = line.split(",")[1];
-        BigDecimal quotient = new BigDecimal(line.split(",")[2]);
+        MyBigDecimal quotient = new MyBigDecimal(line.split(",")[2]);
         if (Node.checkExistence(node1Name) && Node.checkExistence(node2Name)) {
             connectTwoNodes(node1Name, node2Name, quotient);
         } else {
@@ -104,7 +104,7 @@ public class GraphHolder implements Runnable {
      * @param quotient the quotient of converting.
      */
     private static void connectTwoNodes(String node1Name, String node2Name,
-                                        BigDecimal quotient) {
+                                        MyBigDecimal quotient) {
         Graph graph1 = findGraph(node1Name);
         Graph graph2 = findGraph(node2Name);
         if (graph1 == graph2) {
@@ -112,7 +112,7 @@ public class GraphHolder implements Runnable {
             return;
         }
         graphs.remove(graph2);
-        graph1.connect(graph2, node1Name, node2Name, quotient.pow(-1));
+        graph1.connect(graph2, node1Name, node2Name, quotient);
     }
 
     /**
@@ -122,7 +122,7 @@ public class GraphHolder implements Runnable {
      * @param quotient the quotient of converting.
      */
     public static void addNodes(String node1Name, String node2Name,
-                                BigDecimal quotient) {
+                                MyBigDecimal quotient) {
         boolean node1Ex = Node.checkExistence(node1Name);
         boolean node2Ex = Node.checkExistence(node2Name);
         if (node1Ex) {
