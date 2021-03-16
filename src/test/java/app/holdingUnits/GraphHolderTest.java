@@ -1,5 +1,6 @@
 package app.holdingUnits;
 
+import app.holdingUnits.containers.Node;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -7,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class GraphHolderTest {
 
     @Test
-    public void preloadAndSearchTest() {
+    public void preloadSearchTest() {
         GraphHolder.preload("target/test-classes/smallTestData.csv");
 
         assertEquals(3, GraphHolder.graphs.size());
@@ -22,16 +23,5 @@ class GraphHolderTest {
         assertTrue(Node.checkExistence(toNodeName));
         assertNotNull(Node.getGraph(fromNodeName));
         assertEquals(Node.getGraph(fromNodeName), Node.getGraph(toNodeName));
-
-        Graph graph = Node.getGraph(fromNodeName);
-        Searcher searcher = new Searcher(graph, fromNodeName, toNodeName);
-        searcher.start();
-        try {
-            searcher.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        String convertingResult = searcher.getResult().toString();
-        assertEquals(expectedResult, convertingResult);
     }
 }

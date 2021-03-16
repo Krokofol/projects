@@ -1,4 +1,6 @@
-package app.holdingUnits;
+package app.search;
+
+import app.holdingUnits.containers.Graph;
 
 /**
  * class only to parallelize converting.

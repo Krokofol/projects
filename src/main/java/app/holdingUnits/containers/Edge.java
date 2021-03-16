@@ -1,4 +1,6 @@
-package app.holdingUnits;
+package app.holdingUnits.containers;
+
+import app.search.MyBigDecimal;
 
 /**
  * Edge which connects two nodes and contains converting quotient.

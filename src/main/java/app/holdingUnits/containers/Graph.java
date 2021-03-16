@@ -1,4 +1,6 @@
-package app.holdingUnits;
+package app.holdingUnits.containers;
+
+import app.search.MyBigDecimal;
 
 import java.util.*;
 
@@ -44,7 +46,6 @@ public class Graph {
             Node.setGraphsForName(node2Name, this);
             nodesForNames.put(node2Name, node2);
         }
-        assert node1 != null;
         node1.createEdge(node2, startQuotient);
     }
 

@@ -1,5 +1,6 @@
-package app.holdingUnits;
+package app.search;
 
+import app.search.MyBigDecimal;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -66,5 +67,4 @@ class MyBigDecimalTest {
         data3.divide(new MyBigDecimal(startData32));
         assertEquals(expectedData3, data3.toString());
     }
-
 }

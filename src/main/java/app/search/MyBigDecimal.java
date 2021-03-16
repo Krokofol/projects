@@ -1,4 +1,4 @@
-package app.holdingUnits;
+package app.search;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
