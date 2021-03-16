@@ -8,8 +8,8 @@ class NodeTest {
 
     @Test
     public void builderTest() {
-        String node1Name = "node1";
-        String node2Name = "node2";
+        String node1Name = "node1NodeTest1";
+        String node2Name = "node2NodeTest1";
         Node node1 = Node.createNode(node1Name);
         Node node1Copy = Node.createNode(node1Name);
         Node node2 = Node.createNode(node2Name);

@@ -9,7 +9,7 @@ class GraphTest {
 
     @Test
     public void buildTest() {
-        String startNodeName = "startNodeGraphTest1";
+        String startNodeName = "startNode";
         Node startNode = Node.createNode(startNodeName);
         Graph graph = new Graph(startNode);
 
