@@ -1,5 +1,6 @@
 package app.holdingUnits;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 
 /**
@@ -66,6 +67,14 @@ public class Node {
     }
 
     /**
+     * returns all node's edges.
+     * @return all edges.
+     */
+    public HashMap<String, Edge> getAllEdges() {
+        return edgesForSecondNodeName;
+    }
+
+    /**
      * gets graph.
      * @param name node name.
      * @return graph.
@@ -79,20 +88,10 @@ public class Node {
      * @param secondNode node with which this edge connects.
      * @param quotient the rule of converting.
      */
-    public void createEdge(Node secondNode, Double quotient) {
+    public void createEdge(Node secondNode, BigDecimal quotient) {
         Edge edge = new Edge(this, secondNode, quotient);
         edgesForSecondNodeName.put(secondNode.getName(), edge);
-        secondNode.createOppositeEdge(this, 1 / quotient);
-    }
-
-    /**
-     * creates opposite edge.
-     * @param secondNode node with which this edge connects.
-     * @param quotient the rule of converting.
-     */
-    public void createOppositeEdge(Node secondNode, Double quotient) {
-        Edge edge = new Edge(this, secondNode, quotient);
-        edgesForSecondNodeName.put(secondNode.getName(), edge);
+        secondNode.edgesForSecondNodeName.put(name, edge);
     }
 
     /**

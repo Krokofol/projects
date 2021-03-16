@@ -1,6 +1,7 @@
 package app.holdingUnits;
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
@@ -70,12 +71,11 @@ public class GraphHolder implements Runnable {
     private static void parseLine(String line) {
         String node1Name = line.split(",")[0];
         String node2Name = line.split(",")[1];
-        double quotient = Double.parseDouble(line.split(",")[2]);
+        BigDecimal quotient = new BigDecimal(line.split(",")[2]);
         if (Node.checkExistence(node1Name) && Node.checkExistence(node2Name)) {
             connectTwoNodes(node1Name, node2Name, quotient);
         } else {
-            addNode(node1Name, node2Name, quotient);
-            addNode(node2Name, node1Name, 1 / quotient);
+            addNodes(node1Name, node2Name, quotient);
         }
     }
 
@@ -104,7 +104,7 @@ public class GraphHolder implements Runnable {
      * @param quotient the quotient of converting.
      */
     private static void connectTwoNodes(String node1Name, String node2Name,
-                                        Double quotient) {
+                                        BigDecimal quotient) {
         Graph graph1 = findGraph(node1Name);
         Graph graph2 = findGraph(node2Name);
         if (graph1 == graph2) {
@@ -112,26 +112,30 @@ public class GraphHolder implements Runnable {
             return;
         }
         graphs.remove(graph2);
-        graph1.connect(graph2, node1Name, node2Name, 1 / quotient);
+        graph1.connect(graph2, node1Name, node2Name, quotient.pow(-1));
     }
 
     /**
      * adds node to on of the graph if the second node exists.
-     * @param nodeName first node.
-     * @param neighboringNodeName second node.
+     * @param node1Name first node.
+     * @param node2Name second node.
      * @param quotient the quotient of converting.
      */
-    public static void addNode(String nodeName, String neighboringNodeName,
-                               Double quotient) {
-        Node newNode = Node.createNode(nodeName);
-        if (newNode == null)
-            return;
-        if (!Node.checkExistence(neighboringNodeName)) {
-            createGraph(newNode);
+    public static void addNodes(String node1Name, String node2Name,
+                                BigDecimal quotient) {
+        boolean node1Ex = Node.checkExistence(node1Name);
+        boolean node2Ex = Node.checkExistence(node2Name);
+        if (node1Ex) {
+            findGraph(node1Name).addNode(node1Name, node2Name, quotient);
             return;
         }
-        findGraph(neighboringNodeName).addNode(newNode, neighboringNodeName,
-                quotient);
+        if (node2Ex) {
+            findGraph(node2Name).addNode(node1Name, node2Name, quotient);
+            return;
+        }
+        Node node1 = Node.createNode(node1Name);
+        createGraph(node1);
+        findGraph(node1Name).addNode(node1Name, node2Name, quotient);
     }
 
     /**

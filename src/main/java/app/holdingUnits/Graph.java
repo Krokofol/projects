@@ -1,5 +1,6 @@
 package app.holdingUnits;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -28,17 +29,27 @@ public class Graph {
     }
 
     /**
-     * adds node to the graph.
-     * @param newNode new node.
-     * @param neighboringNodeName node with which new node has edge.
+     * one of this nodes not in this graph.
+     * @param node1Name the first node name.
+     * @param node2Name the second node name.
      * @param startQuotient the quotient of converting.
      */
-    public void addNode(Node newNode, String neighboringNodeName,
-                        Double startQuotient) {
-        Node neighboringNode = findNode(neighboringNodeName);
-        newNode.createEdge(neighboringNode, startQuotient);
-        Node.setGraphsForName(newNode.getName(), this);
-        nodesForNames.put(newNode.getName(), newNode);
+    public void addNode(String node1Name, String node2Name,
+                        BigDecimal startQuotient) {
+        Node node1 = nodesForNames.get(node1Name);
+        if (node1 == null) {
+            node1 = Node.createNode(node1Name);
+            Node.setGraphsForName(node1Name, this);
+            nodesForNames.put(node1Name, node1);
+        }
+        Node node2 = nodesForNames.get(node2Name);
+        if (node2 == null) {
+            node2 = Node.createNode(node2Name);
+            Node.setGraphsForName(node2Name, this);
+            nodesForNames.put(node2Name, node2);
+        }
+        assert node1 != null;
+        node1.createEdge(node2, startQuotient);
     }
 
     /**
@@ -49,7 +60,7 @@ public class Graph {
      * @param startQuotient the quotient of converting.
      */
     public void connect(Graph graph2, String nodeName, String graph2NodeName,
-                        Double startQuotient) {
+                        BigDecimal startQuotient) {
         Node graph2Node = graph2.findNode(graph2NodeName);
         Node node = findNode(nodeName);
         graph2Node.createEdge(node, startQuotient);
@@ -93,8 +104,10 @@ public class Graph {
      * @param node2Name the second node.
      * @param quotient the conversion's quotient.
      */
-    public void addEdge(String node1Name, String node2Name, Double quotient) {
+    public void addEdge(String node1Name, String node2Name, BigDecimal quotient) {
         Node node1 = nodesForNames.get(node1Name);
+        if (node1.getEdgeBySecondNodeName(node2Name) != null)
+            return;
         Node node2 = nodesForNames.get(node2Name);
         node1.createEdge(node2, quotient);
     }
@@ -106,64 +119,36 @@ public class Graph {
      * @param endNodeName node name to where we are converting.
      * @return the quotient of converting.
      */
-    public Double findConverting(String startNodeName, String endNodeName) {
+    public BigDecimal findConverting(String startNodeName, String endNodeName) {
         Node startNode = nodesForNames.get(startNodeName);
         Node endNode = nodesForNames.get(endNodeName);
 
-        HashMap<Node, Double> inaccuracyForNodes = new HashMap<>();
-        HashMap<Node, Node> prevNodeForNodes = new HashMap<>();
+        HashMap<Node, BigDecimal> queue = new HashMap<>();
         HashSet<Node> visitedNodes = new HashSet<>();
 
-        inaccuracyForNodes.put(startNode, 0.0);
+        queue.put(startNode, new BigDecimal(0));
 
+        BigDecimal converting;
         Node workingNode;
         do {
-            double minInaccuracy = Double.POSITIVE_INFINITY;
-            workingNode = null;
-            for(Map.Entry<Node, Double> entry : inaccuracyForNodes.entrySet())
-            {
-                if(Math.abs(entry.getValue()) < Math.abs(minInaccuracy)) {
-                    minInaccuracy = entry.getValue();
-                    workingNode = entry.getKey();
-                }
-            }
-
-            assert workingNode != null;
-
-            inaccuracyForNodes.remove(workingNode);
+            if (queue.entrySet().stream().findFirst().isEmpty())
+                return null;
+            workingNode = queue.entrySet().stream().findFirst().get().getKey();
+            converting = queue.entrySet().stream().findFirst().get().getValue();
+            queue.remove(workingNode);
             visitedNodes.add(workingNode);
-            Set<Map.Entry<String, Edge>> entrySet = workingNode
-                    .edgesForSecondNodeName.entrySet();
+            Set<Map.Entry<String, Edge>> entrySet = workingNode.getAllEdges()
+                    .entrySet();
             for(Map.Entry<String, Edge> entry : entrySet) {
-                Double quotient = entry.getValue().getQuotient();
                 Edge edge = entry.getValue();
                 if (visitedNodes.contains(edge.getNode2()))
                     continue;
-                double newInaccuracy = minInaccuracy;
-                if (Math.abs(minInaccuracy + Math.log10(quotient))
-                        > Math.abs(minInaccuracy))
-                    newInaccuracy = minInaccuracy + Math.log10(quotient);
-                Double oldInaccuracy = inaccuracyForNodes.get(edge.getNode2());
-                if (oldInaccuracy == null) {
-                    inaccuracyForNodes.put(edge.getNode2(), newInaccuracy);
-                    prevNodeForNodes.put(edge.getNode2(), workingNode);
-                    continue;
-                }
-                if (Math.abs(oldInaccuracy) > Math.abs(newInaccuracy)) {
-                    inaccuracyForNodes.put(edge.getNode2(), newInaccuracy);
-                    prevNodeForNodes.put(edge.getNode2(), workingNode);
-                }
+                BigDecimal quotient = entry.getValue().getQuotient()
+                        .multiply(converting);
+                queue.put(edge.getNode2(), quotient);
             }
         } while (workingNode != endNode);
 
-        Double result = 1.0;
-        while (workingNode != startNode) {
-            Node prevNode = prevNodeForNodes.get(workingNode);
-            result *= prevNode.getEdgeBySecondNodeName(workingNode.getName())
-                    .getQuotient();
-            workingNode = prevNode;
-        }
-
-        return result;
+        return converting;
     }
 }

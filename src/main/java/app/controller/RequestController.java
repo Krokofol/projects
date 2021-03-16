@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.text.DecimalFormat;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
@@ -52,7 +52,7 @@ public class RequestController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        Double result = calculateResult(
+        String result = calculateResult(
                 new ArrayList<>(Arrays.asList(from.split(" \\* "))),
                 new ArrayList<>(Arrays.asList(to.split(" \\* ")))
         );
@@ -60,10 +60,7 @@ public class RequestController {
         if (result == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(
-                new DecimalFormat("#.###############").format(result),
-                HttpStatus.OK
-        );
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     /**
@@ -137,9 +134,9 @@ public class RequestController {
      * @return if it finds all conversions then return the result, if it don't
      * finds one of conversions returns false.
      */
-    private Double calculateResult (ArrayList<String> toUnits,
+    private String calculateResult (ArrayList<String> toUnits,
                                     ArrayList<String> fromUnits) {
-        final Double[] result = {1.0};
+        final BigDecimal[] result = new BigDecimal[]{new BigDecimal(1)};
 
         if (fromUnits.size() != toUnits.size()) {
             return null;
@@ -171,9 +168,10 @@ public class RequestController {
                 e.printStackTrace();
             }
         });
-        threads.forEach(thread -> result[0] *= thread.getResult());
+        threads.forEach(thread ->
+                result[0] = result[0].multiply(thread.getResult()));
 
-        return result[0];
+        return result[0].toString();
     }
 
     /**
@@ -183,7 +181,7 @@ public class RequestController {
         /* extends thread to start Graph.findConverting at new thread. */
 
         /** result of converting. */
-        public Double result;
+        public BigDecimal result;
 
         /** the graph, where converting will be. */
         public Graph graph;
@@ -198,7 +196,7 @@ public class RequestController {
          * returns result.
          * @return result.
          */
-        public Double getResult() {
+        public BigDecimal getResult() {
             return result;
         }
 
