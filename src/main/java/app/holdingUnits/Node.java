@@ -98,7 +98,7 @@ public class Node {
      * @param name name of the second node.
      * @return edge to the second node.
      */
-    public Edge getEdgeBySecondNodeName(String name) {
+    public Edge findEdge(String name) {
         return edgesForSecondNodeName.get(name);
     }
 

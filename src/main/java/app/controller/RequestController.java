@@ -2,6 +2,7 @@ package app.controller;
 
 import app.holdingUnits.Graph;
 import app.holdingUnits.GraphHolder;
+import app.holdingUnits.MyBigDecimal;
 import app.holdingUnits.Node;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
@@ -136,7 +136,7 @@ public class RequestController {
      */
     private String calculateResult (ArrayList<String> toUnits,
                                     ArrayList<String> fromUnits) {
-        final BigDecimal[] result = new BigDecimal[]{new BigDecimal(1)};
+        final MyBigDecimal result = new MyBigDecimal("1");
 
         if (fromUnits.size() != toUnits.size()) {
             return null;
@@ -168,10 +168,9 @@ public class RequestController {
                 e.printStackTrace();
             }
         });
-        threads.forEach(thread ->
-                result[0] = result[0].multiply(thread.getResult()));
+        threads.forEach(thread -> result.multiply(thread.getResult()));
 
-        return result[0].toString();
+        return result.toString();
     }
 
     /**
@@ -181,7 +180,7 @@ public class RequestController {
         /* extends thread to start Graph.findConverting at new thread. */
 
         /** result of converting. */
-        public BigDecimal result;
+        public MyBigDecimal result;
 
         /** the graph, where converting will be. */
         public Graph graph;
@@ -196,7 +195,7 @@ public class RequestController {
          * returns result.
          * @return result.
          */
-        public BigDecimal getResult() {
+        public MyBigDecimal getResult() {
             return result;
         }
 

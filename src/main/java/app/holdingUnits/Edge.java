@@ -31,6 +31,14 @@ public class Edge {
     }
 
     /**
+     * gets node from where converting is going.
+     * @return the node.
+     */
+    public Node getNode1() {
+        return node1;
+    }
+
+    /**
      * gets node to where converting is going.
      * @return the node.
      */

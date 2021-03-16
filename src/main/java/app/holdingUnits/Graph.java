@@ -1,10 +1,6 @@
 package app.holdingUnits;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Class to hold nodes of the graph. Also it should find way to convert one
@@ -106,7 +102,7 @@ public class Graph {
      */
     public void addEdge(String node1Name, String node2Name, MyBigDecimal quotient) {
         Node node1 = nodesForNames.get(node1Name);
-        if (node1.getEdgeBySecondNodeName(node2Name) != null)
+        if (node1.findEdge(node2Name) != null)
             return;
         Node node2 = nodesForNames.get(node2Name);
         node1.createEdge(node2, quotient);
@@ -119,36 +115,58 @@ public class Graph {
      * @param endNodeName node name to where we are converting.
      * @return the quotient of converting.
      */
-    public MyBigDecimal findConverting(String startNodeName, String endNodeName) {
+    public MyBigDecimal findConverting(
+            String startNodeName,
+            String endNodeName
+    ) {
         Node startNode = nodesForNames.get(startNodeName);
         Node endNode = nodesForNames.get(endNodeName);
-
-        HashMap<Node, BigDecimal> queue = new HashMap<>();
+        HashMap<Node, Node> prevNodes = new HashMap<>();
         HashSet<Node> visitedNodes = new HashSet<>();
+        ArrayList<Node> queue = new ArrayList<>();
 
-        queue.put(startNode, new BigDecimal(0));
+        queue.add(startNode);
 
-        BigDecimal converting;
-        Node workingNode;
-        do {
-            if (queue.entrySet().stream().findFirst().isEmpty())
-                return null;
-            workingNode = queue.entrySet().stream().findFirst().get().getKey();
-            converting = queue.entrySet().stream().findFirst().get().getValue();
+        Node workingNode = queue.get(0);
+        while (workingNode != endNode) {
             queue.remove(workingNode);
-            visitedNodes.add(workingNode);
             Set<Map.Entry<String, Edge>> entrySet = workingNode.getAllEdges()
                     .entrySet();
             for(Map.Entry<String, Edge> entry : entrySet) {
                 Edge edge = entry.getValue();
-                if (visitedNodes.contains(edge.getNode2()))
+                Node toTheNode = edge.getNode1().equals(workingNode)
+                        ? edge.getNode2()
+                        : edge.getNode1();
+                if (visitedNodes.contains(toTheNode))
                     continue;
-                BigDecimal quotient = entry.getValue().getQuotient()
-                        .multiply(converting);
-                queue.put(edge.getNode2(), quotient);
+                queue.add(toTheNode);
+                prevNodes.put(toTheNode, workingNode);
+                visitedNodes.add(toTheNode);
+                workingNode = queue.get(0);
             }
-        } while (workingNode != endNode);
+        }
 
-        return converting;
+        MyBigDecimal result = new MyBigDecimal("1");
+        while (workingNode != startNode) {
+            Node prevNode = prevNodes.get(workingNode);
+            Edge edge = prevNode.findEdge(workingNode.getName());
+            Node toNode = edge.getNode2();
+            if (workingNode.equals(toNode)) {
+                result.multiply(edge.quotient);
+            }
+            workingNode = prevNode;
+        }
+        workingNode = endNode;
+        while (workingNode != startNode) {
+            Node prevNode = prevNodes.get(workingNode);
+            Edge edge = prevNode.findEdge(workingNode.getName());
+            Node toNode = edge.getNode1();
+            if (workingNode.equals(toNode)) {
+                result.divide(edge.quotient);
+            }
+            workingNode = prevNode;
+        }
+
+        return result;
     }
 }
