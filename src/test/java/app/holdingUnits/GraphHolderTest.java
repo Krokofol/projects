@@ -9,14 +9,25 @@ class GraphHolderTest {
 
     @Test
     public void preloadSearchTest() {
-        GraphHolder.preload("target/test-classes/smallTestData.csv");
+        String[] args = {
+                "км,м,1000",
+                "м,мм,1000",
+                "мм,мкм,1000",
+                "мкм,нм,1000",
+                "нм,пм,1000",
+                "час,мин,60",
+                "кг,г,1000"
+        };
+
+        for (String string : args) {
+            GraphHolder.parseLine(string);
+        }
 
         assertEquals(3, GraphHolder.graphs.size());
 
         String fromNodeName = "км";
         String toNodeName = "пм";
         String noSuchUnit = "unit";
-        String expectedResult = "1000000000000000";
 
         assertFalse(Node.checkExistence(noSuchUnit));
         assertTrue(Node.checkExistence(fromNodeName));

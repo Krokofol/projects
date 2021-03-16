@@ -56,5 +56,4 @@ class GraphTest {
         assertEquals(node3, graph12.findNode(node3Name));
         assertEquals(2, node1.edgesForSecondNodeName.size());
     }
-
 }

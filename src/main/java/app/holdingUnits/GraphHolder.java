@@ -75,7 +75,7 @@ public class GraphHolder implements Runnable {
      * after checking both nodes connect them by edge.
      * @param line the line with names and quotient.
      */
-    private static void parseLine(String line) {
+    public static void parseLine(String line) {
         String node1Name = line.split(",")[0];
         String node2Name = line.split(",")[1];
         MyBigDecimal quotient = new MyBigDecimal(line.split(",")[2]);

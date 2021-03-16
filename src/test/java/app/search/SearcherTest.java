@@ -14,7 +14,6 @@ class SearcherTest {
         GraphHolder.preload("target/test-classes/smallTestData.csv");
         String fromNodeName = "км";
         String toNodeName = "пм";
-        String noSuchUnit = "unit";
         String expectedResult = "1000000000000000";
         Graph graph = Node.getGraph(fromNodeName);
         Searcher searcher = new Searcher(graph, fromNodeName, toNodeName);
