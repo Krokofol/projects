@@ -119,12 +119,14 @@ public class Graph {
             String startNodeName,
             String endNodeName
     ) {
+        System.out.println("convertingStarted");
         Node startNode = nodesForNames.get(startNodeName);
         Node endNode = nodesForNames.get(endNodeName);
         HashMap<Node, Node> prevNodes = new HashMap<>();
         HashSet<Node> visitedNodes = new HashSet<>();
         ArrayList<Node> queue = new ArrayList<>();
 
+        visitedNodes.add(startNode);
         queue.add(startNode);
 
         Node workingNode = queue.get(0);
@@ -146,6 +148,8 @@ public class Graph {
             }
         }
 
+        System.out.println("wayIsBuilt");
+
         MyBigDecimal result = new MyBigDecimal("1");
         while (workingNode != startNode) {
             Node prevNode = prevNodes.get(workingNode);
@@ -156,6 +160,9 @@ public class Graph {
             }
             workingNode = prevNode;
         }
+
+        System.out.println("multiplyIsDone");
+
         workingNode = endNode;
         while (workingNode != startNode) {
             Node prevNode = prevNodes.get(workingNode);
@@ -166,6 +173,8 @@ public class Graph {
             }
             workingNode = prevNode;
         }
+
+        System.out.println("divideIsDone");
 
         return result;
     }

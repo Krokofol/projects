@@ -76,7 +76,7 @@ public class MyBigDecimal {
         StringBuilder res = new StringBuilder();
         if (exponent > MAX_POW) {
             res.append("0.");
-            for (long i = MAX_POW; i < exponent; i++) {
+            for (long i = MAX_POW; i < exponent - 1; i++) {
                 res.append("0");
             }
             long data = bigDecimal.setScale(0, RoundingMode.DOWN)
