@@ -5,8 +5,17 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Class to test Graph class.
+ *
+ * @version 1.0.0 17 Mar 2021.
+ * @author Aleksey Lakhanskii.
+ */
 class GraphTest {
 
+    /**
+     * Creates graph with only one node. Checks does graph have only one node.
+     */
     @Test
     public void buildTest() {
         String startNodeName = "startNode";
@@ -16,6 +25,10 @@ class GraphTest {
         assertEquals(1, graph.nodesForNames.size());
     }
 
+    /**
+     * Creates graph with only one node. Connect to the existing node one more
+     * node. Checks are the bose nodes in the graph.
+     */
     @Test
     public void searchAddTest() {
         String node1Name = "node1GraphTest2";
@@ -36,6 +49,12 @@ class GraphTest {
         assertEquals(node1.edgesForSecondNodeName.size(), 1);
     }
 
+    /**
+     * Creates graph with only one node. Connects to the existing node one more
+     * node. Creates one more graph with the third node. Connects to graphs
+     * together. Checks are all nodes in graph to which was connected second
+     * graph.
+     */
     @Test
     public void connectionsTest() {
         String node1Name = "node1GraphTest3";

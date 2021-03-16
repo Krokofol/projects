@@ -4,8 +4,18 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Class to test Node class.
+ *
+ * @version 1.0.0 17 Mar 2021.
+ * @author Aleksey Lakhanksii.
+ */
 class NodeTest {
 
+    /**
+     * Creates two nodes. Checks are this different nodes and are they both
+     * were saved in the nodes storage.
+     */
     @Test
     public void builderTest() {
         String node1Name = "node1NodeTest1";

@@ -1,12 +1,21 @@
 package app.search;
 
-import app.search.MyBigDecimal;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Class to test MyBigDecimal class.
+ *
+ * @version 1.0.0 17 Mar 2021.
+ * @author Aleksey Lakhanksii.
+ */
 class MyBigDecimalTest {
 
+    /**
+     * Creates three types of instances of "MyBigDecimal" and converts them
+     * back to string. Checks the result (the should be the same as the were).
+     */
     @Test
     public void testConstructorAndToString() {
         String expectedEndData1 = "16829241443.8341";
@@ -20,6 +29,10 @@ class MyBigDecimalTest {
                 .toString());
     }
 
+    /**
+     * Creates some instances of "MyBigDecimal" and multiply them with the
+     * other one. Checks the result of multiplication.
+     */
     @Test
     public void testMultiplication() {
         String startData11 = "123.01";
@@ -44,6 +57,10 @@ class MyBigDecimalTest {
         assertEquals(expectedData3, data3.toString());
     }
 
+    /**
+     * Creates some instances of "MyBigDecimal" and divide them on the other
+     * one. Checks the result of division.
+     */
     @Test
     public void testDivision() {
         String startData11 = "1230.1";

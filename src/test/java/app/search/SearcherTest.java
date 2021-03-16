@@ -7,10 +7,19 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Class to test Searcher class.
+ *
+ * @version 1.0.0 17 Mar 2021.
+ * @author Aleksey Lakhanksii.
+ */
 class SearcherTest {
 
-    @Test
-    public void preload() {
+    /**
+     * Preloads required for tests data. Builds graphs if they do not exists
+     * yet and adds to them nodes.
+     */
+    public SearcherTest() {
         String[] args = {
                 "км,м,1000",
                 "м,мм,1000",
@@ -25,9 +34,12 @@ class SearcherTest {
         }
     }
 
+    /**
+     * Converts one units to the other (to which is able to convert) and checks
+     * the result of converting.
+     */
     @Test
     public void converting1() {
-        preload();
         String fromNodeName = "км";
         String toNodeName = "пм";
         String expectedResult = "1000000000000000";
@@ -43,9 +55,12 @@ class SearcherTest {
         assertEquals(expectedResult, convertingResult);
     }
 
+    /**
+     * Converts one units to the other (to which is able to convert) and checks
+     * the result of converting. (reverse direction)
+     */
     @Test
     public void converting2() {
-        preload();
         String fromNodeName = "пм";
         String toNodeName = "км";
         String expectedResult = "0.000000000000001";
