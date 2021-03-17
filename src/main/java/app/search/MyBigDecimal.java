@@ -106,13 +106,13 @@ public class MyBigDecimal {
 
     /**
      * Converts this instance of "MyBigDecimal" to the String.
-     * !!!THIS INSTANCE IS UNUSABLE AFTER CONVERTING!!!
      * @return the string with value at the normal form.
      */
     @Override
     public String toString() {
         StringBuilder res = new StringBuilder();
         if (exponent > NUMBER_SIGNIFICANT_DIGITS) {
+            //converts the digits < 1 and > 0
             res.append("0.");
             for (long i = NUMBER_SIGNIFICANT_DIGITS; i < exponent - 1; i++) {
                 res.append("0");
@@ -126,6 +126,7 @@ public class MyBigDecimal {
             return res.toString();
         }
         if (exponent >= 0) {
+            //converts the digits >=1 and < 10^15
             bigDecimal = bigDecimal.setScale(0, RoundingMode.DOWN);
             long data = bigDecimal.longValue();
             int pow = 0;
@@ -147,9 +148,14 @@ public class MyBigDecimal {
             res.append(bigDecimal.toString());
             return  res.toString();
         }
+        //converts the digits >= 10^15
         bigDecimal = bigDecimal.setScale(0, RoundingMode.DOWN);
         res.append(bigDecimal.toString());
-        for (long i = exponent + NUMBER_SIGNIFICANT_DIGITS; i < NUMBER_SIGNIFICANT_DIGITS; i++) {
+        for (
+                long i = exponent + NUMBER_SIGNIFICANT_DIGITS;
+                i < NUMBER_SIGNIFICANT_DIGITS;
+                i++
+        ) {
             res.append("0");
         }
         return res.toString();
