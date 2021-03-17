@@ -167,7 +167,7 @@ public class Value {
         );
         long data = valueCopy.longValue();
         int pow = 0;
-        while(data % 10 == 0 && pow < NUMBER_SIGNIFICANT_DIGITS) {
+        while(data % 10 == 0 && pow < exponent) {
             pow++;
             data = data / 10;
         }
