@@ -1,6 +1,6 @@
 package app.holdingUnits.containers;
 
-import app.search.MyBigDecimal;
+import app.search.Value;
 
 import java.util.*;
 
@@ -33,18 +33,20 @@ public class Graph {
      * @param startQuotient the quotient of converting.
      */
     public void addNode(String node1Name, String node2Name,
-                        MyBigDecimal startQuotient) {
+                        Value startQuotient) {
         Node node1 = nodesForNames.get(node1Name);
         if (node1 == null) {
             node1 = Node.createNode(node1Name);
             Node.setGraphsForName(node1Name, this);
             nodesForNames.put(node1Name, node1);
+            assert node1 != null;
         }
         Node node2 = nodesForNames.get(node2Name);
         if (node2 == null) {
             node2 = Node.createNode(node2Name);
             Node.setGraphsForName(node2Name, this);
             nodesForNames.put(node2Name, node2);
+            assert node2 != null;
         }
         node1.createEdge(node2, startQuotient);
     }
@@ -57,7 +59,7 @@ public class Graph {
      * @param startQuotient the quotient of converting.
      */
     public void connect(Graph graph2, String nodeName, String graph2NodeName,
-                        MyBigDecimal startQuotient) {
+                        Value startQuotient) {
         Node graph2Node = graph2.findNode(graph2NodeName);
         Node node = findNode(nodeName);
         node.createEdge(graph2Node, startQuotient);
@@ -101,7 +103,7 @@ public class Graph {
      * @param node2Name the second node.
      * @param quotient the conversion's quotient.
      */
-    public void addEdge(String node1Name, String node2Name, MyBigDecimal quotient) {
+    public void addEdge(String node1Name, String node2Name, Value quotient) {
         Node node1 = nodesForNames.get(node1Name);
         if (node1.findEdge(node2Name) != null)
             return;
@@ -116,7 +118,7 @@ public class Graph {
      * @param endNodeName node name to where we are converting.
      * @return the quotient of converting.
      */
-    public MyBigDecimal findConverting(
+    public Value findConverting(
             String startNodeName,
             String endNodeName
     ) {
@@ -147,7 +149,7 @@ public class Graph {
             }
             workingNode = queue.get(0);
         }
-        MyBigDecimal result = new MyBigDecimal("1");
+        Value result = new Value("1");
         while (workingNode != startNode) {
             Node prevNode = prevNodes.get(workingNode);
             Edge edge = prevNode.findEdge(workingNode.getName());

@@ -1,6 +1,6 @@
 package app.holdingUnits.containers;
 
-import app.search.MyBigDecimal;
+import app.search.Value;
 
 import java.util.HashMap;
 
@@ -89,7 +89,7 @@ public class Node {
      * @param secondNode node with which this edge connects.
      * @param quotient the rule of converting.
      */
-    public void createEdge(Node secondNode, MyBigDecimal quotient) {
+    public void createEdge(Node secondNode, Value quotient) {
         Edge edge = new Edge(this, secondNode, quotient);
         edgesForSecondNodeName.put(secondNode.getName(), edge);
         secondNode.edgesForSecondNodeName.put(name, edge);

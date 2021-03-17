@@ -9,7 +9,7 @@ public class Searcher extends Thread {
     /* extends thread to start Graph.findConverting at new thread. */
 
     /** result of converting. */
-    public MyBigDecimal result;
+    public Value result;
 
     /** the graph, where converting will be. */
     public Graph graph;
@@ -24,7 +24,7 @@ public class Searcher extends Thread {
      * returns result.
      * @return result.
      */
-    public MyBigDecimal getResult() {
+    public Value getResult() {
         return result;
     }
 

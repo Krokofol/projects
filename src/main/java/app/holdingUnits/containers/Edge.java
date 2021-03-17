@@ -1,6 +1,6 @@
 package app.holdingUnits.containers;
 
-import app.search.MyBigDecimal;
+import app.search.Value;
 
 /**
  * Edge which connects two nodes and contains converting quotient.
@@ -18,7 +18,7 @@ public class Edge {
     public Node node2;
 
     /** the quotient of converting. */
-    public MyBigDecimal quotient;
+    public Value quotient;
 
     /**
      * constructs edge.
@@ -26,7 +26,7 @@ public class Edge {
      * @param node2 node to where converting is going.
      * @param quotient the quotient of converting.
      */
-    public Edge(Node node1, Node node2, MyBigDecimal quotient) {
+    public Edge(Node node1, Node node2, Value quotient) {
         this.node1 = node1;
         this.node2 = node2;
         this.quotient = quotient;
@@ -52,7 +52,7 @@ public class Edge {
      * gets the quotient of converting.
      * @return the quotient.
      */
-    public MyBigDecimal getQuotient() {
+    public Value getQuotient() {
         return quotient;
     }
 }

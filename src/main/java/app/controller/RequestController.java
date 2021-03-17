@@ -3,7 +3,7 @@ package app.controller;
 import app.holdingUnits.*;
 import app.holdingUnits.containers.Graph;
 import app.holdingUnits.containers.Node;
-import app.search.MyBigDecimal;
+import app.search.Value;
 import app.search.Searcher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -137,13 +137,13 @@ public class RequestController {
      */
     private String calculateResult (ArrayList<String> toUnits,
                                     ArrayList<String> fromUnits) {
-        final MyBigDecimal result = new MyBigDecimal("1");
+        final Value result = new Value("1");
 
         if (fromUnits.size() != toUnits.size()) {
             return null;
         }
 
-        ArrayList<Searcher> threads = new ArrayList<>();
+        ArrayList<Searcher> searchThreads = new ArrayList<>();
 
         first:
         while (fromUnits.size() > 0) {
@@ -152,7 +152,7 @@ public class RequestController {
 
             for (String denominatorIterator : toUnits) {
                 if(graph.existenceNode(denominatorIterator)) {
-                    threads.add(new Searcher(graph, numeratorIterator,
+                    searchThreads.add(new Searcher(graph, numeratorIterator,
                             denominatorIterator));
                     toUnits.remove(denominatorIterator);
                     fromUnits.remove(numeratorIterator);
@@ -161,15 +161,15 @@ public class RequestController {
             }
             return null;
         }
-        threads.forEach(Searcher::start);
-        threads.forEach(thread -> {
+        searchThreads.forEach(Searcher::start);
+        searchThreads.forEach(thread -> {
             try {
                 thread.join();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         });
-        threads.forEach(thread -> result.multiply(thread.getResult()));
+        searchThreads.forEach(thread -> result.multiply(thread.getResult()));
 
         return result.toString();
     }

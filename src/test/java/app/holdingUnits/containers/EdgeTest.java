@@ -1,6 +1,6 @@
 package app.holdingUnits.containers;
 
-import app.search.MyBigDecimal;
+import app.search.Value;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,7 +27,7 @@ class EdgeTest {
         assertNotNull(node1);
         assertNotNull(node2);
 
-        node1.createEdge(node2, new MyBigDecimal("1"));
+        node1.createEdge(node2, new Value("1"));
 
         Edge node1Edge = node1.findEdge(node2Name);
         Edge node2Edge = node2.findEdge(node1Name);

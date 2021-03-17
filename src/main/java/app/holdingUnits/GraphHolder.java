@@ -2,7 +2,7 @@ package app.holdingUnits;
 
 import app.holdingUnits.containers.Graph;
 import app.holdingUnits.containers.Node;
-import app.search.MyBigDecimal;
+import app.search.Value;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -78,7 +78,7 @@ public class GraphHolder implements Runnable {
     public static void parseLine(String line) {
         String node1Name = line.split(",")[0];
         String node2Name = line.split(",")[1];
-        MyBigDecimal quotient = new MyBigDecimal(line.split(",")[2]);
+        Value quotient = new Value(line.split(",")[2]);
         if (Node.checkExistence(node1Name) && Node.checkExistence(node2Name)) {
             connectTwoNodes(node1Name, node2Name, quotient);
         } else {
@@ -100,7 +100,10 @@ public class GraphHolder implements Runnable {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        assert isr != null;
+        if (isr == null) {
+            System.out.println("No such file");
+            System.exit(13);
+        }
         return new BufferedReader(isr);
     }
 
@@ -111,7 +114,7 @@ public class GraphHolder implements Runnable {
      * @param quotient the quotient of converting.
      */
     private static void connectTwoNodes(String node1Name, String node2Name,
-                                        MyBigDecimal quotient) {
+                                        Value quotient) {
         Graph graph1 = findGraph(node1Name);
         Graph graph2 = findGraph(node2Name);
         if (graph1 == graph2) {
@@ -129,7 +132,7 @@ public class GraphHolder implements Runnable {
      * @param quotient the quotient of converting.
      */
     public static void addNodes(String node1Name, String node2Name,
-                                MyBigDecimal quotient) {
+                                Value quotient) {
         boolean node1Ex = Node.checkExistence(node1Name);
         boolean node2Ex = Node.checkExistence(node2Name);
         if (node1Ex) {
