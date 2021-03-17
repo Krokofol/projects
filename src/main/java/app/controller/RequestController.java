@@ -30,9 +30,9 @@ public class RequestController {
      */
     @RequestMapping("convert")
     @PostMapping
-    public ResponseEntity<String> convert(@RequestBody Map<String,
-            String> body) {
-
+    public ResponseEntity<String> convert(
+            @RequestBody Map<String, String> body
+    ) {
         String from = body.get("from");
         String to = body.get("to");
 
@@ -145,6 +145,25 @@ public class RequestController {
 
         ArrayList<Searcher> searchThreads = new ArrayList<>();
 
+        if (getConvertingWays(toUnits, fromUnits, searchThreads)) return null;
+        searchThreads.forEach(Searcher::start);
+        searchThreads.forEach(thread -> {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        searchThreads.forEach(thread -> result.multiply(thread.getResult()));
+
+        return result.toString();
+    }
+
+    private boolean getConvertingWays(
+            ArrayList<String> toUnits,
+            ArrayList<String> fromUnits,
+            ArrayList<Searcher> searchThreads
+    ) {
         first:
         while (fromUnits.size() > 0) {
             String numeratorIterator = fromUnits.get(0);
@@ -159,18 +178,8 @@ public class RequestController {
                     continue first;
                 }
             }
-            return null;
+            return true;
         }
-        searchThreads.forEach(Searcher::start);
-        searchThreads.forEach(thread -> {
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
-        searchThreads.forEach(thread -> result.multiply(thread.getResult()));
-
-        return result.toString();
+        return false;
     }
 }

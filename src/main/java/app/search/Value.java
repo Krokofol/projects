@@ -119,54 +119,92 @@ public class Value {
      */
     @Override
     public String toString() {
-        StringBuilder res = new StringBuilder();
-        if (exponent > NUMBER_SIGNIFICANT_DIGITS) {
-            //converts the digits < 1 and > 0
-            res.append("0.");
-            for (long i = NUMBER_SIGNIFICANT_DIGITS; i < exponent - 1; i++) {
-                res.append("0");
-            }
-            long data = bigDecimal.setScale(0, RoundingMode.DOWN)
-                    .longValue();
-            while (data % 10 == 0) {
-                data = data / 10;
-            }
-            res.append(data);
-            return res.toString();
+        boolean digitDontHaveNumbersBeforeDot =
+                exponent > NUMBER_SIGNIFICANT_DIGITS;
+        boolean digitHaveNumbersAfterDot =
+                exponent >= 0;
+        if (digitDontHaveNumbersBeforeDot) {
+            return convertDigitLessThenOne();
         }
-        if (exponent >= 0) {
-            //converts the digits >=1 and < 10^15
-            bigDecimal = bigDecimal.setScale(0, RoundingMode.DOWN);
-            long data = bigDecimal.longValue();
-            int pow = 0;
-            while(data % 10 == 0 && pow < exponent) {
-                pow++;
-                data = data / 10;
-            }
-            for (long i = 0; i < exponent; i++) {
-                bigDecimal = bigDecimal.divide(
-                        BigDecimal.TEN,
-                        NUMBER_SIGNIFICANT_DIGITS,
-                        RoundingMode.DOWN
-                );
-            }
-            bigDecimal = bigDecimal.setScale(
-                    exponent.intValue() - pow,
+        if (digitHaveNumbersAfterDot) {
+            return convertDigitWhichHaveNumbersAfterDot();
+        }
+        return convertDigitWhichDontHaveNumbersAfterDot();
+    }
+
+    /**
+     * Converts digit which is less then 1 and bigger then 0.
+     * @return the string form of this digit.
+     */
+    private String convertDigitLessThenOne() {
+        StringBuilder stringForm = new StringBuilder();
+        stringForm.append("0.");
+        for (long i = NUMBER_SIGNIFICANT_DIGITS; i < exponent - 1; i++) {
+            stringForm.append("0");
+        }
+        int saveInsignificantDigits = 0;
+        long data = bigDecimal
+                .setScale(saveInsignificantDigits, RoundingMode.DOWN)
+                .longValue();
+        while (data % 10 == 0) {
+            data = data / 10;
+        }
+        stringForm.append(data);
+        return stringForm.toString();
+    }
+
+    /**
+     * Converts digit which is bigger or equals then 1 and less or equals then
+     * 10^"NUMBER_SIGNIFICANT_DIGITS".
+     * @return the string form of this digit.
+     */
+    private String convertDigitWhichHaveNumbersAfterDot() {
+        StringBuilder stringForm = new StringBuilder();
+        int saveInsignificantDigits = 0;
+        BigDecimal valueCopy = bigDecimal.setScale(
+                saveInsignificantDigits,
+                RoundingMode.DOWN
+        );
+        long data = valueCopy.longValue();
+        int pow = 0;
+        while(data % 10 == 0 && pow < NUMBER_SIGNIFICANT_DIGITS) {
+            pow++;
+            data = data / 10;
+        }
+        for (long i = 0; i < exponent; i++) {
+            valueCopy = valueCopy.divide(
+                    BigDecimal.TEN,
+                    NUMBER_SIGNIFICANT_DIGITS,
                     RoundingMode.DOWN
             );
-            res.append(bigDecimal.toString());
-            return  res.toString();
         }
-        //converts the digits >= 10^15
-        bigDecimal = bigDecimal.setScale(0, RoundingMode.DOWN);
-        res.append(bigDecimal.toString());
+        valueCopy = valueCopy.setScale(
+                exponent.intValue() - pow,
+                RoundingMode.DOWN
+        );
+        stringForm.append(valueCopy.toString());
+        return stringForm.toString();
+    }
+
+    /**
+     * Converts digit which is bigger then 10^"NUMBER_SIGNIFICANT_DIGITS".
+     * @return string form of this digit.
+     */
+    private String convertDigitWhichDontHaveNumbersAfterDot(){
+        StringBuilder stringForm = new StringBuilder();
+        int saveInsignificantDigits = 0;
+        BigDecimal valueCopy = bigDecimal.setScale(
+                saveInsignificantDigits,
+                RoundingMode.DOWN
+        );
+        stringForm.append(valueCopy.toString());
         for (
                 long i = exponent + NUMBER_SIGNIFICANT_DIGITS;
                 i < NUMBER_SIGNIFICANT_DIGITS;
                 i++
         ) {
-            res.append("0");
+            stringForm.append("0");
         }
-        return res.toString();
+        return stringForm.toString();
     }
 }

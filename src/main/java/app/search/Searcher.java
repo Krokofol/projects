@@ -34,8 +34,7 @@ public class Searcher extends Thread {
      * @param startNodeName name of the node FROM which we are converting.
      * @param endNodeName name of the node TO which we are converting.
      */
-    public Searcher(Graph graph, String startNodeName,
-                    String endNodeName) {
+    public Searcher(Graph graph, String startNodeName, String endNodeName) {
         this.endNodeName = endNodeName;
         this.startNodeName = startNodeName;
         this.graph = graph;
