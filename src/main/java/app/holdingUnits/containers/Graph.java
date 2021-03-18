@@ -149,6 +149,7 @@ public class Graph {
             }
             workingNode = queue.get(0);
         }
+
         Value result = new Value("1");
         while (workingNode != startNode) {
             Node prevNode = prevNodes.get(workingNode);
@@ -159,16 +160,19 @@ public class Graph {
             }
             workingNode = prevNode;
         }
+        Value denominator = new Value("1");
         workingNode = endNode;
         while (workingNode != startNode) {
             Node prevNode = prevNodes.get(workingNode);
             Edge edge = prevNode.findEdge(workingNode.getName());
             Node toNode = edge.getNode1();
             if (workingNode.equals(toNode)) {
-                result.divide(edge.getQuotient());
+                denominator.multiply(edge.getQuotient());
             }
             workingNode = prevNode;
         }
+        result.divide(denominator);
+
         return result;
     }
 }
