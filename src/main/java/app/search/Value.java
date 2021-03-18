@@ -24,41 +24,64 @@ public class Value {
     private static final Integer NUMBER_OF_INSIGNIFICANT_DIGITS = 60;
 
     /**
-     * the number that has NUMBER_SIGNIFICANT_DIGITS before "." and
+     * numerator of the digit that has NUMBER_SIGNIFICANT_DIGITS before "." and
      * NUMBER_OF_INSIGNIFICANT_DIGITS after ".".
      */
-    public BigDecimal bigDecimal;
+    public BigDecimal numerator;
 
     /**
-     * the exponent on which "bigDecimal" should be multiplied to convert it
-     * to the normal form
+     * denominator of the digit that has NUMBER_SIGNIFICANT_DIGITS before "."
+     * and NUMBER_OF_INSIGNIFICANT_DIGITS after ".".
      */
-    public Long exponent;
+    public BigDecimal denominator;
+
+    /**
+     * numerator exponent on which "bigDecimal" should be multiplied to convert
+     * it to the normal form.
+     */
+    public Long numeratorExponent;
+
+
+    /**
+     * denominator exponent on which "bigDecimal" should be multiplied to convert
+     * it to the normal form.
+     */
+    public Long denominatorExponent;
 
     /**
      * constructs "Value" by number which is written at the string.
      * @param number the number which presented as the string.
      */
     public Value(String number) {
-        bigDecimal = new BigDecimal(number);
-        long startExponent = Math.round(
-                Math.floor(Math.log10(bigDecimal.doubleValue()))
+        numerator = new BigDecimal(number);
+        denominator = new BigDecimal("1");
+        long startNumeratorExponent = Math.round(
+                Math.floor(Math.log10(numerator.doubleValue()))
         );
-        exponent = NUMBER_SIGNIFICANT_DIGITS - startExponent;
-        if (startExponent < NUMBER_SIGNIFICANT_DIGITS) {
-            for (long i = startExponent; i < NUMBER_SIGNIFICANT_DIGITS; i++) {
-                bigDecimal = bigDecimal.multiply(BigDecimal.TEN);
+        long startDenominatorExponent = 0;
+        numeratorExponent = NUMBER_SIGNIFICANT_DIGITS - startNumeratorExponent;
+        denominatorExponent = NUMBER_SIGNIFICANT_DIGITS.longValue();
+        for (long i = startDenominatorExponent;
+             i < NUMBER_SIGNIFICANT_DIGITS;
+             i++) {
+            denominator = denominator.multiply(BigDecimal.TEN);
+        }
+        if (startNumeratorExponent < NUMBER_SIGNIFICANT_DIGITS) {
+            for (long i = startNumeratorExponent;
+                    i < NUMBER_SIGNIFICANT_DIGITS;
+                    i++) {
+                numerator = numerator.multiply(BigDecimal.TEN);
             }
         } else {
-            for (long i = startExponent; i > NUMBER_SIGNIFICANT_DIGITS; i--) {
-                bigDecimal = bigDecimal.divide(
+            for (long i = startNumeratorExponent; i > NUMBER_SIGNIFICANT_DIGITS; i--) {
+                numerator = numerator.divide(
                         BigDecimal.TEN,
                         NUMBER_OF_INSIGNIFICANT_DIGITS,
                         RoundingMode.DOWN
                 );
             }
         }
-        bigDecimal = bigDecimal.setScale(
+        numerator = numerator.setScale(
                 NUMBER_OF_INSIGNIFICANT_DIGITS,
                 RoundingMode.DOWN
         );
@@ -71,22 +94,11 @@ public class Value {
      *              multiplies.
      */
     public void multiply(Value value) {
-        exponent += value.exponent;
-        bigDecimal = bigDecimal.multiply(value.bigDecimal);
-        long deltaExponent = Math.round(
-                Math.floor(Math.log10(bigDecimal.doubleValue()))
-        );
-        exponent += NUMBER_SIGNIFICANT_DIGITS - deltaExponent;
-        for (long i = NUMBER_SIGNIFICANT_DIGITS; i < deltaExponent; i++) {
-            bigDecimal = bigDecimal.divide(
-                    BigDecimal.TEN,
-                    NUMBER_OF_INSIGNIFICANT_DIGITS,
-                    RoundingMode.DOWN
-            );
-        }
-        bigDecimal = bigDecimal.setScale(
-                NUMBER_OF_INSIGNIFICANT_DIGITS,
-                RoundingMode.DOWN
+        calculate(
+                value.numeratorExponent,
+                value.denominatorExponent,
+                value.numerator,
+                value.denominator
         );
     }
 
@@ -96,22 +108,53 @@ public class Value {
      * @param value the value on which this instance of "Value" divides.
      */
     public void divide(Value value) {
-        exponent -= value.exponent;
-        bigDecimal = bigDecimal.divide(
-                value.bigDecimal,
-                NUMBER_OF_INSIGNIFICANT_DIGITS * 2,
+        calculate(
+                value.denominatorExponent,
+                value.numeratorExponent,
+                value.denominator,
+                value.numerator
+        );
+    }
+
+    public void calculate(long valueNumeratorExponent,
+                          long valueDenominatorExponent,
+                          BigDecimal valueNumerator,
+                          BigDecimal valueDenominator
+    ) {
+        numeratorExponent += valueNumeratorExponent;
+        numerator = numerator.multiply(valueNumerator);
+        long deltaExponent = Math.round(
+                Math.floor(Math.log10(numerator.doubleValue()))
+        );
+        numeratorExponent += NUMBER_SIGNIFICANT_DIGITS - deltaExponent;
+        for (long i = NUMBER_SIGNIFICANT_DIGITS; i < deltaExponent; i++) {
+            numerator = numerator.divide(
+                    BigDecimal.TEN,
+                    NUMBER_OF_INSIGNIFICANT_DIGITS,
+                    RoundingMode.DOWN
+            );
+        }
+        numerator = numerator.setScale(
+                NUMBER_OF_INSIGNIFICANT_DIGITS,
                 RoundingMode.DOWN
         );
-        long ex = Math.round(Math.floor(Math.log10(bigDecimal.doubleValue())));
-        exponent += NUMBER_SIGNIFICANT_DIGITS - ex;
-        for (long i = ex; i < NUMBER_SIGNIFICANT_DIGITS; i++) {
-            bigDecimal = bigDecimal.multiply(BigDecimal.TEN);
+        denominatorExponent += valueDenominatorExponent;
+        denominator = denominator.multiply(valueDenominator);
+        deltaExponent = Math.round(Math.floor(Math.log10(denominator.doubleValue())));
+        denominatorExponent += NUMBER_SIGNIFICANT_DIGITS - deltaExponent;
+        for (long i = NUMBER_SIGNIFICANT_DIGITS; i < deltaExponent; i++) {
+            denominator = denominator.divide(
+                    BigDecimal.TEN,
+                    NUMBER_OF_INSIGNIFICANT_DIGITS,
+                    RoundingMode.DOWN
+            );
         }
-        bigDecimal = bigDecimal.setScale(
+        denominator = denominator.setScale(
                 NUMBER_OF_INSIGNIFICANT_DIGITS,
                 RoundingMode.DOWN
         );
     }
+
 
     /**
      * Converts this instance of "Value" to the String.
@@ -119,17 +162,39 @@ public class Value {
      */
     @Override
     public String toString() {
+        Value convertValue = divideNumeratorOnDenominator();
         boolean digitDontHaveNumbersBeforeDot =
-                exponent > NUMBER_SIGNIFICANT_DIGITS;
+                convertValue.numeratorExponent > NUMBER_SIGNIFICANT_DIGITS;
         boolean digitHaveNumbersAfterDot =
-                exponent >= 0;
+                convertValue.numeratorExponent >= 0;
         if (digitDontHaveNumbersBeforeDot) {
-            return convertDigitLessThenOne();
+            return convertValue.convertDigitLessThenOne();
         }
         if (digitHaveNumbersAfterDot) {
-            return convertDigitWhichHaveNumbersAfterDot();
+            return convertValue.convertDigitWhichHaveNumbersAfterDot();
         }
-        return convertDigitWhichDontHaveNumbersAfterDot();
+        return convertValue.convertDigitWhichDontHaveNumbersAfterDot();
+    }
+
+    public Value divideNumeratorOnDenominator() {
+        Value result = new Value("1");
+        result.numeratorExponent = numeratorExponent - denominatorExponent;
+        result.numerator = numerator.divide(
+                denominator,
+                NUMBER_OF_INSIGNIFICANT_DIGITS,
+                RoundingMode.DOWN
+        );
+        long deltaExponent = Math.round(Math.floor(Math.log10(
+                result.numerator.doubleValue())));
+        result.numeratorExponent += NUMBER_SIGNIFICANT_DIGITS - deltaExponent;
+        for (long i = deltaExponent; i < NUMBER_SIGNIFICANT_DIGITS; i++) {
+            result.numerator = result.numerator.multiply(BigDecimal.TEN);
+        }
+        result.numerator = result.numerator.setScale(
+                NUMBER_OF_INSIGNIFICANT_DIGITS,
+                RoundingMode.DOWN
+        );
+        return result;
     }
 
     /**
@@ -139,11 +204,11 @@ public class Value {
     private String convertDigitLessThenOne() {
         StringBuilder stringForm = new StringBuilder();
         stringForm.append("0.");
-        for (long i = NUMBER_SIGNIFICANT_DIGITS; i < exponent - 1; i++) {
+        for (long i = NUMBER_SIGNIFICANT_DIGITS; i < numeratorExponent - 1; i++) {
             stringForm.append("0");
         }
         int saveInsignificantDigits = 0;
-        long data = bigDecimal
+        long data = numerator
                 .setScale(saveInsignificantDigits, RoundingMode.DOWN)
                 .longValue();
         while (data % 10 == 0) {
@@ -161,17 +226,17 @@ public class Value {
     private String convertDigitWhichHaveNumbersAfterDot() {
         StringBuilder stringForm = new StringBuilder();
         int saveInsignificantDigits = 0;
-        BigDecimal valueCopy = bigDecimal.setScale(
+        BigDecimal valueCopy = numerator.setScale(
                 saveInsignificantDigits,
                 RoundingMode.DOWN
         );
         long data = valueCopy.longValue();
         int pow = 0;
-        while(data % 10 == 0 && pow < exponent) {
+        while(data % 10 == 0 && pow < numeratorExponent) {
             pow++;
             data = data / 10;
         }
-        for (long i = 0; i < exponent; i++) {
+        for (long i = 0; i < numeratorExponent; i++) {
             valueCopy = valueCopy.divide(
                     BigDecimal.TEN,
                     NUMBER_SIGNIFICANT_DIGITS,
@@ -179,7 +244,7 @@ public class Value {
             );
         }
         valueCopy = valueCopy.setScale(
-                exponent.intValue() - pow,
+                numeratorExponent.intValue() - pow,
                 RoundingMode.DOWN
         );
         stringForm.append(valueCopy.toString());
@@ -193,13 +258,13 @@ public class Value {
     private String convertDigitWhichDontHaveNumbersAfterDot(){
         StringBuilder stringForm = new StringBuilder();
         int saveInsignificantDigits = 0;
-        BigDecimal valueCopy = bigDecimal.setScale(
+        BigDecimal valueCopy = numerator.setScale(
                 saveInsignificantDigits,
                 RoundingMode.DOWN
         );
         stringForm.append(valueCopy.toString());
         for (
-                long i = exponent + NUMBER_SIGNIFICANT_DIGITS;
+                long i = numeratorExponent + NUMBER_SIGNIFICANT_DIGITS;
                 i < NUMBER_SIGNIFICANT_DIGITS;
                 i++
         ) {
