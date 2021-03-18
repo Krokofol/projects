@@ -151,7 +151,6 @@ public class Graph {
         }
 
         Value numerator = new Value("1");
-        Value denominator = new Value("1");
         Node prevNode;
         Edge edge;
         Node toNode;
@@ -163,12 +162,10 @@ public class Graph {
                 numerator.multiply(edge.getQuotient());
             }
             else {
-                denominator.multiply(edge.getQuotient());
+                numerator.divide(edge.getQuotient());
             }
             workingNode = prevNode;
         }
-        numerator.divide(denominator);
-
         return numerator;
     }
 }

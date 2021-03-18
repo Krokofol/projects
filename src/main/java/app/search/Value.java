@@ -30,17 +30,19 @@ public class Value {
     public BigDecimal numerator;
 
     /**
-     * denominator of the digit that has NUMBER_SIGNIFICANT_DIGITS before "."
-     * and NUMBER_OF_INSIGNIFICANT_DIGITS after ".".
-     */
-    public BigDecimal denominator;
-
-    /**
      * numerator exponent on which "bigDecimal" should be multiplied to convert
      * it to the normal form.
      */
     public Long numeratorExponent;
 
+    /** if this instance has denominator become true */
+    public boolean denominatorIsInitialized = false;
+
+    /**
+     * denominator of the digit that has NUMBER_SIGNIFICANT_DIGITS before "."
+     * and NUMBER_OF_INSIGNIFICANT_DIGITS after ".".
+     */
+    public BigDecimal denominator;
 
     /**
      * denominator exponent on which "bigDecimal" should be multiplied to convert
@@ -94,6 +96,8 @@ public class Value {
      *              multiplies.
      */
     public void multiply(Value value) {
+        if (value.denominatorIsInitialized)
+            denominatorIsInitialized = true;
         calculate(
                 value.numeratorExponent,
                 value.denominatorExponent,
@@ -108,6 +112,7 @@ public class Value {
      * @param value the value on which this instance of "Value" divides.
      */
     public void divide(Value value) {
+        denominatorIsInitialized = true;
         calculate(
                 value.denominatorExponent,
                 value.numeratorExponent,
@@ -138,21 +143,23 @@ public class Value {
                 NUMBER_OF_INSIGNIFICANT_DIGITS,
                 RoundingMode.DOWN
         );
-        denominatorExponent += valueDenominatorExponent;
-        denominator = denominator.multiply(valueDenominator);
-        deltaExponent = Math.round(Math.floor(Math.log10(denominator.doubleValue())));
-        denominatorExponent += NUMBER_SIGNIFICANT_DIGITS - deltaExponent;
-        for (long i = NUMBER_SIGNIFICANT_DIGITS; i < deltaExponent; i++) {
-            denominator = denominator.divide(
-                    BigDecimal.TEN,
+        if (denominatorIsInitialized) {
+            denominatorExponent += valueDenominatorExponent;
+            denominator = denominator.multiply(valueDenominator);
+            deltaExponent = Math.round(Math.floor(Math.log10(denominator.doubleValue())));
+            denominatorExponent += NUMBER_SIGNIFICANT_DIGITS - deltaExponent;
+            for (long i = NUMBER_SIGNIFICANT_DIGITS; i < deltaExponent; i++) {
+                denominator = denominator.divide(
+                        BigDecimal.TEN,
+                        NUMBER_OF_INSIGNIFICANT_DIGITS,
+                        RoundingMode.DOWN
+                );
+            }
+            denominator = denominator.setScale(
                     NUMBER_OF_INSIGNIFICANT_DIGITS,
                     RoundingMode.DOWN
             );
         }
-        denominator = denominator.setScale(
-                NUMBER_OF_INSIGNIFICANT_DIGITS,
-                RoundingMode.DOWN
-        );
     }
 
 
