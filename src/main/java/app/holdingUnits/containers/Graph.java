@@ -150,29 +150,25 @@ public class Graph {
             workingNode = queue.get(0);
         }
 
-        Value result = new Value("1");
-        while (workingNode != startNode) {
-            Node prevNode = prevNodes.get(workingNode);
-            Edge edge = prevNode.findEdge(workingNode.getName());
-            Node toNode = edge.getNode2();
-            if (workingNode.equals(toNode)) {
-                result.multiply(edge.getQuotient());
-            }
-            workingNode = prevNode;
-        }
+        Value numerator = new Value("1");
         Value denominator = new Value("1");
-        workingNode = endNode;
-        while (workingNode != startNode) {
-            Node prevNode = prevNodes.get(workingNode);
-            Edge edge = prevNode.findEdge(workingNode.getName());
-            Node toNode = edge.getNode1();
+        Node prevNode;
+        Edge edge;
+        Node toNode;
+        while (!workingNode.equals(startNode)) {
+            prevNode = prevNodes.get(workingNode);
+            edge = prevNode.findEdge(workingNode.getName());
+            toNode = edge.getNode2();
             if (workingNode.equals(toNode)) {
+                numerator.multiply(edge.getQuotient());
+            }
+            else {
                 denominator.multiply(edge.getQuotient());
             }
             workingNode = prevNode;
         }
-        result.divide(denominator);
+        numerator.divide(denominator);
 
-        return result;
+        return numerator;
     }
 }
