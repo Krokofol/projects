@@ -36,7 +36,7 @@ public class Value {
     public Long numeratorExponent;
 
     /** if this instance has denominator become true */
-    public boolean denominatorIsInitialized = false;
+    public boolean denominatorIsInitialized;
 
     /**
      * denominator of the digit that has NUMBER_SIGNIFICANT_DIGITS before "."
@@ -55,6 +55,7 @@ public class Value {
      * @param number the number which presented as the string.
      */
     public Value(String number) {
+        denominatorIsInitialized = false;
         numerator = new BigDecimal(number);
         denominator = new BigDecimal("1");
         long startNumeratorExponent = Math.round(
@@ -96,8 +97,9 @@ public class Value {
      *              multiplies.
      */
     public void multiply(Value value) {
-        if (value.denominatorIsInitialized)
+        if (value.denominatorIsInitialized) {
             denominatorIsInitialized = true;
+        }
         calculate(
                 value.numeratorExponent,
                 value.denominatorExponent,
