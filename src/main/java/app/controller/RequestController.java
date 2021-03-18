@@ -159,6 +159,13 @@ public class RequestController {
         return result.toString();
     }
 
+    /**
+     * finds units which are able to convert from one to other.
+     * @param toUnits to which units convert;
+     * @param fromUnits from which units convert;
+     * @param searchThreads collection of prepared to start threads.
+     * @return true if impossible to convert units.
+     */
     private boolean getConvertingWays(
             ArrayList<String> toUnits,
             ArrayList<String> fromUnits,
