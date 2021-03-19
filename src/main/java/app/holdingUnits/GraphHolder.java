@@ -65,6 +65,7 @@ public class GraphHolder implements Runnable {
     public static void readingStartInfo(String filePath) {
         try (BufferedReader reader = preloadReader(filePath)) {
             reader.lines().forEach(GraphHolder::parseLine);
+            graphs.forEach(Graph::completionGraph);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -21,7 +21,7 @@ public class Value {
      * The number of insignificant digits. More numbers = more precision, but
      * spends more time for operations.
      */
-    private static final Integer NUMBER_OF_INSIGNIFICANT_DIGITS = 45;
+    private static final Integer NUMBER_OF_INSIGNIFICANT_DIGITS = 60;
 
     /**
      * numerator of the digit that has NUMBER_SIGNIFICANT_DIGITS before "." and
@@ -61,22 +61,22 @@ public class Value {
         long startNumeratorExponent = Math.round(
                 Math.floor(Math.log10(numerator.doubleValue()))
         );
-        long startDenominatorExponent = 0;
+        denominatorExponent = 0L;
         numeratorExponent = NUMBER_SIGNIFICANT_DIGITS - startNumeratorExponent;
-        denominatorExponent = NUMBER_SIGNIFICANT_DIGITS.longValue();
-        for (long i = startDenominatorExponent;
-             i < NUMBER_SIGNIFICANT_DIGITS;
-             i++) {
-            denominator = denominator.multiply(BigDecimal.TEN);
-        }
         if (startNumeratorExponent < NUMBER_SIGNIFICANT_DIGITS) {
-            for (long i = startNumeratorExponent;
+            for (
+                    long i = startNumeratorExponent;
                     i < NUMBER_SIGNIFICANT_DIGITS;
-                    i++) {
+                    i++
+            ) {
                 numerator = numerator.multiply(BigDecimal.TEN);
             }
         } else {
-            for (long i = startNumeratorExponent; i > NUMBER_SIGNIFICANT_DIGITS; i--) {
+            for (
+                    long i = startNumeratorExponent;
+                    i > NUMBER_SIGNIFICANT_DIGITS;
+                    i--
+            ) {
                 numerator = numerator.divide(
                         BigDecimal.TEN,
                         NUMBER_OF_INSIGNIFICANT_DIGITS,
@@ -134,7 +134,11 @@ public class Value {
                 Math.floor(Math.log10(numerator.doubleValue()))
         );
         numeratorExponent += NUMBER_SIGNIFICANT_DIGITS - deltaExponent;
-        for (long i = NUMBER_SIGNIFICANT_DIGITS; i < deltaExponent; i++) {
+        for (
+                long i = NUMBER_SIGNIFICANT_DIGITS;
+                i < deltaExponent;
+                i++
+        ) {
             numerator = numerator.divide(
                     BigDecimal.TEN,
                     NUMBER_OF_INSIGNIFICANT_DIGITS,
@@ -213,7 +217,11 @@ public class Value {
     private String convertDigitLessThenOne() {
         StringBuilder stringForm = new StringBuilder();
         stringForm.append("0.");
-        for (long i = NUMBER_SIGNIFICANT_DIGITS; i < numeratorExponent - 1; i++) {
+        for (
+                long i = NUMBER_SIGNIFICANT_DIGITS;
+                i < numeratorExponent - 1;
+                i++
+        ) {
             stringForm.append("0");
         }
         int saveInsignificantDigits = 0;

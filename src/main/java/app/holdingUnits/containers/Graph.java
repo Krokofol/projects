@@ -17,6 +17,9 @@ public class Graph {
     /** all nodes of the graph. */
     public HashMap<String, Node> nodesForNames;
 
+    /** name of the first node. */
+    public String firstNodeName;
+
     /**
      * constructs the graph.
      * @param startNode first graph node.
@@ -24,6 +27,7 @@ public class Graph {
     public Graph(Node startNode) {
         nodesForNames = new HashMap<>();
         nodesForNames.put(startNode.getName(), startNode);
+        firstNodeName = startNode.getName();
     }
 
     /**
@@ -112,6 +116,58 @@ public class Graph {
     }
 
     /**
+     * ads some edges to the graph to search faster;
+     */
+    public void completionGraph() {
+        Node startNode = nodesForNames.get(firstNodeName);
+        Integer distance = 0;
+        ArrayList<Node> queue = new ArrayList<>();
+        HashSet<Node> visitedNodes = new HashSet<>();
+        HashMap<Node, Integer> distancesToNodes = new HashMap<>();
+        HashMap<Node, Value> convertingResults = new HashMap<>();
+        visitedNodes.add(startNode);
+        queue.add(nodesForNames.get(firstNodeName));
+        distancesToNodes.put(startNode, distance);
+        convertingResults.put(startNode, new Value ("1"));
+        Node workingNode;
+        Node nextNode;
+        Value converting;
+        Value nextConverting;
+        System.out.println("building");
+        while (queue.size() != 0) {
+            workingNode = queue.get(0);
+            distance = distancesToNodes.get(workingNode);
+            converting = convertingResults.get(workingNode);
+            distancesToNodes.remove(workingNode);
+            convertingResults.remove(workingNode);
+            queue.remove(workingNode);
+            for (Edge edgeIterator : workingNode.getAllEdges().values()) {
+                nextNode = edgeIterator.getNode1().equals(workingNode)
+                        ? edgeIterator.getNode2()
+                        : edgeIterator.getNode1();
+                if (visitedNodes.contains(nextNode)) {
+                    continue;
+                }
+                nextConverting = new Value("1");
+                nextConverting.multiply(converting);
+                if (edgeIterator.getNode1().equals(nextNode)) {
+                    nextConverting.divide(edgeIterator.getQuotient());
+                } else {
+                    nextConverting.multiply(edgeIterator.getQuotient());
+                }
+                if ((distance + 1) % 500 == 0) {
+                    startNode.createEdge(nextNode, nextConverting);
+                }
+                visitedNodes.add(nextNode);
+                distancesToNodes.put(nextNode, distance + 1);
+                queue.add(nextNode);
+                convertingResults.put(nextNode, nextConverting);
+            }
+        }
+        System.out.println("built");
+    }
+
+    /**
      * Dijkstra search, but the weight is the inaccuracy in the representation
      * of a number in binary form.
      * @param startNodeName node name from which we are converting.
@@ -152,10 +208,12 @@ public class Graph {
 
         Value numerator = new Value("1");
         Value denominator = new Value("1");
+        int count = 0;
         Node prevNode;
         Edge edge;
         Node toNode;
         while (!workingNode.equals(startNode)) {
+            count++;
             prevNode = prevNodes.get(workingNode);
             edge = prevNode.findEdge(workingNode.getName());
             toNode = edge.getNode2();
@@ -167,6 +225,7 @@ public class Graph {
             }
             workingNode = prevNode;
         }
+        System.out.println(count);
         numerator.divide(denominator);
         return numerator;
     }
