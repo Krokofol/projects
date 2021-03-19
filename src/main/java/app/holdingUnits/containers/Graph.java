@@ -184,6 +184,7 @@ public class Graph {
             String startNodeName,
             String endNodeName
     ) {
+        logger.log(Level.INFO,"start searching converting rule");
         Node startNode = nodesForNames.get(startNodeName);
         Node endNode = nodesForNames.get(endNodeName);
         HashMap<Node, Node> prevNodes = new HashMap<>();
@@ -231,7 +232,7 @@ public class Graph {
             }
             workingNode = prevNode;
         }
-        System.out.println(count);
+        logger.log(Level.INFO, "rule was founded by " + count + " edges");
         numerator.divide(denominator);
         return numerator;
     }
