@@ -107,7 +107,7 @@ public class RequestController {
         if (units2.length > 0) result.append(units2[0]);
         if (units2.length > 0 && units1.length > 1) {
             if (units2[0].length() > 0) {
-                result.append(" * ");
+                result.append("*");
             }
         }
         if (units1.length > 1) result.append(units1[1]);
