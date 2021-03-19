@@ -1,6 +1,6 @@
 package app;
 
-import app.holdingUnits.GraphHolder;
+import app.holdingUnits.Preloader;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -20,6 +20,6 @@ public class App {
      */
     public static void main (String[] args) {
         SpringApplication.run(App.class, args);
-        GraphHolder.preload(args[0]);
+        Preloader.preload(args[0]);
     }
 }

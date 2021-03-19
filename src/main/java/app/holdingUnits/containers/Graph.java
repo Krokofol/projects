@@ -1,8 +1,11 @@
 package app.holdingUnits.containers;
 
+import app.holdingUnits.Preloader;
 import app.search.Value;
 
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Class to hold nodes of the graph. Also it should find way to convert one
@@ -13,6 +16,9 @@ import java.util.*;
  *
  */
 public class Graph {
+
+    /** logger for this class. */
+    public static Logger logger = Logger.getLogger(Graph.class.getName());
 
     /** all nodes of the graph. */
     public HashMap<String, Node> nodesForNames;
@@ -119,6 +125,7 @@ public class Graph {
      * ads some edges to the graph to search faster;
      */
     public void completionGraph() {
+        logger.log(Level.INFO, "start adding edges into the graph");
         Node startNode = nodesForNames.get(firstNodeName);
         Integer distance = 0;
         ArrayList<Node> queue = new ArrayList<>();
@@ -133,7 +140,6 @@ public class Graph {
         Node nextNode;
         Value converting;
         Value nextConverting;
-        System.out.println("building");
         while (queue.size() != 0) {
             workingNode = queue.get(0);
             distance = distancesToNodes.get(workingNode);
@@ -164,7 +170,7 @@ public class Graph {
                 convertingResults.put(nextNode, nextConverting);
             }
         }
-        System.out.println("built");
+        logger.log(Level.FINE, "edges are added into the graph");
     }
 
     /**

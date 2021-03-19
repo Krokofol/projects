@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * Class for processing requests.
@@ -37,7 +38,7 @@ public class RequestController {
         String to = body.get("to");
 
         try {
-            GraphHolder.preloader.join();
+            Preloader.preloader.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -48,14 +49,14 @@ public class RequestController {
         String[] fromTo = refactorArgs(from, to);
         from = fromTo[0];
         to = fromTo[1];
-        if (checkExistence(from.split(" \\* "))
-            || checkExistence(to.split(" \\* "))) {
+        if (checkExistence(from.split("\\*"))
+            || checkExistence(to.split("\\*"))) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         String result = calculateResult(
-                new ArrayList<>(Arrays.asList(from.split(" \\* "))),
-                new ArrayList<>(Arrays.asList(to.split(" \\* ")))
+                new ArrayList<>(Arrays.asList(from.split("\\*"))),
+                new ArrayList<>(Arrays.asList(to.split("\\*")))
         );
 
         if (result == null) {
@@ -85,8 +86,8 @@ public class RequestController {
      * string.
      */
     private static String[] refactorArgs(String from, String to) {
-        String[] units1 = from.split(" / ");
-        String[] units2 = to.split(" / ");
+        String[] units1 = from.replace(" ", "").split("/");
+        String[] units2 = to.replace(" ", "").split("/");
 
         return new String[]{
                 buildArgs(units1, units2).toString(),

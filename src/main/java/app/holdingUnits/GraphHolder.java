@@ -4,9 +4,8 @@ import app.holdingUnits.containers.Graph;
 import app.holdingUnits.containers.Node;
 import app.search.Value;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 /**
  * Class which builds and holds all graphs.
@@ -15,61 +14,8 @@ import java.util.ArrayList;
  * @author Aleksey Lakhanskii
  *
  */
-public class GraphHolder implements Runnable {
+public class GraphHolder {
     /* implements Runnable to start preloading thread. */
-
-    /** all graphs. */
-    public static ArrayList<Graph> graphs = new ArrayList<>();
-
-    /** thread which preloads units and converting rules. */
-    public static Thread preloader;
-
-    /** path to the file with rules. */
-    public String path;
-
-    /**
-     * creates instance of GraphHolder and starts new thread to preload units
-     * and converting rules.
-     * @param path path to the file with units and converting rules.
-     */
-    public static void preload(String path) {
-        GraphHolder.preloader = new Thread(new GraphHolder(path));
-        preloader.start();
-        try {
-            preloader.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * constructs GraphHolder.
-     * @param path path to the file with units and converting rules.
-     */
-    public GraphHolder(String path) {
-        this.path = path;
-    }
-
-    /**
-     * runs thread and preloads units and converting rules.
-     */
-    @Override
-    public void run() {
-        GraphHolder.readingStartInfo(path);
-    }
-
-    /**
-     * preloading graphs.
-     * @param filePath path to file with converting rules.
-     */
-    public static void readingStartInfo(String filePath) {
-        try (BufferedReader reader = preloadReader(filePath)) {
-            reader.lines().forEach(GraphHolder::parseLine);
-            graphs.forEach(Graph::completionGraph);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     /**
      * gets from line names of the nodes. Adds node if it does not exists and
@@ -87,26 +33,8 @@ public class GraphHolder implements Runnable {
         }
     }
 
-    /**
-     * preloads buffer reader of file.
-     * @param filePath path to the file with converting rules.
-     * @return buffer reader.
-     */
-    private static BufferedReader preloadReader(String filePath) {
-        File input = new File(filePath);
-        InputStreamReader isr = null;
-        try {
-            isr = new InputStreamReader(new FileInputStream(input),
-                    StandardCharsets.UTF_8);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        if (isr == null) {
-            System.out.println("No such file");
-            System.exit(13);
-        }
-        return new BufferedReader(isr);
-    }
+    /** all graphs. */
+    public static ArrayList<Graph> graphs = new ArrayList<>();
 
     /**
      * tries to connect two already existing nodes.
@@ -166,5 +94,13 @@ public class GraphHolder implements Runnable {
         Graph graph = new Graph(startNode);
         graphs.add(graph);
         Node.setGraphsForName(startNode.getName(), graph);
+    }
+
+    /**
+     * gets graphs.
+     * @return all graphs.
+     */
+    public static ArrayList<Graph> getGraphs() {
+        return graphs;
     }
 }
