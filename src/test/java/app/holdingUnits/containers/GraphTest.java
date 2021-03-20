@@ -8,8 +8,9 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Class to test Graph class.
  *
- * @version 1.0.0 17 Mar 2021.
- * @author Aleksey Lakhanskii.
+ * @version 1.0.0 17 Mar 2021
+ * @author Aleksey Lakhanskii
+ *
  */
 class GraphTest {
 

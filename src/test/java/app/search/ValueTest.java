@@ -7,8 +7,9 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Class to test Value class.
  *
- * @version 1.0.0 17 Mar 2021.
- * @author Aleksey Lakhanksii.
+ * @version 1.0.0 17 Mar 2021
+ * @author Aleksey Lakhanksii
+ *
  */
 class ValueTest {
 
