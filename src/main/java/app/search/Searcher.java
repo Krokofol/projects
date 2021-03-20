@@ -4,6 +4,10 @@ import app.holdingUnits.containers.Graph;
 
 /**
  * class only to parallelize converting.
+ *
+ * @version 1.0.0 10 Mar 2021
+ * @author Aleksey Lakhanskii
+ *
  */
 public class Searcher extends Thread {
     /* extends thread to start Graph.findConverting at new thread. */

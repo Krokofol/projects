@@ -8,6 +8,7 @@ import java.math.RoundingMode;
  *
  * @version 1.0.0 17 Mar 2021
  * @author Aleksey Lakhanskii
+ *
  */
 public class Value {
 

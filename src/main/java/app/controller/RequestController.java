@@ -18,6 +18,10 @@ import java.util.Map;
 
 /**
  * Class for processing requests.
+ *
+ * @version 1.0.0 10 Mar 2021
+ * @author Aleksey Lakhanskii
+ *
  */
 @Controller
 public class RequestController {

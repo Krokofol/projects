@@ -12,6 +12,7 @@ import java.util.logging.Logger;
  *
  * @version 1.0.0 19 Mar 2021
  * @author Aleksey Lakhanskii
+ *
  */
 public class Preloader extends Thread {
     /* extends Thread to preload data and other threads were able to join. */
