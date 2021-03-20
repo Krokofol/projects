@@ -160,7 +160,7 @@ public class Graph {
                 } else {
                     nextConverting.multiply(edgeIterator.getQuotient());
                 }
-                if ((distance + 1) % 500 == 0) {
+                if ((distance + 1) % 200 == 0) {
                     startNode.createEdge(nextNode, nextConverting);
                 }
                 visitedNodes.add(nextNode);
