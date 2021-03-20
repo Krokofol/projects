@@ -139,6 +139,7 @@ public class Graph {
         Node nextNode;
         Value converting;
         Value nextConverting;
+        int CONNECT_EACH_NUMBER_OF_NODES = 500;
         while (queue.size() != 0) {
             workingNode = queue.get(0);
             distance = distancesToNodes.get(workingNode);
@@ -160,7 +161,7 @@ public class Graph {
                 } else {
                     nextConverting.multiply(edgeIterator.getQuotient());
                 }
-                if ((distance + 1) % 200 == 0) {
+                if ((distance + 1) % CONNECT_EACH_NUMBER_OF_NODES == 0) {
                     startNode.createEdge(nextNode, nextConverting);
                 }
                 visitedNodes.add(nextNode);
@@ -193,8 +194,11 @@ public class Graph {
         visitedNodes.add(startNode);
         queue.add(startNode);
 
+        int count = 0;
         Node workingNode = queue.get(0);
+
         while (workingNode != endNode) {
+            count++;
             queue.remove(workingNode);
             Set<Map.Entry<String, Edge>> entrySet = workingNode.getAllEdges()
                     .entrySet();
@@ -211,10 +215,10 @@ public class Graph {
             }
             workingNode = queue.get(0);
         }
-
+        logger.log(Level.INFO, "rule was founded by " + count + " nodes");
         Value numerator = new Value("1");
         Value denominator = new Value("1");
-        int count = 0;
+        count = 0;
         Node prevNode;
         Edge edge;
         Node toNode;
@@ -231,7 +235,7 @@ public class Graph {
             }
             workingNode = prevNode;
         }
-        logger.log(Level.INFO, "rule was founded by " + count + " edges");
+        logger.log(Level.INFO, "rule was calculated by " + count + " edges");
         numerator.divide(denominator);
         return numerator;
     }
