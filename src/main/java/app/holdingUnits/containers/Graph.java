@@ -16,6 +16,9 @@ import java.util.logging.Logger;
  */
 public class Graph {
 
+    /** distance to the node, which should be connected with the start node */
+    private static final int CONNECT_EACH_NUMBER_OF_NODES = 500;
+
     /** logger for this class. */
     public static Logger logger = Logger.getLogger(Graph.class.getName());
 
@@ -139,7 +142,6 @@ public class Graph {
         Node nextNode;
         Value converting;
         Value nextConverting;
-        int CONNECT_EACH_NUMBER_OF_NODES = 500;
         while (queue.size() != 0) {
             workingNode = queue.get(0);
             distance = distancesToNodes.get(workingNode);
