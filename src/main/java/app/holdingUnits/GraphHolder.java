@@ -46,7 +46,6 @@ public class GraphHolder {
         Graph graph1 = findGraph(node1Name);
         Graph graph2 = findGraph(node2Name);
         if (graph1 == graph2) {
-            graph1.addEdge(node1Name, node2Name, quotient);
             return;
         }
         graphs.remove(graph2);

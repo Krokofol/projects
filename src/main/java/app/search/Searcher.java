@@ -49,6 +49,6 @@ public class Searcher extends Thread {
      */
     @Override
     public void run() {
-        result = graph.findConverting(startNodeName, endNodeName);
+//        result = graph.findConverting(startNodeName, endNodeName);
     }
 }

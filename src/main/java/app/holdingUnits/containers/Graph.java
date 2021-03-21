@@ -16,9 +16,6 @@ import java.util.logging.Logger;
  */
 public class Graph {
 
-    /** distance to the node, which should be connected with the start node */
-    private static final int CONNECT_EACH_NUMBER_OF_NODES = 500;
-
     /** logger for this class. */
     public static Logger logger = Logger.getLogger(Graph.class.getName());
 
@@ -49,20 +46,22 @@ public class Graph {
         Node existenceNode;
         Node newNode;
         Value newRule = new Value("1");
-        if (existenceNode(node2Name)) {
+        if (existenceNode(node1Name)) {
             existenceNode = nodesForNames.get(node1Name);
             newNode = Node.createNode(node2Name);
-            newRule.multiply(startQuotient);
+            newRule.divide(startQuotient);
+            nodesForNames.put(node2Name, newNode);
         }
         else {
             existenceNode = nodesForNames.get(node2Name);
             newNode = Node.createNode(node1Name);
-            newRule.divide(startQuotient);
+            newRule.multiply(startQuotient);
+            nodesForNames.put(node1Name, newNode);
         }
         assert newNode != null;
         Value rule = new Value("1");
         rule.multiply(existenceNode.getConvertingRule());
-        rule.multiply(startQuotient);
+        rule.multiply(newRule);
         newNode.setConvertingRule(rule);
         Node.setGraphsForName(newNode.getName(), this);
     }
@@ -78,10 +77,15 @@ public class Graph {
                         Value startQuotient) {
         Node graph2Node = graph2.findNode(graph2NodeName);
         Node node = findNode(nodeName);
-        node.createEdge(graph2Node, startQuotient);
+        Value newRule = new Value("1");
+
+        newRule.multiply(startQuotient);
+        newRule.multiply(node.getConvertingRule());
+        newRule.divide(graph2Node.getConvertingRule());
 
         HashMap<String, Node> nodesForNamesGraph2 = graph2.getNodesForNames();
         for (Map.Entry<String, Node> entry : nodesForNamesGraph2.entrySet()) {
+            entry.getValue().getConvertingRule().multiply(newRule);
             Node.setGraphsForName(entry.getValue().getName(), this);
             nodesForNames.put(entry.getKey(), entry.getValue());
         }
@@ -111,19 +115,5 @@ public class Graph {
      */
     public HashMap<String, Node> getNodesForNames() {
         return nodesForNames;
-    }
-
-    /**
-     * connects two nodes in one graph.
-     * @param node1Name the first node.
-     * @param node2Name the second node.
-     * @param quotient the conversion's quotient.
-     */
-    public void addEdge(String node1Name, String node2Name, Value quotient) {
-        Node node1 = nodesForNames.get(node1Name);
-        if (node1.findEdge(node2Name) != null)
-            return;
-        Node node2 = nodesForNames.get(node2Name);
-        node1.createEdge(node2, quotient);
     }
 }
