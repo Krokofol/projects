@@ -23,8 +23,8 @@ public class Node {
     /** name of the node. */
     public String name;
 
-    /** all edges of the node. */
-    public HashMap<String, Edge> edgesForSecondNodeName;
+    /** converting rule to the first unit in the graph */
+    public Value convertingRule;
 
     /**
      * creates new node if node with the same name does not exist yet.
@@ -55,7 +55,19 @@ public class Node {
      */
     private Node(String nodeName) {
         name = nodeName;
-        edgesForSecondNodeName = new HashMap<>();
+        convertingRule = new Value("1");
+    }
+
+    public Value getConvertingRule() {
+        return convertingRule;
+    }
+
+    /**
+     * sets new converting rule.
+     * @param convertingRule new rule.
+     */
+    public void setConvertingRule(Value convertingRule) {
+        this.convertingRule = convertingRule;
     }
 
     /**
@@ -68,40 +80,12 @@ public class Node {
     }
 
     /**
-     * returns all node's edges.
-     * @return all edges.
-     */
-    public HashMap<String, Edge> getAllEdges() {
-        return edgesForSecondNodeName;
-    }
-
-    /**
      * gets graph.
      * @param name node name.
      * @return graph.
      */
     public static Graph getGraph(String name) {
         return graphsForNames.get(name);
-    }
-
-    /**
-     * creates edge and opposite edge.
-     * @param secondNode node with which this edge connects.
-     * @param quotient the rule of converting.
-     */
-    public void createEdge(Node secondNode, Value quotient) {
-        Edge edge = new Edge(this, secondNode, quotient);
-        edgesForSecondNodeName.put(secondNode.getName(), edge);
-        secondNode.edgesForSecondNodeName.put(name, edge);
-    }
-
-    /**
-     * finds edge by second node name.
-     * @param name name of the second node.
-     * @return edge to the second node.
-     */
-    public Edge findEdge(String name) {
-        return edgesForSecondNodeName.get(name);
     }
 
     /**

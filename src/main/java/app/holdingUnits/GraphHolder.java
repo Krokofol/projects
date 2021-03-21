@@ -46,7 +46,6 @@ public class GraphHolder {
         Graph graph1 = findGraph(node1Name);
         Graph graph2 = findGraph(node2Name);
         if (graph1 == graph2) {
-            graph1.addEdge(node1Name, node2Name, quotient);
             return;
         }
         graphs.remove(graph2);
@@ -93,13 +92,5 @@ public class GraphHolder {
         Graph graph = new Graph(startNode);
         graphs.add(graph);
         Node.setGraphsForName(startNode.getName(), graph);
-    }
-
-    /**
-     * gets graphs.
-     * @return all graphs.
-     */
-    public static ArrayList<Graph> getGraphs() {
-        return graphs;
     }
 }

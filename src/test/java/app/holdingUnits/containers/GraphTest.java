@@ -47,7 +47,6 @@ class GraphTest {
         assertEquals(node1, graph.findNode(node1Name));
         graph.addNode(node1Name, node2Name, new Value("1"));
         assertTrue(graph.existenceNode(node2Name));
-        assertEquals(node1.edgesForSecondNodeName.size(), 1);
     }
 
     /**
@@ -74,6 +73,5 @@ class GraphTest {
         assertTrue(graph12.existenceNode(node3Name));
         assertEquals(node1, graph12.findNode(node1Name));
         assertEquals(node3, graph12.findNode(node3Name));
-        assertEquals(2, node1.edgesForSecondNodeName.size());
     }
 }
