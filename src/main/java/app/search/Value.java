@@ -22,7 +22,7 @@ public class Value {
      * The number of insignificant digits. More numbers = more precision, but
      * spends more time for operations.
      */
-    private static final Integer NUMBER_OF_INSIGNIFICANT_DIGITS = 60;
+    private static final Integer NUMBER_OF_INSIGNIFICANT_DIGITS = 90;
 
     /**
      * numerator of the digit that has NUMBER_SIGNIFICANT_DIGITS before "." and

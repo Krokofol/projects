@@ -16,6 +16,9 @@ import java.util.ArrayList;
 public class GraphHolder {
     /* implements Runnable to start preloading thread. */
 
+    /** all graphs. */
+    public static ArrayList<Graph> graphs = new ArrayList<>();
+
     /**
      * gets from line names of the nodes. Adds node if it does not exists and
      * after checking both nodes connect them by edge.
@@ -31,9 +34,6 @@ public class GraphHolder {
             addNodes(node1Name, node2Name, quotient);
         }
     }
-
-    /** all graphs. */
-    public static ArrayList<Graph> graphs = new ArrayList<>();
 
     /**
      * tries to connect two already existing nodes.
