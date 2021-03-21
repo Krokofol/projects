@@ -46,21 +46,25 @@ public class Graph {
      */
     public void addNode(String node1Name, String node2Name,
                         Value startQuotient) {
-        Node node1 = nodesForNames.get(node1Name);
-        if (node1 == null) {
-            node1 = Node.createNode(node1Name);
-            Node.setGraphsForName(node1Name, this);
-            nodesForNames.put(node1Name, node1);
-            assert node1 != null;
+        Node existenceNode;
+        Node newNode;
+        Value newRule = new Value("1");
+        if (existenceNode(node2Name)) {
+            existenceNode = nodesForNames.get(node1Name);
+            newNode = Node.createNode(node2Name);
+            newRule.multiply(startQuotient);
         }
-        Node node2 = nodesForNames.get(node2Name);
-        if (node2 == null) {
-            node2 = Node.createNode(node2Name);
-            Node.setGraphsForName(node2Name, this);
-            nodesForNames.put(node2Name, node2);
-            assert node2 != null;
+        else {
+            existenceNode = nodesForNames.get(node2Name);
+            newNode = Node.createNode(node1Name);
+            newRule.divide(startQuotient);
         }
-        node1.createEdge(node2, startQuotient);
+        assert newNode != null;
+        Value rule = new Value("1");
+        rule.multiply(existenceNode.getConvertingRule());
+        rule.multiply(startQuotient);
+        newNode.setConvertingRule(rule);
+        Node.setGraphsForName(newNode.getName(), this);
     }
 
     /**
@@ -121,124 +125,5 @@ public class Graph {
             return;
         Node node2 = nodesForNames.get(node2Name);
         node1.createEdge(node2, quotient);
-    }
-
-    /**
-     * ads some edges to the graph to search faster;
-     */
-    public void completionGraph() {
-        logger.log(Level.INFO, "start adding edges into the graph");
-        Node startNode = nodesForNames.get(firstNodeName);
-        Integer distance = 0;
-        ArrayList<Node> queue = new ArrayList<>();
-        HashSet<Node> visitedNodes = new HashSet<>();
-        HashMap<Node, Integer> distancesToNodes = new HashMap<>();
-        HashMap<Node, Value> convertingResults = new HashMap<>();
-        visitedNodes.add(startNode);
-        queue.add(nodesForNames.get(firstNodeName));
-        distancesToNodes.put(startNode, distance);
-        convertingResults.put(startNode, new Value ("1"));
-        Node workingNode;
-        Node nextNode;
-        Value converting;
-        Value nextConverting;
-        while (queue.size() != 0) {
-            workingNode = queue.get(0);
-            distance = distancesToNodes.get(workingNode);
-            converting = convertingResults.get(workingNode);
-            distancesToNodes.remove(workingNode);
-            convertingResults.remove(workingNode);
-            queue.remove(workingNode);
-            for (Edge edgeIterator : workingNode.getAllEdges().values()) {
-                nextNode = edgeIterator.getNode1().equals(workingNode)
-                        ? edgeIterator.getNode2()
-                        : edgeIterator.getNode1();
-                if (visitedNodes.contains(nextNode)) {
-                    continue;
-                }
-                nextConverting = new Value("1");
-                nextConverting.multiply(converting);
-                if (edgeIterator.getNode1().equals(nextNode)) {
-                    nextConverting.divide(edgeIterator.getQuotient());
-                } else {
-                    nextConverting.multiply(edgeIterator.getQuotient());
-                }
-                if ((distance + 1) % CONNECT_EACH_NUMBER_OF_NODES == 0) {
-                    startNode.createEdge(nextNode, nextConverting);
-                }
-                visitedNodes.add(nextNode);
-                distancesToNodes.put(nextNode, distance + 1);
-                queue.add(nextNode);
-                convertingResults.put(nextNode, nextConverting);
-            }
-        }
-        logger.log(Level.FINE, "edges are added into the graph");
-    }
-
-    /**
-     * Dijkstra search, but the weight is the inaccuracy in the representation
-     * of a number in binary form.
-     * @param startNodeName node name from which we are converting.
-     * @param endNodeName node name to where we are converting.
-     * @return the quotient of converting.
-     */
-    public Value findConverting(
-            String startNodeName,
-            String endNodeName
-    ) {
-        logger.log(Level.INFO,"start searching converting rule");
-        Node startNode = nodesForNames.get(startNodeName);
-        Node endNode = nodesForNames.get(endNodeName);
-        HashMap<Node, Node> prevNodes = new HashMap<>();
-        HashSet<Node> visitedNodes = new HashSet<>();
-        ArrayList<Node> queue = new ArrayList<>();
-
-        visitedNodes.add(startNode);
-        queue.add(startNode);
-
-        int count = 0;
-        Node workingNode = queue.get(0);
-
-        while (workingNode != endNode) {
-            count++;
-            queue.remove(workingNode);
-            Set<Map.Entry<String, Edge>> entrySet = workingNode.getAllEdges()
-                    .entrySet();
-            for(Map.Entry<String, Edge> entry : entrySet) {
-                Edge edge = entry.getValue();
-                Node toTheNode = edge.getNode1().equals(workingNode)
-                        ? edge.getNode2()
-                        : edge.getNode1();
-                if (visitedNodes.contains(toTheNode))
-                    continue;
-                queue.add(toTheNode);
-                prevNodes.put(toTheNode, workingNode);
-                visitedNodes.add(toTheNode);
-            }
-            workingNode = queue.get(0);
-        }
-        logger.log(Level.INFO, "rule was founded by " + count + " nodes");
-        Value numerator = new Value("1");
-        Value denominator = new Value("1");
-        count = 0;
-        Node prevNode;
-        Edge edge;
-        Node toNode;
-        while (!workingNode.equals(startNode)) {
-            count++;
-            prevNode = prevNodes.get(workingNode);
-            edge = prevNode.findEdge(workingNode.getName());
-            toNode = edge.getNode2();
-            if (workingNode.equals(toNode)) {
-                numerator.multiply(edge.getQuotient());
-            }
-            else {
-                denominator.multiply(edge.getQuotient());
-            }
-            workingNode = prevNode;
-        }
-        logger.log(Level.INFO, "rule was calculated by " + count + " edges");
-        numerator.divide(denominator);
-        return numerator;
     }
 }
