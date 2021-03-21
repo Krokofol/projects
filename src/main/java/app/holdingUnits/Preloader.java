@@ -1,7 +1,5 @@
 package app.holdingUnits;
 
-import app.holdingUnits.containers.Graph;
-
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
@@ -40,7 +38,7 @@ public class Preloader extends Thread {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        logger.log(Level.FINE, "preloading is done");
+        logger.log(Level.INFO, "preloading is done");
     }
 
     /**
@@ -68,9 +66,6 @@ public class Preloader extends Thread {
             logger.log(Level.INFO, "start reading converting rules");
             reader.lines().forEach(GraphHolder::parseLine);
             logger.log(Level.FINE, "reading converting rules is done");
-            logger.log(Level.INFO, "start adding new converting rules");
-//            GraphHolder.getGraphs().forEach(Graph::completionGraph);
-            logger.log(Level.FINE, "adding new converting rules is done");
         } catch (IOException e) {
             e.printStackTrace();
         }

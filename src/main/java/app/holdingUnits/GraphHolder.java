@@ -93,12 +93,4 @@ public class GraphHolder {
         graphs.add(graph);
         Node.setGraphsForName(startNode.getName(), graph);
     }
-
-    /**
-     * gets graphs.
-     * @return all graphs.
-     */
-    public static ArrayList<Graph> getGraphs() {
-        return graphs;
-    }
 }
