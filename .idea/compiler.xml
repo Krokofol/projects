@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="universal-converter" target="11" />
+      <module name="universal-converter" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
