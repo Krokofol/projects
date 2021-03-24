@@ -22,8 +22,9 @@ class GraphTest {
         String startNodeName = "startNode";
         Node startNode = Node.createNode(startNodeName);
         Graph graph = new Graph(startNode);
-
         assertEquals(1, graph.nodesForNames.size());
+        assertTrue(graph.existenceNode(startNodeName));
+        assertEquals(startNode, graph.findNode(startNodeName));
     }
 
     /**
@@ -45,8 +46,10 @@ class GraphTest {
         assertTrue(graph.existenceNode(node1Name));
         assertFalse(graph.existenceNode(node2Name));
         assertEquals(node1, graph.findNode(node1Name));
-        graph.addNode(node1Name, node2Name, new Value("1"));
+        graph.addNode(node1Name, node2Name, new Value("0.1"));
         assertTrue(graph.existenceNode(node2Name));
+        Value convertingResult = graph.findConverting(node2Name,node1Name);
+        assertEquals("10", convertingResult.toString());
     }
 
     /**
@@ -63,9 +66,9 @@ class GraphTest {
         String node3Name = "node3GraphTest3";
         Node node3 = Node.createNode(node3Name);
         Graph graph12 = new Graph(node1);
-        graph12.addNode(node1Name, node2Name, new Value("1"));
+        graph12.addNode(node1Name, node2Name, new Value("10"));
         Graph graph3 = new Graph(node3);
-        graph12.connect(graph3, node1Name, node3Name, new Value("1"));
+        graph12.connect(graph3, node1Name, node3Name, new Value("0.1"));
 
         assertNotNull(node1);
         assertNotNull(node3);
@@ -73,5 +76,11 @@ class GraphTest {
         assertTrue(graph12.existenceNode(node3Name));
         assertEquals(node1, graph12.findNode(node1Name));
         assertEquals(node3, graph12.findNode(node3Name));
+        Value convertingResult = graph12.findConverting(node2Name, node3Name);
+        assertEquals("1", convertingResult.toString());
+        convertingResult = graph12.findConverting(node2Name, node1Name);
+        assertEquals("0.1", convertingResult.toString());
+        convertingResult = graph12.findConverting(node1Name, node3Name);
+        assertEquals("10", convertingResult.toString());
     }
 }

@@ -38,7 +38,7 @@ class GraphHolderTest {
      * in one graph.
      */
     @Test
-    public void preloadTest() {
+    public void parsingTest() {
         assertEquals(3, GraphHolder.graphs.size());
 
         String fromNodeName = "км";
