@@ -5,8 +5,8 @@ import app.search.Value;
 import java.util.HashMap;
 
 /**
- * Node is holding name of the unit and all its rules converting (edges).
- * Also class Node holding all units (Nodes) which have been preloaded.
+ * Node is holding name of the unit and all its rules converting (edges). Also class Node holding all units (Nodes)
+ * which have been preloaded.
  *
  * @version 1.0.0 10 Mar 2021
  * @author Aleksey Lkahanskii
@@ -58,6 +58,10 @@ public class Node {
         convertingRule = new Value("1");
     }
 
+    /**
+     * gets converting rule from this node to the first node of the graph in which it's exists.
+     * @return the converting rule.
+     */
     public Value getConvertingRule() {
         return convertingRule;
     }

@@ -25,8 +25,7 @@ public class Preloader extends Thread {
     public String path;
 
     /**
-     * creates instance of GraphHolder and starts new thread to preload units
-     * and converting rules.
+     * creates instance of GraphHolder and starts new thread to preload units and converting rules.
      * @param path path to the file with units and converting rules.
      */
     public static void preload(String path) {

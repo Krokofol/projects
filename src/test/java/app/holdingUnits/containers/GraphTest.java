@@ -28,8 +28,8 @@ class GraphTest {
     }
 
     /**
-     * Creates graph with only one node. Connect to the existing node one more
-     * node. Checks are the bose nodes in the graph.
+     * Creates graph with only one node. Connect to the existing node one more node. Checks are the bose nodes in the
+     * graph.
      */
     @Test
     public void searchAddTest() {
@@ -53,10 +53,8 @@ class GraphTest {
     }
 
     /**
-     * Creates graph with only one node. Connects to the existing node one more
-     * node. Creates one more graph with the third node. Connects to graphs
-     * together. Checks are all nodes in graph to which was connected second
-     * graph.
+     * Creates graph with only one node. Connects to the existing node one more node. Creates one more graph with the
+     * third node. Connects to graphs together. Checks are all nodes in graph to which was connected second graph.
      */
     @Test
     public void connectionsTest() {

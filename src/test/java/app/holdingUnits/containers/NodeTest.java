@@ -14,8 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class NodeTest {
 
     /**
-     * Creates two nodes. Checks are this different nodes and are they both
-     * were saved in the nodes storage.
+     * Creates two nodes. Checks are this different nodes and are they both were saved in the nodes storage.
      */
     @Test
     public void builderTest() {

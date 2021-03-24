@@ -17,8 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class SearcherTest {
 
     /**
-     * Preloads required for tests data. Builds graphs if they do not exists
-     * yet and adds to them nodes.
+     * Preloads required for tests data. Builds graphs if they do not exists yet and adds to them nodes.
      */
     public SearcherTest() {
         String[] args = {
@@ -36,8 +35,7 @@ class SearcherTest {
     }
 
     /**
-     * Converts one units to the other (to which is able to convert) and checks
-     * the result of converting.
+     * Converts one units to the other (to which is able to convert) and checks the result of converting.
      */
     @Test
     public void converting1() {
@@ -57,8 +55,7 @@ class SearcherTest {
     }
 
     /**
-     * Converts one units to the other (to which is able to convert) and checks
-     * the result of converting. (reverse direction)
+     * Converts one units to the other (to which is able to convert) and checks the result of converting. (reverse direction)
      */
     @Test
     public void converting2() {

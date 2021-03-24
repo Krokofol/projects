@@ -5,8 +5,7 @@ import app.search.Value;
 import java.util.*;
 
 /**
- * Class to hold nodes of the graph. Also it should find way to convert one
- * unit to other one.
+ * Class to hold nodes of the graph. Also it should find way to convert one unit to other one.
  *
  * @version 1.0.0 10 Mar 2021
  * @author Aleksey Lakhanskii
@@ -36,8 +35,7 @@ public class Graph {
      * @param node2Name the second node name.
      * @param startQuotient the quotient of converting.
      */
-    public void addNode(String node1Name, String node2Name,
-                        Value startQuotient) {
+    public void addNode(String node1Name, String node2Name, Value startQuotient) {
         Node existenceNode;
         Node newNode;
         Value newRule = new Value("1");
@@ -68,8 +66,7 @@ public class Graph {
      * @param graph2NodeName node name from the second graph.
      * @param startQuotient the quotient of converting.
      */
-    public void connect(Graph graph2, String nodeName, String graph2NodeName,
-                        Value startQuotient) {
+    public void connect(Graph graph2, String nodeName, String graph2NodeName, Value startQuotient) {
         Node graph2Node = graph2.findNode(graph2NodeName);
         Node node = findNode(nodeName);
         Value newRule = new Value("1");

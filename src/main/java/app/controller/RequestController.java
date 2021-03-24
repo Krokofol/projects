@@ -27,16 +27,13 @@ import java.util.Map;
 public class RequestController {
 
     /**
-     * Processes requests with "convert" address.  Also it waits of ending
-     * preloading thread.
+     * Processes requests with "convert" address. Also it waits the ending of preloading thread.
      * @param body body of the request.
      * @return response, which consist of the text and Http status.
      */
     @RequestMapping("convert")
     @PostMapping
-    public ResponseEntity<String> convert(
-            @RequestBody Map<String, String> body
-    ) {
+    public ResponseEntity<String> convert(@RequestBody Map<String, String> body) {
         String from = body.get("from");
         String to = body.get("to");
 
@@ -46,20 +43,22 @@ public class RequestController {
             e.printStackTrace();
         }
 
-        if (checkInput(from, to))
+        if (checkInput(from, to)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
 
         String[] fromTo = refactorArgs(from, to);
-        from = fromTo[0];
-        to = fromTo[1];
-        if (checkExistence(from.split("\\*"))
-            || checkExistence(to.split("\\*"))) {
+        String[] fromSeparated = fromTo[0].split("\\*");
+        String[] toSeparated = fromTo[1].split("\\*");
+        boolean allUnitsFromExist = checkExistence(fromSeparated);
+        boolean allUnitsToExist = checkExistence(toSeparated);
+        if (allUnitsToExist || allUnitsFromExist) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         String result = calculateResult(
-                new ArrayList<>(Arrays.asList(from.split("\\*"))),
-                new ArrayList<>(Arrays.asList(to.split("\\*")))
+                new ArrayList<>(Arrays.asList(fromSeparated)),
+                new ArrayList<>(Arrays.asList(toSeparated))
         );
 
         if (result == null) {
@@ -79,10 +78,9 @@ public class RequestController {
     }
 
     /**
-     * splits numerator and denominator of "from" and "to" units. Multiplies
-     * numerator of "from" and denominator of "to" and writs it into "from" and
-     * also multiplies numerator of "to" and denominator of "from" and writes
-     * it into "to".
+     * splits numerator and denominator of "from" and "to" units. Multiplies numerator of "from" and denominator of
+     * "to" and writs it into "from" and also multiplies numerator of "to" and denominator of "from" and writes it
+     * into "to".
      * @param from "from" units
      * @param to "to" units
      * @return two elements, first is new "from" string, second is new "to"
@@ -99,8 +97,7 @@ public class RequestController {
     }
 
     /**
-     * Multiplies numerator of the first units and denominator of the
-     * second units.
+     * Multiplies numerator of the first units and denominator of the second units.
      * @param units1 first units.
      * @param units2 second units.
      * @return multiplication.
@@ -132,24 +129,21 @@ public class RequestController {
     }
 
     /**
-     * iterates through "toUnits" and tries to find conversion to one of
-     * "fromUnits".
+     * iterates through "toUnits" and tries to find conversion to one of "fromUnits".
      * @param toUnits units to which we are converting.
      * @param fromUnits units from which we are converting.
-     * @return if it finds all conversions then return the result, if it don't
-     * finds one of conversions returns false.
+     * @return if it finds all conversions then return the result, if it don't finds one of conversions returns false.
      */
-    private String calculateResult (ArrayList<String> toUnits,
-                                    ArrayList<String> fromUnits) {
-        final Value result = new Value("1");
-
+    private String calculateResult (ArrayList<String> toUnits, ArrayList<String> fromUnits) {
         if (fromUnits.size() != toUnits.size()) {
             return null;
         }
-
+        final Value result = new Value("1");
         ArrayList<Searcher> searchThreads = new ArrayList<>();
 
-        if (getConvertingWays(toUnits, fromUnits, searchThreads)) return null;
+        if (getConvertingWays(toUnits, fromUnits, searchThreads)) {
+            return null;
+        }
         searchThreads.forEach(Searcher::start);
         searchThreads.forEach(thread -> {
             try {
@@ -170,16 +164,12 @@ public class RequestController {
      * @param searchThreads collection of prepared to start threads.
      * @return true if impossible to convert units.
      */
-    private boolean getConvertingWays(
-            ArrayList<String> toUnits,
-            ArrayList<String> fromUnits,
-            ArrayList<Searcher> searchThreads
-    ) {
+    private boolean getConvertingWays(ArrayList<String> toUnits, ArrayList<String> fromUnits,
+                                      ArrayList<Searcher> searchThreads) {
         first:
         while (fromUnits.size() > 0) {
             String numeratorIterator = fromUnits.get(0);
             Graph graph = GraphHolder.findGraph(numeratorIterator);
-
             for (String denominatorIterator : toUnits) {
                 if(graph.existenceNode(denominatorIterator)) {
                     searchThreads.add(new Searcher(graph, numeratorIterator,

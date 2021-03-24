@@ -15,8 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class GraphHolderTest {
 
     /**
-     * Preloads required for tests data. Builds graphs if they do not exists
-     * yet and adds to them nodes.
+     * Preloads required for tests data. Builds graphs if they do not exists yet and adds to them nodes.
      */
     public GraphHolderTest() {
         String[] args = {
@@ -34,8 +33,7 @@ class GraphHolderTest {
     }
 
     /**
-     * Checks the existing of nodes which able to convert from one to other
-     * in one graph.
+     * Checks the existing of nodes which able to convert from one to other in one graph.
      */
     @Test
     public void parsingTest() {

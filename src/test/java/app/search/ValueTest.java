@@ -14,25 +14,21 @@ import static org.junit.jupiter.api.Assertions.*;
 class ValueTest {
 
     /**
-     * Creates three types of instances of "Value" and converts them
-     * back to string. Checks the result (the should be the same as the were).
+     * Creates three types of instances of "Value" and converts them back to string. Checks the result (the should be
+     * the same as the were).
      */
     @Test
     public void testConstructorAndToString() {
         String expectedEndData1 = "16829241443.8341";
-        assertEquals(expectedEndData1, new Value(expectedEndData1)
-                .toString());
+        assertEquals(expectedEndData1, new Value(expectedEndData1).toString());
         String expectedEndData2 = "1234567890123450000000000000000";
-        assertEquals(expectedEndData2, new Value(expectedEndData2)
-                .toString());
+        assertEquals(expectedEndData2, new Value(expectedEndData2).toString());
         String expectedEndData3 = "0.000000000000000123456789012345";
-        assertEquals(expectedEndData3, new Value(expectedEndData3)
-                .toString());
+        assertEquals(expectedEndData3, new Value(expectedEndData3).toString());
     }
 
     /**
-     * Creates some instances of "Value" and multiply them with the
-     * other one. Checks the result of multiplication.
+     * Creates some instances of "Value" and multiply them with the other one. Checks the result of multiplication.
      */
     @Test
     public void testMultiplication() {
@@ -59,8 +55,7 @@ class ValueTest {
     }
 
     /**
-     * Creates some instances of "Value" and divide them on the other
-     * one. Checks the result of division.
+     * Creates some instances of "Value" and divide them on the other one. Checks the result of division.
      */
     @Test
     public void testDivision() {

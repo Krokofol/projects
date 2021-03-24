@@ -14,14 +14,13 @@ import java.util.ArrayList;
  *
  */
 public class GraphHolder {
-    /* implements Runnable to start preloading thread. */
 
     /** all graphs. */
     public static ArrayList<Graph> graphs = new ArrayList<>();
 
     /**
-     * gets from line names of the nodes. Adds node if it does not exists and
-     * after checking both nodes connect them by edge.
+     * gets from line names of the nodes. Adds node if it does not exists and after checking both nodes connect them
+     * by edge.
      * @param line the line with names and quotient.
      */
     public static void parseLine(String line) {
@@ -41,8 +40,7 @@ public class GraphHolder {
      * @param node2Name second node name.
      * @param quotient the quotient of converting.
      */
-    private static void connectTwoNodes(String node1Name, String node2Name,
-                                        Value quotient) {
+    private static void connectTwoNodes(String node1Name, String node2Name, Value quotient) {
         Graph graph1 = findGraph(node1Name);
         Graph graph2 = findGraph(node2Name);
         if (graph1 == graph2) {
@@ -58,8 +56,7 @@ public class GraphHolder {
      * @param node2Name second node.
      * @param quotient the quotient of converting.
      */
-    public static void addNodes(String node1Name, String node2Name,
-                                Value quotient) {
+    public static void addNodes(String node1Name, String node2Name, Value quotient) {
         boolean node1Ex = Node.checkExistence(node1Name);
         boolean node2Ex = Node.checkExistence(node2Name);
         if (node1Ex) {
