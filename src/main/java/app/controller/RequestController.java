@@ -48,6 +48,9 @@ public class RequestController {
         }
 
         String[] fromTo = refactorArgs(from, to);
+        if (fromTo == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         String[] fromSeparated = fromTo[0].split("\\*");
         String[] toSeparated = fromTo[1].split("\\*");
         boolean allUnitsFromExist = checkExistence(fromSeparated);
@@ -87,12 +90,16 @@ public class RequestController {
      * string.
      */
     private static String[] refactorArgs(String from, String to) {
-        String[] units1 = from.replace(" ", "").split("/");
-        String[] units2 = to.replace(" ", "").split("/");
-
+        boolean fromContainsDividing = from.contains("/");
+        boolean toContainsDividing = to.contains("/");
+        String[] fromUnits = from.replace(" ", "").split("/");
+        String[] toUnits = to.replace(" ", "").split("/");
+        if ((fromContainsDividing && fromUnits.length == 1) || (toContainsDividing && toUnits.length == 1)) {
+            return null;
+        }
         return new String[]{
-                buildArgs(units1, units2).toString(),
-                buildArgs(units2, units1).toString()
+                buildArgs(fromUnits, toUnits).toString(),
+                buildArgs(toUnits, fromUnits).toString()
         };
     }
 
