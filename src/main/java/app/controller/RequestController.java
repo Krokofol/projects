@@ -44,7 +44,7 @@ public class RequestController {
         }
 
         if (checkInput(from, to)) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         String[] fromTo = refactorArgs(from, to);
