@@ -12,48 +12,23 @@ import java.util.logging.Logger;
  * @author Aleksey Lakhanskii
  *
  */
-public class Preloader extends Thread {
-    /* extends Thread to preload data and other threads were able to join. */
+public class Preloader {
 
     /** logger for this class. */
     public static Logger logger = Logger.getLogger(Preloader.class.getName());
 
-    /** preloader. */
-    public static Preloader preloader;
-
-    /** path to the file with rules. */
-    public String path;
+    /** preloading thread. */
+    public static Thread preloader;
 
     /**
      * creates instance of GraphHolder and starts new thread to preload units and converting rules.
      * @param path path to the file with units and converting rules.
      */
     public static void preload(String path) {
+        preloader = Thread.currentThread();
         logger.log(Level.INFO, "start preloading");
-        preloader = new Preloader(path);
-        preloader.start();
-        try {
-            preloader.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        logger.log(Level.INFO, "preloading is done");
-    }
-
-    /**
-     * constructs GraphHolder.
-     * @param path path to the file with units and converting rules.
-     */
-    public Preloader(String path) {
-        this.path = path;
-    }
-
-    /**
-     * runs thread and preloads units and converting rules.
-     */
-    @Override
-    public void run() {
         readingStartInfo(path);
+        logger.log(Level.INFO, "preloading is done");
     }
 
     /**
@@ -92,9 +67,4 @@ public class Preloader extends Thread {
         logger.log(Level.FINE, "file is found");
         return new BufferedReader(isr);
     }
-
-
-
-
-
 }
