@@ -26,7 +26,6 @@ class RequestControllerTest {
         HashMap<String, String> startData = new HashMap<>();
         String result;
 
-        System.out.println("here");
         startData.put("from", "км * м");
         startData.put("to", "м * м");
         result = controller.convert(startData).getBody();

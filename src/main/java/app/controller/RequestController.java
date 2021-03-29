@@ -97,6 +97,12 @@ public class RequestController {
         if ((fromContainsDividing && fromUnits.length == 1) || (toContainsDividing && toUnits.length == 1)) {
             return null;
         }
+        if (fromUnits[0].equals("1")) {
+            fromUnits[0] = "";
+        }
+        if (toUnits[0].equals("1")) {
+            toUnits[0] = "";
+        }
         return new String[]{
                 buildArgs(fromUnits, toUnits).toString(),
                 buildArgs(toUnits, fromUnits).toString()

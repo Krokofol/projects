@@ -39,7 +39,7 @@ public class Preloader extends Thread{
             logger.log(Level.SEVERE, "preloading join error");
             e.printStackTrace();
         }
-        logger.log(Level.INFO, "preloading is done");
+        logger.log(Level.FINE, "preloading is done");
     }
 
     /**
