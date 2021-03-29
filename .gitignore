@@ -3,9 +3,10 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-universal-converter.iml
 .idea
-.gitignore
+*.iws
+*.iml
+*.ipr
 
 ### STS ###
 .apt_generated
@@ -15,12 +16,6 @@ universal-converter.iml
 .settings
 .springBeans
 .sts4-cache
-
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
 
 ### NetBeans ###
 /nbproject/private/
