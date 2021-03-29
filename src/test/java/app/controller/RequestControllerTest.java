@@ -16,10 +16,16 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class RequestControllerTest {
 
+    /**
+     * preloads data for test.
+     */
     public RequestControllerTest() {
         Preloader.preload("target/test-classes/smallTestData.csv");
     }
 
+    /**
+     * searches some converting rules and compare it with the answer.
+     */
     @Test
     void convert() {
         RequestController controller = new RequestController();
