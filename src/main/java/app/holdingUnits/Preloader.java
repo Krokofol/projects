@@ -12,7 +12,8 @@ import java.util.logging.Logger;
  * @author Aleksey Lakhanskii
  *
  */
-public class Preloader {
+public class Preloader extends Thread{
+    /* extends Thread to preload at new thread */
 
     /** logger for this class. */
     public static Logger logger = Logger.getLogger(Preloader.class.getName());
@@ -20,15 +21,41 @@ public class Preloader {
     /** preloading thread. */
     public static Thread preloader;
 
+    /** path to the file with data to preload */
+    public String path;
+
     /**
      * creates instance of GraphHolder and starts new thread to preload units and converting rules.
      * @param path path to the file with units and converting rules.
      */
     public static void preload(String path) {
-        preloader = Thread.currentThread();
+        GraphHolder.cleanUp();
         logger.log(Level.INFO, "start preloading");
-        readingStartInfo(path);
+        preloader = new Preloader(path);
+        preloader.start();
+        try {
+            preloader.join();
+        } catch (InterruptedException e) {
+            logger.log(Level.SEVERE, "preloading join error");
+            e.printStackTrace();
+        }
         logger.log(Level.INFO, "preloading is done");
+    }
+
+    /**
+     * constructor of the preloader.
+     * @param path path to preloading file.
+     */
+    public Preloader(String path) {
+        this.path = path;
+    }
+
+    /**
+     * main body of the thread. Preloads data.
+     */
+    @Override
+    public void run() {
+        readingStartInfo(path);
     }
 
     /**
@@ -37,7 +64,7 @@ public class Preloader {
      */
     public static void readingStartInfo(String filePath) {
         try (BufferedReader reader = preloadReader(filePath)) {
-            logger.log(Level.INFO, "start reading converting rules");
+            logger.log(Level.FINE, "start reading converting rules");
             reader.lines().forEach(GraphHolder::parseLine);
             logger.log(Level.FINE, "reading converting rules is done");
         } catch (IOException e) {
@@ -51,7 +78,7 @@ public class Preloader {
      * @return buffer reader.
      */
     private static BufferedReader preloadReader(String filePath) {
-        logger.log(Level.INFO, "searching the file");
+        logger.log(Level.FINE, "searching the file");
         File input = new File(filePath);
         InputStreamReader isr = null;
         try {

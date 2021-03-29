@@ -15,9 +15,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class GraphHolderTest {
 
     /**
-     * Preloads required for tests data. Builds graphs if they do not exists yet and adds to them nodes.
+     * Preloads required for tests data. Builds graphs if they do not exists yet and adds to them nodes. Also deletes
+     * all graphs and nodes which could be created at other tests.
      */
     public GraphHolderTest() {
+        GraphHolder.cleanUp();
         String[] args = {
                 "км,м,1000",
                 "м,мм,1000",

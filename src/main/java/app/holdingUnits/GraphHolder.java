@@ -90,4 +90,12 @@ public class GraphHolder {
         graphs.add(graph);
         Node.setGraphsForName(startNode.getName(), graph);
     }
+
+    /**
+     * deletes all existing graphs and nodes.
+     */
+    public static void cleanUp() {
+        graphs.clear();
+        Node.cleanUp();
+    }
 }

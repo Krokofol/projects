@@ -99,4 +99,11 @@ public class Node {
     public String getName() {
         return name;
     }
+
+    /**
+     * deletes all nodes.
+     */
+    public static void cleanUp() {
+        nodesForNames.clear();
+    }
 }

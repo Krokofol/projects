@@ -14,6 +14,13 @@ import static org.junit.jupiter.api.Assertions.*;
 class NodeTest {
 
     /**
+     * deletes all nodes which could be created at other tests.
+     */
+    public NodeTest () {
+        Node.cleanUp();
+    }
+
+    /**
      * Creates two nodes. Checks are this different nodes and are they both were saved in the nodes storage.
      */
     @Test

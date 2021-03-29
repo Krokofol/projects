@@ -1,5 +1,6 @@
 package app.holdingUnits.containers;
 
+import app.holdingUnits.GraphHolder;
 import app.search.Value;
 import org.junit.jupiter.api.Test;
 
@@ -13,6 +14,13 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  */
 class GraphTest {
+
+    /**
+     * deletes all graphs and nodes which could be created at other tests.
+     */
+    public GraphTest() {
+        GraphHolder.cleanUp();
+    }
 
     /**
      * Creates graph with only one node. Checks does graph have only one node.
