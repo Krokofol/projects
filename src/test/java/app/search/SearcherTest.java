@@ -55,7 +55,8 @@ class SearcherTest {
     }
 
     /**
-     * Converts one units to the other (to which is able to convert) and checks the result of converting. (reverse direction)
+     * Converts one units to the other (to which is able to convert) and checks the result of converting. (reverse
+     * direction)
      */
     @Test
     public void converting2() {
