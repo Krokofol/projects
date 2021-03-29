@@ -143,4 +143,77 @@ class RequestControllerTest {
         result = controller.convert(startData).getBody();
         assertEquals("1", result);
     }
+
+    /**
+     * checks some cases when answer is "404 NOT FOUND"
+     */
+    @Test
+    public void NotFoundTests() {
+        RequestController controller = new RequestController();
+        HashMap<String, String> startData = new HashMap<>();
+        Integer expectedResult = 404;
+        Integer result;
+
+        startData.put("from", "м * кг / кг * мин");
+        startData.put("to", "км * г / с * час");
+        result = controller.convert(startData).getStatusCodeValue();
+        assertEquals(expectedResult, result);
+
+        startData.put("from", "м * с / кг * мин");
+        startData.put("to", "км * г / с * час");
+        result = controller.convert(startData).getStatusCodeValue();
+        assertEquals(expectedResult, result);
+
+        startData.put("from", "м * с / час * мин");
+        startData.put("to", "км * г / с * час");
+        result = controller.convert(startData).getStatusCodeValue();
+        assertEquals(expectedResult, result);
+
+        startData.put("from", "мин");
+        startData.put("to", "км");
+        result = controller.convert(startData).getStatusCodeValue();
+        assertEquals(expectedResult, result);
+    }
+
+
+    /**
+     * checks some cases when answer is "400 BAD REQUEST"
+     */
+    @Test
+    public void BadRequestTests() {
+        RequestController controller = new RequestController();
+        HashMap<String, String> startData = new HashMap<>();
+        Integer expectedResult = 400;
+        Integer result;
+
+        startData.put("from", "м * кг / кг * мин");
+        startData.put("to", "км * г / неСекунда * час");
+        result = controller.convert(startData).getStatusCodeValue();
+        assertEquals(expectedResult, result);
+
+        startData.put("from", "м * с / неКилограмм * мин");
+        startData.put("to", "км * г / с * час");
+        result = controller.convert(startData).getStatusCodeValue();
+        assertEquals(expectedResult, result);
+
+        startData.put("from", "м * с / час * мин");
+        startData.put("to", "тожеНеКилограмм * г / с * час");
+        result = controller.convert(startData).getStatusCodeValue();
+        assertEquals(expectedResult, result);
+
+        startData.put("from", "м / км");
+        startData.put("to", "1 / ");
+        result = controller.convert(startData).getStatusCodeValue();
+        assertEquals(expectedResult, result);
+
+        startData.put("from", "м / ");
+        startData.put("to", "км");
+        result = controller.convert(startData).getStatusCodeValue();
+        assertEquals(expectedResult, result);
+
+        startData.put("from", "неМинута");
+        startData.put("to", "км");
+        result = controller.convert(startData).getStatusCodeValue();
+        assertEquals(expectedResult, result);
+    }
 }
