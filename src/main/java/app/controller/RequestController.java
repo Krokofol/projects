@@ -48,7 +48,7 @@ public class RequestController {
         }
 
         String[] fromTo = refactorArgs(from, to);
-        if (fromTo == null) {
+        if (fromTo == null || (fromTo[0].equals("") && fromTo[1].equals(""))) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         String[] fromSeparated = fromTo[0].split("\\*");
@@ -134,6 +134,9 @@ public class RequestController {
      */
     private boolean checkExistence(String[] units) {
         for (String nameIterator : units) {
+            if (nameIterator.equals("")) {
+                continue;
+            }
             if (!Node.checkExistence(nameIterator)) {
                 return true;
             }

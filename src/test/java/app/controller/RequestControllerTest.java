@@ -169,6 +169,16 @@ class RequestControllerTest {
         result = controller.convert(startData).getStatusCodeValue();
         assertEquals(expectedResult, result);
 
+        startData.put("from", "м");
+        startData.put("to", "1 / км");
+        result = controller.convert(startData).getStatusCodeValue();
+        assertEquals(expectedResult, result);
+
+        startData.put("from", "1 / м");
+        startData.put("to", "км");
+        result = controller.convert(startData).getStatusCodeValue();
+        assertEquals(expectedResult, result);
+
         startData.put("from", "мин");
         startData.put("to", "км");
         result = controller.convert(startData).getStatusCodeValue();
@@ -213,6 +223,11 @@ class RequestControllerTest {
 
         startData.put("from", "неМинута");
         startData.put("to", "км");
+        result = controller.convert(startData).getStatusCodeValue();
+        assertEquals(expectedResult, result);
+
+        startData.put("from", "");
+        startData.put("to", "");
         result = controller.convert(startData).getStatusCodeValue();
         assertEquals(expectedResult, result);
     }
