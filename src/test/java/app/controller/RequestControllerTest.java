@@ -24,16 +24,16 @@ class RequestControllerTest {
     }
 
     /**
-     * searches some converting rules and compare it with the answer.
+     * searches some converting rules from ONLY ONE UNIT to OTHER ONE and compare it with the answer.
      */
     @Test
-    void convert() {
+    void convertFromOnlyOneUnitToOther() {
         RequestController controller = new RequestController();
         HashMap<String, String> startData = new HashMap<>();
         String result;
 
-        startData.put("from", "км * м");
-        startData.put("to", "м * м");
+        startData.put("from", "км");
+        startData.put("to", "м");
         result = controller.convert(startData).getBody();
         assertEquals("1000", result);
 
@@ -42,9 +42,105 @@ class RequestControllerTest {
         result = controller.convert(startData).getBody();
         assertEquals("3600", result);
 
-        startData.put("from", "м / с");
-        startData.put("to", "км / час");
+        startData.put("from", "месяц");
+        startData.put("to", "день");
         result = controller.convert(startData).getBody();
-        assertEquals("3.6", result);
+        assertEquals("31", result);
+    }
+
+    /**
+     * searches some converting rules from ONE MULTIPLICATION to OTHER ONE and compare it with the answer.
+     */
+    @Test
+    void convertFromMultiplicationToOtherOne() {
+        RequestController controller = new RequestController();
+        HashMap<String, String> startData = new HashMap<>();
+        String result;
+
+        startData.put("from", "км * м");
+        startData.put("to", "м * км");
+        result = controller.convert(startData).getBody();
+        assertEquals("1", result);
+
+        startData.put("from", "км * м");
+        startData.put("to", "м * м");
+        result = controller.convert(startData).getBody();
+        assertEquals("1000", result);
+
+        startData.put("from", "км * час");
+        startData.put("to", "м * с");
+        result = controller.convert(startData).getBody();
+        assertEquals("3600000", result);
+
+        startData.put("from", "час * год");
+        startData.put("to", "мин * месяц");
+        result = controller.convert(startData).getBody();
+        assertEquals("720", result);
+
+        startData.put("from", "м * кг * мин");
+        startData.put("to", "мм * т * с");
+        result = controller.convert(startData).getBody();
+        assertEquals("60", result);
+
+        startData.put("from", "м * кг * мин * час * с");
+        startData.put("to", "мм * т * с * мин * час");
+        result = controller.convert(startData).getBody();
+        assertEquals("1", result);
+    }
+
+    /**
+     * searches some converting rules from ONE DIVIDING to OTHER ONE and compare it with the answer.
+     */
+    @Test
+    void convertFromOneDividingToOther() {
+        RequestController controller = new RequestController();
+        HashMap<String, String> startData = new HashMap<>();
+        String result;
+
+        startData.put("from", "1 / с");
+        startData.put("to", "1 / час");
+        result = controller.convert(startData).getBody();
+        assertEquals("3600", result);
+
+        startData.put("from", "1 / км");
+        startData.put("to", "1 / м");
+        result = controller.convert(startData).getBody();
+        assertEquals("0.001", result);
+
+        startData.put("from", "1 / г");
+        startData.put("to", "1 / кг");
+        result = controller.convert(startData).getBody();
+        assertEquals("1000", result);
+    }
+
+    /**
+     * searches some converting rules from ONE DIVIDING WITH MULTIPLICATION to OTHER ONE and compare it with the
+     * answer.
+     */
+    @Test
+    void convertFromOneDividingWithMultiplicationToOther() {
+        RequestController controller = new RequestController();
+        HashMap<String, String> startData = new HashMap<>();
+        String result;
+
+        startData.put("from", "м * м / мм * км");
+        startData.put("to", "");
+        result = controller.convert(startData).getBody();
+        assertEquals("1", result);
+
+        startData.put("from", "час / час");
+        startData.put("to", "с / мин");
+        result = controller.convert(startData).getBody();
+        assertEquals("60", result);
+
+        startData.put("from", "м * кг / час * час");
+        startData.put("to", "км * кг / час * час");
+        result = controller.convert(startData).getBody();
+        assertEquals("0.001", result);
+
+        startData.put("from", "м * кг / мин * мин");
+        startData.put("to", "км * г / с * час");
+        result = controller.convert(startData).getBody();
+        assertEquals("1", result);
     }
 }
