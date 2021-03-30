@@ -34,7 +34,7 @@ public class Graph {
     public void addNode(String node1Name, String node2Name, Value startQuotient) {
         Node existenceNode;
         Node newNode;
-        Value newRule = new Value("1");
+        Value newRule = new Value();
         if (existenceNode(node1Name)) {
             existenceNode = nodesForNames.get(node1Name);
             newNode = Node.createNode(node2Name);
@@ -48,7 +48,7 @@ public class Graph {
             nodesForNames.put(node1Name, newNode);
         }
         assert newNode != null;
-        Value rule = new Value("1");
+        Value rule = new Value();
         rule.multiply(existenceNode.getConvertingRule());
         rule.multiply(newRule);
         newNode.setConvertingRule(rule);
@@ -65,7 +65,7 @@ public class Graph {
     public void connect(Graph graph2, String nodeName, String graph2NodeName, Value startQuotient) {
         Node graph2Node = graph2.findNode(graph2NodeName);
         Node node = findNode(nodeName);
-        Value newRule = new Value("1");
+        Value newRule = new Value();
 
         newRule.multiply(startQuotient);
         newRule.multiply(node.getConvertingRule());
@@ -112,7 +112,7 @@ public class Graph {
      * @return the converting rule.
      */
     public Value findConverting(String startNodeName, String endNodeName) {
-        Value result = new Value("1");
+        Value result = new Value();
         Node startNode = nodesForNames.get(startNodeName);
         Node endNode = nodesForNames.get(endNodeName);
         result.multiply(startNode.getConvertingRule());

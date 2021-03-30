@@ -55,7 +55,7 @@ public class Node {
      */
     private Node(String nodeName) {
         name = nodeName;
-        convertingRule = new Value("1");
+        convertingRule = new Value();
     }
 
     /**

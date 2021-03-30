@@ -168,9 +168,8 @@ public class RequestController {
         if (fromUnits.size() != toUnits.size()) {
             return null;
         }
-        final Value result = new Value("1");
+        final Value result = new Value();
         ArrayList<Searcher> searchThreads = new ArrayList<>();
-
         if (getConvertingWays(toUnits, fromUnits, searchThreads)) {
             return null;
         }
@@ -202,8 +201,7 @@ public class RequestController {
             Graph graph = GraphHolder.findGraph(numeratorIterator);
             for (String denominatorIterator : toUnits) {
                 if(graph.existenceNode(denominatorIterator)) {
-                    searchThreads.add(new Searcher(graph, numeratorIterator,
-                            denominatorIterator));
+                    searchThreads.add(new Searcher(graph, numeratorIterator, denominatorIterator));
                     toUnits.remove(denominatorIterator);
                     fromUnits.remove(numeratorIterator);
                     continue whileLoop;

@@ -40,6 +40,13 @@ public class Value {
     private Long denominatorExponent;
 
     /**
+     * Constructs Value of 1.
+     */
+    public Value() {
+        this("1");
+    }
+
+    /**
      * Constructs "Value" by number which is written at the string.
      * @param number the number which presented as the string.
      */
@@ -134,7 +141,7 @@ public class Value {
      * @return the result of dividing.
      */
     private Value divideNumeratorOnDenominator() {
-        Value result = new Value("1");
+        Value result = new Value();
         result.numeratorExponent = numeratorExponent - denominatorExponent;
         result.numerator = numerator.divide(denominator, NUMBER_OF_INSIGNIFICANT_DIGITS, RoundingMode.DOWN);
         long deltaExponent = Math.round(Math.floor(Math.log10(result.numerator.doubleValue())));
