@@ -15,17 +15,17 @@ import java.util.logging.Logger;
 public class Preloader extends Thread{
     /* extends Thread to preload at new thread */
 
-    /** logger for this class. */
+    /** Logger for this class. */
     private final static Logger logger = Logger.getLogger(Preloader.class.getName());
 
-    /** preloading thread. */
+    /** Preloading thread. */
     private static Thread preloader;
 
-    /** path to the file with data to preload */
+    /** Path to the file with converting rules. */
     private final String path;
 
     /**
-     * creates instance of GraphHolder and starts new thread to preload units and converting rules.
+     * Creates instance of Preloader and starts it to preload units and converting rules.
      * @param path path to the file with units and converting rules.
      */
     public static void preload(String path) {
@@ -42,7 +42,7 @@ public class Preloader extends Thread{
     }
 
     /**
-     * constructor of the preloader.
+     * Constructor of the preloader.
      * @param path path to preloading file.
      */
     public Preloader(String path) {
@@ -50,7 +50,7 @@ public class Preloader extends Thread{
     }
 
     /**
-     * main body of the thread. Preloads data.
+     * Main body of the thread. Preloads data.
      */
     @Override
     public void run() {
@@ -58,7 +58,7 @@ public class Preloader extends Thread{
     }
 
     /**
-     * preloading graphs.
+     * Reads converting rules and pars it.
      * @param filePath path to file with converting rules.
      */
     public static void readingStartInfo(String filePath) {
@@ -72,7 +72,7 @@ public class Preloader extends Thread{
     }
 
     /**
-     * preloads buffer reader of file.
+     * Preloads buffer reader of the file.
      * @param filePath path to the file with converting rules.
      * @return buffer reader.
      */
@@ -95,7 +95,7 @@ public class Preloader extends Thread{
     }
 
     /**
-     * gets preloading thread.
+     * Gets preloading thread.
      * @return preloading thread.
      */
     public static Thread getPreloadingThread() {

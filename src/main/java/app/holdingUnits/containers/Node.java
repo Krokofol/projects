@@ -14,20 +14,20 @@ import java.util.HashMap;
  */
 public class Node {
 
-    /** contains all added nodes. */
+    /** Contains all added nodes. */
     private final static HashMap<String, Node> nodesForNames = new HashMap<>();
 
-    /** contains graph for existing nodes. */
+    /** Contains graph for existing nodes. */
     private final static HashMap<String, Graph> graphsForNames = new HashMap<>();
 
-    /** name of the node. */
+    /** Name of the node. */
     private final String name;
 
-    /** converting rule to the first unit in the graph */
+    /** Converting rule to the first unit in the graph. */
     private Value convertingRule;
 
     /**
-     * creates new node if node with the same name does not exist yet.
+     * Creates new node if node with the same name does not exist yet.
      * @param name name of the new node which need to create.
      * @return new node or null if node already exists.
      */
@@ -41,7 +41,7 @@ public class Node {
     }
 
     /**
-     * checks existence of the node with the same name.
+     * Checks existence of the node with the same name.
      * @param name name of the node which existence need be checked.
      * @return true if node exists else return false.
      */
@@ -50,7 +50,7 @@ public class Node {
     }
 
     /**
-     * constructs node.
+     * Constructs node.
      * @param nodeName name of new node.
      */
     private Node(String nodeName) {
@@ -59,23 +59,23 @@ public class Node {
     }
 
     /**
-     * gets converting rule from this node to the first node of the graph in which it's exists.
-     * @return the converting rule.
+     * Gets converting rule from this node to the first node of the graph in which it's exists.
+     * @return the converting rule to the start node of the graph.
      */
     public Value getConvertingRule() {
         return convertingRule;
     }
 
     /**
-     * sets new converting rule.
-     * @param convertingRule new rule.
+     * Sets new converting rule from this node to the first node of the graph in which it's exists.
+     * @param convertingRule new converting rule to the start node of the graph.
      */
     public void setConvertingRule(Value convertingRule) {
         this.convertingRule = convertingRule;
     }
 
     /**
-     * sets graph for Node with such name.
+     * Sets graph for node with such name.
      * @param name name of the node for which graph sets.
      * @param graph graph to set.
      */
@@ -84,24 +84,24 @@ public class Node {
     }
 
     /**
-     * gets graph in which Node with such name is located.
+     * Gets graph in which Node with such name is located.
      * @param name node name.
-     * @return graph.
+     * @return if node with such name exists returns graph, else returns null.
      */
     public static Graph getGraph(String name) {
         return graphsForNames.get(name);
     }
 
     /**
-     * gets name of this Node.
-     * @return name.
+     * Gets name of the node.
+     * @return name name of the node.
      */
     public String getName() {
         return name;
     }
 
     /**
-     * finds Node with this name.
+     * Finds node with this name.
      * @param nodeName name of the Node.
      * @return if such Node exists returns it, else returns null.
      */
@@ -110,7 +110,7 @@ public class Node {
     }
 
     /**
-     * deletes all nodes.
+     * Deletes all nodes.
      */
     public static void cleanUp() {
         nodesForNames.clear();
