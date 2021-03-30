@@ -5,7 +5,7 @@ import app.search.Value;
 import java.util.*;
 
 /**
- * Class to hold nodes of the graph. Also it should find way to convert one unit to other one.
+ * Class to hold nodes of the graph. Also it should find way to convert one unit of this graph to other one.
  *
  * @version 1.0.0 10 Mar 2021
  * @author Aleksey Lakhanskii
@@ -13,11 +13,11 @@ import java.util.*;
  */
 public class Graph {
 
-    /** all nodes of the graph. */
+    /** All nodes of the graph. */
     private final HashMap<String, Node> nodesForNames;
 
     /**
-     * constructs the graph.
+     * Constructs the graph and adds start node to this graph.
      * @param startNode first graph node.
      */
     public Graph(Node startNode) {
@@ -26,10 +26,10 @@ public class Graph {
     }
 
     /**
-     * one of this nodes not in this graph.
+     * Add one of nodes, which is not exists yet.
      * @param node1Name the first node name.
      * @param node2Name the second node name.
-     * @param startQuotient the quotient of converting.
+     * @param startQuotient the quotient of converting from the first node to the second.
      */
     public void addNode(String node1Name, String node2Name, Value startQuotient) {
         Node existenceNode;
@@ -56,7 +56,7 @@ public class Graph {
     }
 
     /**
-     * connects two graphs.
+     * Connects two graphs.
      * @param graph2 the second graph.
      * @param nodeName node name from the first graph.
      * @param graph2NodeName node name from the second graph.
@@ -80,7 +80,7 @@ public class Graph {
     }
 
     /**
-     * checks the existence of the node by node name.
+     * Checks the existence of the node by node name.
      * @param nodeName node name.
      * @return if node exists - true, else - false.
      */
@@ -89,16 +89,16 @@ public class Graph {
     }
 
     /**
-     * gets node by name.
+     * Gets node by name.
      * @param nodeName node name.
-     * @return node.
+     * @return if node with such name exists returns node, else returns null.
      */
     public Node findNode(String nodeName) {
         return nodesForNames.get(nodeName);
     }
 
     /**
-     * get HashMap with nodes.
+     * Get HashMap with key as node name and value as node.
      * @return HashMap nodeForNames.
      */
     public HashMap<String, Node> getNodesForNames() {
@@ -106,7 +106,7 @@ public class Graph {
     }
 
     /**
-     * gets converting rule from one node to other one.
+     * Gets converting rule from one node to other one.
      * @param startNodeName node from which rule search.
      * @param endNodeName node to which rule search.
      * @return the converting rule.
@@ -121,7 +121,7 @@ public class Graph {
     }
 
     /**
-     * function to get amount of the nodes in this graph.
+     * Function to get amount of the nodes in this graph.
      * @return amount of the nodes in this graph.
      */
     public Integer getGraphSize() {
