@@ -30,7 +30,8 @@ class GraphTest {
         String startNodeName = "startNode";
         Node startNode = Node.createNode(startNodeName);
         Graph graph = new Graph(startNode);
-        assertEquals(1, graph.nodesForNames.size());
+        Integer expectedGraphSize = 1;
+        assertEquals(expectedGraphSize, graph.getGraphSize());
         assertTrue(graph.existenceNode(startNodeName));
         assertEquals(startNode, graph.findNode(startNodeName));
     }
@@ -41,8 +42,8 @@ class GraphTest {
      */
     @Test
     public void searchAddTest() {
-        String node1Name = "node1GraphTest2";
-        String node2Name = "node2GraphTest2";
+        String node1Name = "node1";
+        String node2Name = "node2";
 
         assertFalse(Node.checkExistence(node1Name));
         assertFalse(Node.checkExistence(node2Name));
@@ -57,7 +58,8 @@ class GraphTest {
         graph.addNode(node1Name, node2Name, new Value("0.1"));
         assertTrue(graph.existenceNode(node2Name));
         Value convertingResult = graph.findConverting(node2Name,node1Name);
-        assertEquals("10", convertingResult.toString());
+        String expectedConvertingResult = "10";
+        assertEquals(expectedConvertingResult, convertingResult.toString());
     }
 
     /**
@@ -66,10 +68,10 @@ class GraphTest {
      */
     @Test
     public void connectionsTest() {
-        String node1Name = "node1GraphTest3";
+        String node1Name = "node1";
         Node node1 = Node.createNode(node1Name);
-        String node2Name = "node2GraphTest3";
-        String node3Name = "node3GraphTest3";
+        String node2Name = "node2";
+        String node3Name = "node3";
         Node node3 = Node.createNode(node3Name);
         Graph graph12 = new Graph(node1);
         graph12.addNode(node1Name, node2Name, new Value("10"));
@@ -82,11 +84,17 @@ class GraphTest {
         assertTrue(graph12.existenceNode(node3Name));
         assertEquals(node1, graph12.findNode(node1Name));
         assertEquals(node3, graph12.findNode(node3Name));
+
+        String expectedConvertingResult = "1";
         Value convertingResult = graph12.findConverting(node2Name, node3Name);
-        assertEquals("1", convertingResult.toString());
+        assertEquals(expectedConvertingResult, convertingResult.toString());
+
+        expectedConvertingResult = "0.1";
         convertingResult = graph12.findConverting(node2Name, node1Name);
-        assertEquals("0.1", convertingResult.toString());
+        assertEquals(expectedConvertingResult, convertingResult.toString());
+
+        expectedConvertingResult = "10";
         convertingResult = graph12.findConverting(node1Name, node3Name);
-        assertEquals("10", convertingResult.toString());
+        assertEquals(expectedConvertingResult, convertingResult.toString());
     }
 }

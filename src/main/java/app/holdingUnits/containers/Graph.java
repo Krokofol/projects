@@ -123,4 +123,12 @@ public class Graph {
         result.divide(endNode.getConvertingRule());
         return result;
     }
+
+    /**
+     * function to get amount of the nodes in this graph.
+     * @return amount of the nodes in this graph.
+     */
+    public Integer getGraphSize() {
+        return nodesForNames.size();
+    }
 }
