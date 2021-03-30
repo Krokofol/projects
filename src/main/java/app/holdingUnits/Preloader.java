@@ -29,7 +29,6 @@ public class Preloader extends Thread{
      * @param path path to the file with units and converting rules.
      */
     public static void preload(String path) {
-        GraphHolder.cleanUp();
         logger.log(Level.INFO, "start preloading");
         preloader = new Preloader(path);
         preloader.start();

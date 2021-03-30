@@ -1,5 +1,6 @@
 package app.controller;
 
+import app.holdingUnits.GraphHolder;
 import app.holdingUnits.Preloader;
 import org.junit.jupiter.api.Test;
 
@@ -20,6 +21,7 @@ class RequestControllerTest {
      * preloads data for test.
      */
     public RequestControllerTest() {
+        GraphHolder.cleanUp();
         Preloader.preload("target/test-classes/smallTestData.csv");
     }
 

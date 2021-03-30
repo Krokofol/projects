@@ -20,6 +20,7 @@ class SearcherTest {
      * Preloads required for tests data. Builds graphs if they do not exists yet and adds to them nodes.
      */
     public SearcherTest() {
+        GraphHolder.cleanUp();
         String[] args = {
                 "км,м,1000",
                 "м,мм,1000",
