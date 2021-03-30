@@ -18,6 +18,9 @@ public class Preloader extends Thread{
     /** Logger for this class. */
     private final static Logger logger = Logger.getLogger(Preloader.class.getName());
 
+    /** Exit status if no file with converting rules. */
+    private final static int noFileExitStatus = 13;
+
     /** Preloading thread. */
     private static Thread preloader;
 
@@ -88,7 +91,7 @@ public class Preloader extends Thread{
         }
         if (isr == null) {
             logger.log(Level.SEVERE, "no such file");
-            System.exit(13);
+            System.exit(noFileExitStatus);
         }
         logger.log(Level.FINE, "file is found");
         return new BufferedReader(isr);
