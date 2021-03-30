@@ -75,7 +75,7 @@ public class Node {
     }
 
     /**
-     * sets graph for node.
+     * sets graph for Node with such name.
      * @param name name of the node for which graph sets.
      * @param graph graph to set.
      */
@@ -84,7 +84,7 @@ public class Node {
     }
 
     /**
-     * gets graph.
+     * gets graph in which Node with such name is located.
      * @param name node name.
      * @return graph.
      */
@@ -93,11 +93,20 @@ public class Node {
     }
 
     /**
-     * gets name.
+     * gets name of this Node.
      * @return name.
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * finds Node with this name.
+     * @param nodeName name of the Node.
+     * @return if such Node exists returns it, else returns null.
+     */
+    public static Node findNode(String nodeName) {
+        return nodesForNames.get(nodeName);
     }
 
     /**
