@@ -51,11 +51,14 @@ public class RequestController {
         }
 
         if (checkInput(from, to)) {
+            logger.log(Level.FINER, "\"from\" or \"to\" is not declared");
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
+        logger.log(Level.FINER, "got body with such \"from\" and \"to\"\n-from : " + from + "\n-to : " + to);
         String[] fromTo = refactorArgs(from, to);
         if (fromTo == null || (fromTo[0].equals("") && fromTo[1].equals(""))) {
+            logger.log(Level.FINER, "bad form of \"from\" or \"to\" \n-from : " + from + "\n-to : " + to);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         String[] fromSeparated = fromTo[0].split("\\*");
@@ -63,6 +66,7 @@ public class RequestController {
         boolean allUnitsFromExist = checkExistence(fromSeparated);
         boolean allUnitsToExist = checkExistence(toSeparated);
         if (allUnitsToExist || allUnitsFromExist) {
+            //is already logged in function "checkExistence"
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
@@ -72,8 +76,10 @@ public class RequestController {
         );
 
         if (result == null) {
+            logger.log(Level.FINER, "unable to convert \nfrom : (" + from + ") \nto : (" + to + ")");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        logger.log(Level.FINER, "converting result \nfrom : (" + from + ") \nto : (" + to + ") \nis : " + result);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -145,6 +151,7 @@ public class RequestController {
                 continue;
             }
             if (!Node.checkExistence(nameIterator)) {
+                logger.log(Level.FINER, "there is not such unit : " + nameIterator);
                 return true;
             }
         }
