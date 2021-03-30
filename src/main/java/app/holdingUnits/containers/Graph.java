@@ -14,10 +14,7 @@ import java.util.*;
 public class Graph {
 
     /** all nodes of the graph. */
-    public HashMap<String, Node> nodesForNames;
-
-    /** name of the first node. */
-    public String firstNodeName;
+    private final HashMap<String, Node> nodesForNames;
 
     /**
      * constructs the graph.
@@ -26,7 +23,6 @@ public class Graph {
     public Graph(Node startNode) {
         nodesForNames = new HashMap<>();
         nodesForNames.put(startNode.getName(), startNode);
-        firstNodeName = startNode.getName();
     }
 
     /**

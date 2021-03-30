@@ -29,7 +29,7 @@ import java.util.logging.Logger;
 public class RequestController {
 
     /** logger for this class. */
-    public static Logger logger = Logger.getLogger(RequestController.class.getName());
+    private final static Logger logger = Logger.getLogger(RequestController.class.getName());
 
     /**
      * Processes requests with "convert" address. Also it waits the ending of preloading thread.

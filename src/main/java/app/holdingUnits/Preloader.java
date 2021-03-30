@@ -16,13 +16,13 @@ public class Preloader extends Thread{
     /* extends Thread to preload at new thread */
 
     /** logger for this class. */
-    public static Logger logger = Logger.getLogger(Preloader.class.getName());
+    private final static Logger logger = Logger.getLogger(Preloader.class.getName());
 
     /** preloading thread. */
-    public static Thread preloader;
+    private static Thread preloader;
 
     /** path to the file with data to preload */
-    public String path;
+    private final String path;
 
     /**
      * creates instance of GraphHolder and starts new thread to preload units and converting rules.

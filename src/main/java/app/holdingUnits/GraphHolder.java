@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class GraphHolder {
 
     /** all graphs. */
-    public static ArrayList<Graph> graphs = new ArrayList<>();
+    private final static ArrayList<Graph> graphs = new ArrayList<>();
 
     /**
      * gets from line names of the nodes. Adds node if it does not exists and after checking both nodes connect them

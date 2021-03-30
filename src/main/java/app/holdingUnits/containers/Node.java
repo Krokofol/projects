@@ -15,16 +15,16 @@ import java.util.HashMap;
 public class Node {
 
     /** contains all added nodes. */
-    public static HashMap<String, Node> nodesForNames = new HashMap<>();
+    private final static HashMap<String, Node> nodesForNames = new HashMap<>();
 
     /** contains graph for existing nodes. */
-    public static HashMap<String, Graph> graphsForNames = new HashMap<>();
+    private final static HashMap<String, Graph> graphsForNames = new HashMap<>();
 
     /** name of the node. */
-    public String name;
+    private final String name;
 
     /** converting rule to the first unit in the graph */
-    public Value convertingRule;
+    private Value convertingRule;
 
     /**
      * creates new node if node with the same name does not exist yet.

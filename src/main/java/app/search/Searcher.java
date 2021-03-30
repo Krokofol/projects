@@ -13,16 +13,16 @@ public class Searcher extends Thread {
     /* extends thread to start Graph.findConverting at new thread. */
 
     /** result of converting. */
-    public Value result;
+    private Value result;
 
     /** the graph, where converting will be. */
-    public Graph graph;
+    private final Graph graph;
 
     /** name of the node FROM which we are converting. */
-    public String startNodeName;
+    private final String startNodeName;
 
     /** name of the node TO which we are converting. */
-    public String endNodeName;
+    private final String endNodeName;
 
     /**
      * returns result.

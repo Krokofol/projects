@@ -22,22 +22,22 @@ public class Value {
      * Numerator of the digit that has NUMBER_SIGNIFICANT_DIGITS before "." and NUMBER_OF_INSIGNIFICANT_DIGITS after
      * ".".
      */
-    public BigDecimal numerator;
+    private BigDecimal numerator;
 
     /** Numerator exponent on which "bigDecimal" should be multiplied to convert it to the normal form. */
-    public Long numeratorExponent;
+    private Long numeratorExponent;
 
     /** if this instance has denominator become true */
-    public boolean denominatorIsInitialized;
+    private boolean denominatorIsInitialized;
 
     /**
      * Denominator of the digit that has NUMBER_SIGNIFICANT_DIGITS before "." and NUMBER_OF_INSIGNIFICANT_DIGITS
      * after ".".
      */
-    public BigDecimal denominator;
+    private BigDecimal denominator;
 
     /** Denominator exponent on which "bigDecimal" should be multiplied to convert it to the normal form. */
-    public Long denominatorExponent;
+    private Long denominatorExponent;
 
     /**
      * Constructs "Value" by number which is written at the string.
@@ -133,7 +133,7 @@ public class Value {
      * When Value converts to string, divide Numerator Value on Denominator Value.
      * @return the result of dividing.
      */
-    public Value divideNumeratorOnDenominator() {
+    private Value divideNumeratorOnDenominator() {
         Value result = new Value("1");
         result.numeratorExponent = numeratorExponent - denominatorExponent;
         result.numerator = numerator.divide(denominator, NUMBER_OF_INSIGNIFICANT_DIGITS, RoundingMode.DOWN);
