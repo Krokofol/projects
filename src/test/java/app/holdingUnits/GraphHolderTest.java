@@ -15,11 +15,43 @@ import static org.junit.jupiter.api.Assertions.*;
 class GraphHolderTest {
 
     /**
-     * Preloads required for tests data. Builds graphs if they do not exists yet and adds to them nodes. Also deletes
-     * all graphs and nodes which could be created at other tests.
+     * Checks the existing of nodes which able to convert from one to other in one graph.
      */
-    public GraphHolderTest() {
+    @Test
+    public void parsingTest() {
         GraphHolder.cleanUp();
+        preloadData();
+        Integer expectedGraphHolderSize = 3;
+        assertEquals(expectedGraphHolderSize, GraphHolder.getGraphHolderSize());
+
+        String fromNodeName = "км";
+        String toNodeName = "пм";
+        String noSuchUnit = "unit";
+
+        assertFalse(Node.checkExistence(noSuchUnit));
+        assertTrue(Node.checkExistence(fromNodeName));
+        assertTrue(Node.checkExistence(toNodeName));
+        assertNotNull(Node.getGraph(fromNodeName));
+        assertEquals(Node.getGraph(fromNodeName), Node.getGraph(toNodeName));
+    }
+
+    /**
+     * adds to the graph Holder some graphs and cleans them app. Expected that after cleaning up graph Holder size
+     * will be 0.
+     */
+    @Test
+    public void cleanUpTest() {
+        Integer graphHolderEmptySize = 0;
+        preloadData();
+        assertNotEquals(graphHolderEmptySize, GraphHolder.getGraphHolderSize());
+        GraphHolder.cleanUp();
+        assertEquals(graphHolderEmptySize, GraphHolder.getGraphHolderSize());
+    }
+
+    /**
+     * preloads some converting rules.
+     */
+    public void preloadData() {
         String[] args = {
                 "км,м,1000",
                 "м,мм,1000",
@@ -34,21 +66,4 @@ class GraphHolderTest {
         }
     }
 
-    /**
-     * Checks the existing of nodes which able to convert from one to other in one graph.
-     */
-    @Test
-    public void parsingTest() {
-        assertEquals(3, GraphHolder.graphs.size());
-
-        String fromNodeName = "км";
-        String toNodeName = "пм";
-        String noSuchUnit = "unit";
-
-        assertFalse(Node.checkExistence(noSuchUnit));
-        assertTrue(Node.checkExistence(fromNodeName));
-        assertTrue(Node.checkExistence(toNodeName));
-        assertNotNull(Node.getGraph(fromNodeName));
-        assertEquals(Node.getGraph(fromNodeName), Node.getGraph(toNodeName));
-    }
 }

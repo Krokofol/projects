@@ -98,4 +98,12 @@ public class GraphHolder {
         graphs.clear();
         Node.cleanUp();
     }
+
+    /**
+     * function to get amount of the graphs.
+     * @return amount of the graphs.
+     */
+    public static Integer getGraphHolderSize() {
+        return graphs.size();
+    }
 }
