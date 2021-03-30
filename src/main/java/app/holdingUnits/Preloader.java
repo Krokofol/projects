@@ -93,4 +93,12 @@ public class Preloader extends Thread{
         logger.log(Level.FINE, "file is found");
         return new BufferedReader(isr);
     }
+
+    /**
+     * gets preloading thread.
+     * @return preloading thread.
+     */
+    public static Thread getPreloadingThread() {
+        return preloader;
+    }
 }

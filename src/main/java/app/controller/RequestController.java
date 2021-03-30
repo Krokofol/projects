@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Class for processing requests.
@@ -25,6 +27,9 @@ import java.util.Map;
  */
 @Controller
 public class RequestController {
+
+    /** logger for this class. */
+    public static Logger logger = Logger.getLogger(RequestController.class.getName());
 
     /**
      * Processes requests with "convert" address. Also it waits the ending of preloading thread.
@@ -38,8 +43,10 @@ public class RequestController {
         String to = body.get("to");
 
         try {
-            Preloader.preloader.join();
+            Preloader.getPreloadingThread().join();
+            logger.log(Level.FINE, "preloading thread join is successful");
         } catch (InterruptedException e) {
+            logger.log(Level.WARNING, "preloading thread join error");
             e.printStackTrace();
         }
 
@@ -182,7 +189,7 @@ public class RequestController {
      */
     private boolean getConvertingWays(ArrayList<String> toUnits, ArrayList<String> fromUnits,
                                       ArrayList<Searcher> searchThreads) {
-        first:
+        whileLoop:
         while (fromUnits.size() > 0) {
             String numeratorIterator = fromUnits.get(0);
             Graph graph = GraphHolder.findGraph(numeratorIterator);
@@ -192,7 +199,7 @@ public class RequestController {
                             denominatorIterator));
                     toUnits.remove(denominatorIterator);
                     fromUnits.remove(numeratorIterator);
-                    continue first;
+                    continue whileLoop;
                 }
             }
             return true;
