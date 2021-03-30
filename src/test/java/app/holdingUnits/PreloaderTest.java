@@ -20,7 +20,7 @@ class PreloaderTest {
     @Test
     public void preloadTest() {
         GraphHolder.cleanUp();
-        Preloader.preload("target/test-classes/smallTestData.csv");
+        Preloader.preload("target/test-classes/testData.csv");
         assertTrue(Node.checkExistence("км"));
         assertTrue(Node.checkExistence("пм"));
     }

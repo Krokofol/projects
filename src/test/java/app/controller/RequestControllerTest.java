@@ -22,7 +22,7 @@ class RequestControllerTest {
      */
     public RequestControllerTest() {
         GraphHolder.cleanUp();
-        Preloader.preload("target/test-classes/smallTestData.csv");
+        Preloader.preload("target/test-classes/testData.csv");
     }
 
     /**
