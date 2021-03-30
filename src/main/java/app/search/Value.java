@@ -27,7 +27,7 @@ public class Value {
     /** Numerator exponent on which "bigDecimal" should be multiplied to convert it to the normal form. */
     private Long numeratorExponent;
 
-    /** if this instance has denominator become true */
+    /** If this instance has denominator become true */
     private boolean denominatorIsInitialized;
 
     /**

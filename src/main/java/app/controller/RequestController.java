@@ -28,11 +28,12 @@ import java.util.logging.Logger;
 @Controller
 public class RequestController {
 
-    /** logger for this class. */
+    /** Logger for this class. */
     private final static Logger logger = Logger.getLogger(RequestController.class.getName());
 
     /**
-     * Processes requests with "convert" address. Also it waits the ending of preloading thread.
+     * Processes requests with "convert" address. Also before converting waits the ending of preloading thread to be
+     * sure that all units are preloaded.
      * @param body body of the request.
      * @return response, which consist of the text and Http status.
      */
@@ -84,7 +85,7 @@ public class RequestController {
     }
 
     /**
-     * checks is input empty.
+     * Checks is input empty.
      * @param from input string with units from which converts.
      * @param to input string with units to which converts.
      * @return if one of inputs is empty returns true, else false.
@@ -94,13 +95,13 @@ public class RequestController {
     }
 
     /**
-     * splits numerator and denominator of "from" and "to" units. Multiplies numerator of "from" and denominator of
+     * Splits numerator and denominator of "from" and "to" units. Multiplies numerator of "from" and denominator of
      * "to" and writs it into "from" and also multiplies numerator of "to" and denominator of "from" and writes it
      * into "to".
-     * @param from "from" units
-     * @param to "to" units
-     * @return two elements, first is new "from" string, second is new "to"
-     * string.
+     * @param from string with the units from which converts.
+     * @param to string with the units to which converts.
+     * @return if form of "from" and "to" string is correct returns two elements, first is new "from" string, second is
+     * new "to" string.
      */
     private static String[] refactorArgs(String from, String to) {
         boolean fromContainsDividing = from.contains("/");
@@ -123,10 +124,11 @@ public class RequestController {
     }
 
     /**
-     * Multiplies numerator of the first units and denominator of the second units.
-     * @param units1 first units.
-     * @param units2 second units.
-     * @return multiplication.
+     * Multiplies numerator (units before "/") of the first units and denominator (units after "/") of the second
+     * units.
+     * @param units1 first units set.
+     * @param units2 second units set.
+     * @return string with multiplication numerator of the first units and denominator of the second units.
      */
     private static StringBuilder buildArgs(String[] units1, String[] units2) {
         StringBuilder result = new StringBuilder();
@@ -141,9 +143,9 @@ public class RequestController {
     }
 
     /**
-     * checks existence of all units.
-     * @param units all units.
-     * @return if everything is ok - false, else - true.
+     * Checks existence of the units.
+     * @param units units which existence should be checked.
+     * @return if all units exists returns false, else returns true.
      */
     private boolean checkExistence(String[] units) {
         for (String nameIterator : units) {
@@ -159,10 +161,12 @@ public class RequestController {
     }
 
     /**
-     * iterates through "toUnits" and tries to find conversion to one of "fromUnits".
-     * @param toUnits units to which we are converting.
-     * @param fromUnits units from which we are converting.
-     * @return if it finds all conversions then return the result, if it don't finds one of conversions returns false.
+     * Calculates converting from "from" units to "to" units. Iterates through "toUnits" and tries to find conversion
+     * to one of "fromUnits".
+     * @param toUnits units to which converting rule is searches.
+     * @param fromUnits units from which converting rule is searches.
+     * @return if finds all conversions then return the result as string, if doesn't finds one of conversions returns
+     * null.
      */
     private String calculateResult (ArrayList<String> toUnits, ArrayList<String> fromUnits) {
         if (fromUnits.size() != toUnits.size()) {
@@ -187,11 +191,11 @@ public class RequestController {
     }
 
     /**
-     * finds units which are able to convert from one to other.
+     * Finds units which are able to convert from one to other and adds searching thread to searching array.
      * @param toUnits to which units convert;
      * @param fromUnits from which units convert;
-     * @param searchThreads collection of prepared to start threads.
-     * @return true if impossible to convert units.
+     * @param searchThreads collection of prepared to start searching threads.
+     * @return true if impossible to convert units, else returns false.
      */
     private boolean getConvertingWays(ArrayList<String> toUnits, ArrayList<String> fromUnits,
                                       ArrayList<Searcher> searchThreads) {
