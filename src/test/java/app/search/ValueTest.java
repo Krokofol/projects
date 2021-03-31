@@ -80,4 +80,58 @@ class ValueTest {
         data3.divide(new Value(startData32));
         assertEquals(expectedData3, data3.toString());
     }
+
+    @Test
+    public void negativeTestMultiply() {
+        String startData11 = "-1";
+        String startData12 = "-738.2";
+        String expectedData1 = "738.2";
+        Value value11 = new Value(startData11);
+        Value value12 = new Value(startData12);
+        value12.multiply(value11);
+        assertEquals(expectedData1, value12.toString());
+
+        String startData21 = "-1";
+        String startData22 = "-0.0000000000000000000382";
+        String expectedData2 = "0.0000000000000000000382";
+        Value value21 = new Value(startData21);
+        Value value22 = new Value(startData22);
+        value22.multiply(value21);
+        assertEquals(expectedData2, value22.toString());
+
+        String startData31 = "-1";
+        String startData32 = "-3820000000000000000000";
+        String expectedData3 = "3820000000000000000000";
+        Value value31 = new Value(startData31);
+        Value value32 = new Value(startData32);
+        value32.multiply(value31);
+        assertEquals(expectedData3, value32.toString());
+    }
+
+    @Test
+    public void negativeTestDivide() {
+        String startData11 = "-1";
+        String startData12 = "-738.2";
+        String expectedData1 = "738.2";
+        Value value11 = new Value(startData11);
+        Value value12 = new Value(startData12);
+        value12.divide(value11);
+        assertEquals(expectedData1, value12.toString());
+
+        String startData21 = "-1";
+        String startData22 = "-0.0000000000000000000382";
+        String expectedData2 = "0.0000000000000000000382";
+        Value value21 = new Value(startData21);
+        Value value22 = new Value(startData22);
+        value22.divide(value21);
+        assertEquals(expectedData2, value22.toString());
+
+        String startData31 = "-1";
+        String startData32 = "-3820000000000000000000";
+        String expectedData3 = "3820000000000000000000";
+        Value value31 = new Value(startData31);
+        Value value32 = new Value(startData32);
+        value32.divide(value31);
+        assertEquals(expectedData3, value32.toString());
+    }
 }

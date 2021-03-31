@@ -18,6 +18,9 @@ public class Value {
     /** The number of insignificant digits. More numbers = more precision, but spends more time for operations. */
     private static final Integer NUMBER_OF_INSIGNIFICANT_DIGITS = 90;
 
+    /** if value lower then 0 it is true, else it is false */
+    private Boolean negative;
+
     /**
      * Numerator of the digit that has NUMBER_SIGNIFICANT_DIGITS before "." and NUMBER_OF_INSIGNIFICANT_DIGITS after
      * ".".
@@ -51,6 +54,8 @@ public class Value {
      * @param number the number which presented as the string.
      */
     public Value(String number) {
+        negative = number.contains("-");
+        number = number.replace("-", "");
         denominatorIsInitialized = false;
         numerator = new BigDecimal(number);
         denominator = new BigDecimal("1");
@@ -74,6 +79,7 @@ public class Value {
      * @param value the value on which this instance of "Value" multiplies.
      */
     public void multiply(Value value) {
+        negative = (value.negative && !negative) || (!value.negative && negative);
         if (value.denominatorIsInitialized) {
             denominatorIsInitialized = true;
         }
@@ -85,6 +91,7 @@ public class Value {
      * @param value the value on which this instance of "Value" divides.
      */
     public void divide(Value value) {
+        negative = (value.negative && !negative) || (!value.negative && negative);
         denominatorIsInitialized = true;
         calculate(value.denominatorExponent, value.numeratorExponent, value.denominator, value.numerator);
     }
@@ -159,6 +166,9 @@ public class Value {
      */
     private String convertDigitLessThenOne() {
         StringBuilder stringForm = new StringBuilder();
+        if (negative) {
+            stringForm.append("-");
+        }
         stringForm.append("0.");
         for (long i = NUMBER_SIGNIFICANT_DIGITS; i < numeratorExponent - 1; i++) {
             stringForm.append("0");
@@ -179,6 +189,9 @@ public class Value {
      */
     private String convertDigitWhichHaveNumbersAfterDot() {
         StringBuilder stringForm = new StringBuilder();
+        if (negative) {
+            stringForm.append("-");
+        }
         int saveInsignificantDigits = 0;
         BigDecimal valueCopy = numerator.setScale(saveInsignificantDigits, RoundingMode.DOWN);
         long data = valueCopy.longValue();
@@ -201,6 +214,9 @@ public class Value {
      */
     private String convertDigitWhichDontHaveNumbersAfterDot(){
         StringBuilder stringForm = new StringBuilder();
+        if (negative) {
+            stringForm.append("-");
+        }
         int saveInsignificantDigits = 0;
         BigDecimal valueCopy = numerator.setScale(saveInsignificantDigits, RoundingMode.DOWN);
         stringForm.append(valueCopy.toString());
