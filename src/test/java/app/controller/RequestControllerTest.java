@@ -125,6 +125,11 @@ class RequestControllerTest {
         HashMap<String, String> startData = new HashMap<>();
         String result;
 
+        startData.put("from", "см");
+        startData.put("to", "км * м / дм");
+        result = controller.convert(startData).getBody();
+        assertEquals("0.000001", result);
+
         startData.put("from", "м * м / мм * км");
         startData.put("to", "");
         result = controller.convert(startData).getBody();
