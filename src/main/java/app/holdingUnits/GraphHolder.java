@@ -2,11 +2,11 @@ package app.holdingUnits;
 
 import app.holdingUnits.containers.Graph;
 import app.holdingUnits.containers.Node;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import app.search.Value;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Class which builds and holds all graphs.
@@ -21,7 +21,7 @@ public class GraphHolder {
     private final static ArrayList<Graph> graphs = new ArrayList<>();
 
     /** Logger for this class. */
-    private final static Logger logger = Logger.getLogger(GraphHolder.class.getName());
+    private final static Logger logger = LoggerFactory.getLogger(GraphHolder.class);
 
     /**
      * Gets from line names of the nodes and converting rule. Creates nodes if it does not exists and connects them by
@@ -29,18 +29,18 @@ public class GraphHolder {
      * @param line the line with names and quotient.
      */
     public static void parseLine(String line) {
-        logger.log(Level.FINER, "parsing line : " + line);
+        logger.debug("parsing line : {}", line);
         String node1Name = line.split(",")[0];
         String node2Name = line.split(",")[1];
         Value quotient = new Value(line.split(",")[2]);
-        logger.log(Level.FINEST, "unit 1 name : " + node1Name);
-        logger.log(Level.FINEST, "unit 2 name : " + node2Name);
-        logger.log(Level.FINEST, "converting rule : " + quotient.toString());
+        logger.trace("unit 1 name : {}", node1Name);
+        logger.trace("unit 2 name : {}", node2Name);
+        logger.trace("converting rule : {}", quotient.toString());
         if (Node.checkExistence(node1Name) && Node.checkExistence(node2Name)) {
-            logger.log(Level.FINER, "connects graph with unit \"" + node1Name + "\" and \"" + node2Name + "\"");
+            logger.debug("connects graph with units : {}, {}", node1Name, node2Name);
             connectTwoNodes(node1Name, node2Name, quotient);
         } else {
-            logger.log(Level.FINER, "connects units \"" + node1Name + "\" and \"" + node2Name + "\"");
+            logger.debug("connects units : {}, {}", node1Name, node2Name);
             addNodes(node1Name, node2Name, quotient);
         }
     }
@@ -55,11 +55,11 @@ public class GraphHolder {
         Graph graph1 = findGraph(node1Name);
         Graph graph2 = findGraph(node2Name);
         if (graph1 == graph2) {
-            logger.log(Level.FINEST, "units \"" + node1Name + "\", \"" + node2Name + "\" already in one graph");
+            logger.trace("units {}, {} are already in one graph", node1Name, node2Name);
             return;
         }
         graphs.remove(graph2);
-        logger.log(Level.FINEST, "graphs with units \"" + node1Name + "\", \"" + node2Name + "\" are connected");
+        logger.trace("graphs with units {}, {} are connected", node1Name, node2Name);
         graph1.connect(graph2, node1Name, node2Name, quotient);
     }
 
@@ -74,16 +74,16 @@ public class GraphHolder {
         boolean node1Ex = Node.checkExistence(node1Name);
         boolean node2Ex = Node.checkExistence(node2Name);
         if (node1Ex) {
-            logger.log(Level.FINEST, "unit with the name " + node1Name + " already exists");
+            logger.trace("unit with the name {} already exists", node1Name);
             findGraph(node1Name).addNode(node1Name, node2Name, quotient);
             return;
         }
         if (node2Ex) {
-            logger.log(Level.FINEST, "unit with the name " + node2Name + " already exists");
+            logger.trace("unit with the name {} already exists", node2Name);
             findGraph(node2Name).addNode(node1Name, node2Name, quotient);
             return;
         }
-        logger.log(Level.FINEST, "both units are new");
+        logger.trace("both units ({}, {}) are new", node1Name, node2Name);
         Node node1 = Node.createNode(node1Name);
         createGraph(node1);
         findGraph(node1Name).addNode(node1Name, node2Name, quotient);
@@ -106,7 +106,7 @@ public class GraphHolder {
         Graph graph = new Graph(startNode);
         graphs.add(graph);
         Node.setGraphsForName(startNode.getName(), graph);
-        logger.log(Level.FINER, "created new graph for unit " + startNode);
+        logger.debug("created new graph for unit {}", startNode.getName());
     }
 
     /**

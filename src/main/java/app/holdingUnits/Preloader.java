@@ -1,9 +1,10 @@
 package app.holdingUnits;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Special class to preload data.
@@ -16,7 +17,7 @@ public class Preloader extends Thread{
     /* extends Thread to preload at new thread */
 
     /** Logger for this class. */
-    private final static Logger logger = Logger.getLogger(Preloader.class.getName());
+    private final static Logger logger = LoggerFactory.getLogger(Preloader.class);
 
     /** Exit status if no file with converting rules. */
     private final static int noFileExitStatus = 13;
@@ -32,16 +33,16 @@ public class Preloader extends Thread{
      * @param path path to the file with units and converting rules.
      */
     public static void preload(String path) {
-        logger.log(Level.INFO, "start preloading");
+        logger.info("start preloading");
         preloader = new Preloader(path);
         preloader.start();
         try {
             preloader.join();
         } catch (InterruptedException e) {
-            logger.log(Level.SEVERE, "preloading join error");
+            logger.warn("preloading join error");
             e.printStackTrace();
         }
-        logger.log(Level.FINE, "preloading is done");
+        logger.info("preloading is done");
     }
 
     /**
@@ -66,9 +67,9 @@ public class Preloader extends Thread{
      */
     public static void readingStartInfo(String filePath) {
         try (BufferedReader reader = preloadReader(filePath)) {
-            logger.log(Level.FINE, "start reading converting rules");
+            logger.debug("start reading converting rules");
             reader.lines().forEach(GraphHolder::parseLine);
-            logger.log(Level.FINE, "reading converting rules is done");
+            logger.debug("reading converting rules is done");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -80,7 +81,7 @@ public class Preloader extends Thread{
      * @return buffer reader.
      */
     private static BufferedReader preloadReader(String filePath) {
-        logger.log(Level.FINE, "searching the file");
+        logger.debug("searching the file");
         File input = new File(filePath);
         InputStreamReader isr = null;
         try {
@@ -90,10 +91,10 @@ public class Preloader extends Thread{
             e.printStackTrace();
         }
         if (isr == null) {
-            logger.log(Level.SEVERE, "no such file");
+            logger.error("no such file : {}", filePath);
             System.exit(noFileExitStatus);
         }
-        logger.log(Level.FINE, "file is found");
+        logger.debug("file is founded");
         return new BufferedReader(isr);
     }
 

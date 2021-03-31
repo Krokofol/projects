@@ -5,6 +5,8 @@ import app.holdingUnits.containers.Graph;
 import app.holdingUnits.containers.Node;
 import app.search.Value;
 import app.search.Searcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -15,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Class for processing requests.
@@ -29,7 +29,7 @@ import java.util.logging.Logger;
 public class RequestController {
 
     /** Logger for this class. */
-    private final static Logger logger = Logger.getLogger(RequestController.class.getName());
+    private final static Logger logger = LoggerFactory.getLogger(RequestController.class);
 
     /**
      * Processes requests with "convert" address. Also before converting waits the ending of preloading thread to be
@@ -45,21 +45,21 @@ public class RequestController {
 
         try {
             Preloader.getPreloadingThread().join();
-            logger.log(Level.FINE, "preloading thread join is successful");
+            logger.debug("preloading thread join is successful");
         } catch (InterruptedException e) {
-            logger.log(Level.WARNING, "preloading thread join error");
+            logger.warn("preloading thread join error");
             e.printStackTrace();
         }
 
         if (checkInput(from, to)) {
-            logger.log(Level.FINER, "\"from\" or \"to\" is not declared");
+            logger.debug("\"from\" or \"to\" is not declared");
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        logger.log(Level.FINER, "got body with such \"from\" and \"to\"\n-from : " + from + "\n-to : " + to);
+        logger.debug("got body with such \"from\" and \"to\"\n----from : {}\n----to : {}", from, to);
         String[] fromTo = refactorArgs(from, to);
         if (fromTo == null || (fromTo[0].equals("") && fromTo[1].equals(""))) {
-            logger.log(Level.FINER, "bad form of \"from\" or \"to\" \n-from : " + from + "\n-to : " + to);
+            logger.debug("bad form of \"from\" or \"to\" \n-from : {}\n-to : {}", from, to);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         String[] fromSeparated = fromTo[0].split("\\*");
@@ -77,10 +77,10 @@ public class RequestController {
         );
 
         if (result == null) {
-            logger.log(Level.FINER, "unable to convert \nfrom : (" + from + ") \nto : (" + to + ")");
+            logger.debug("unable to convert \n----from : {}\n----to : {}", from, to);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        logger.log(Level.FINER, "converting result \nfrom : (" + from + ") \nto : (" + to + ") \nis : " + result);
+        logger.debug("converting result \n----from : {}\n----to : {}\n----result : {}", from, to, result);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -153,7 +153,7 @@ public class RequestController {
                 continue;
             }
             if (!Node.checkExistence(nameIterator)) {
-                logger.log(Level.FINER, "there is not such unit : " + nameIterator);
+                logger.debug("there is not such unit : {}", nameIterator);
                 return true;
             }
         }
