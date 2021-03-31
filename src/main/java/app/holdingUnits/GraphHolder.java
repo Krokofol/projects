@@ -29,6 +29,7 @@ public class GraphHolder {
      * @param line the line with names and quotient.
      */
     public static void parseLine(String line) {
+        line = line.replace(" ", "");
         logger.debug("parsing line : {}", line);
         String node1Name = line.split(",")[0];
         String node2Name = line.split(",")[1];
