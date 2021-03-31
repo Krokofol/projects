@@ -2,12 +2,11 @@
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <charset>UTF-8</charset>
-            <outputPatternAsHeader>true</outputPatternAsHeader>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <logger name="app" level="trace" />
+    <logger name="app" level="info" />
     <root level="info">
         <appender-ref ref="STDOUT" />
     </root>
